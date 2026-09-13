@@ -14,7 +14,7 @@
             padding: 40px 20px;
         }
         .container {
-            max-width: 600px;
+            max-width: 650px;
             margin: 0 auto;
             background: #1e293b;
             padding: 30px;
@@ -40,7 +40,7 @@
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 15px;
         }
         button:hover {
             background-color: #2563eb;
@@ -48,32 +48,53 @@
         .resultado {
             margin-top: 30px;
         }
-        img {
+        img, video {
             max-width: 100%;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.5);
             margin-top: 10px;
+        }
+        .seccion-archivo {
+            text-align: left; 
+            margin: 15px 5%;
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed #475569;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>Generador Inteligente con IA</h2>
-        <p style="color: #94a3b8; font-size: 14px;">Crea imágenes asombrosas o sube tus propias referencias.</p>
+        <h2>Generador Multimedia con IA</h2>
+        <p style="color: #94a3b8; font-size: 14px;">Crea contenido en alta calidad usando referencias.</p>
         
         <form method="POST" enctype="multipart/form-data">
-            <input type="text" name="prompt" placeholder="Ej: Goku en Super Saiyan...">
+            <input type="text" name="prompt" placeholder="Ej: Paisaje futurista en movimiento..." required>
             <br>
             
-            <div style="text-align: left; margin: 10px 5%;">
-                <label style="font-size: 14px; color: #cbd5e1;">Sube una imagen de referencia:</label>
-                <input type="file" name="imagen_subida" accept="image/*">
+            <div class="seccion-archivo">
+                <label style="font-size: 14px; color: #cbd5e1; display: block; margin-bottom: 5px;">Sube archivo de referencia (Imagen o Video):</label>
+                <input type="file" name="archivo_referencia" accept="image/*,video/*">
             </div>
+            
+            <select name="tipo_salida">
+                <option value="imagen">Generar Imagen</option>
+                <option value="video">Generar Video</option>
+            </select>
+            <br>
+
+            <select name="resolucion">
+                <option value="hd">Calidad HD (1280x720)</option>
+                <option value="fhd">Calidad Full HD (1920x1080)</option>
+                <option value="4k">Calidad Ultra HD / 4K</option>
+            </select>
+            <br>
             
             <select name="estilo">
                 <option value="anime">Estilo Anime / Manga Pro</option>
-                <option value="realista">Estilo Fotorrealista 8K</option>
+                <option value="realista">Estilo Fotorrealista</option>
                 <option value="3d">Estilo Render 3D / Unreal Engine</option>
             </select>
             <br>
@@ -81,17 +102,17 @@
             <button type="submit">Generar Contenido</button>
         </form>
 
-        {% if imagen_usuario %}
+        {% if resultado_url %}
             <div class="resultado">
-                <h3>Imagen que subiste:</h3>
-                <img src="{{ imagen_usuario }}" alt="Tu imagen">
-            </div>
-        {% endif %}
-
-        {% if imagen_url %}
-            <div class="resultado">
-                <h3>Resultado Generado por la IA:</h3>
-                <img src="{{ imagen_url }}" alt="Imagen generada">
+                <h3>Resultado Generado ({{ resolucion_elegida.upper() }}):</h3>
+                {% if es_video %}
+                    <video controls autoplay>
+                        <source src="{{ resultado_url }}" type="video/mp4">
+                        Tu navegador no soporta la reproducción de video.
+                    </video>
+                {% else %}
+                    <img src="{{ resultado_url }}" alt="Resultado generado">
+                {% endif %}
             </div>
         {% endif %}
     </div>
