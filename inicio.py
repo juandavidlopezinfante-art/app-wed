@@ -6,7 +6,7 @@ from flask import Flask, render_template, request
 app = Flask(__name__)
 
 API_TOKEN = os.environ.get("HUGGINGFACE_TOKEN")
-API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2"
+API_URL = "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5"
 headers = {"Authorization": f"Bearer {API_TOKEN}"}
 
 @app.route("/", methods=["GET", "POST"])
