@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi App Inteligente con IA</title>
+    <title>Suite de IA y Automatización Empresarial</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -11,124 +11,156 @@
             color: #f8fafc;
             text-align: center;
             margin: 0;
-            padding: 40px 20px;
+            padding: 30px 15px;
         }
         .container {
-            max-width: 650px;
+            max-width: 750px;
             margin: 0 auto;
             background: #1e293b;
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+        h2 { margin-bottom: 5px; color: #38bdf8; }
+        p.sub { color: #94a3b8; font-size: 14px; margin-bottom: 25px; }
+        
+        .card-seccion {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .card-seccion h3 {
+            margin-top: 0;
+            font-size: 16px;
+            color: #e2e8f0;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 8px;
         }
         input[type="text"], select, input[type="file"] {
-            width: 90%;
-            padding: 12px;
-            margin: 10px 0;
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 15px 0;
             border-radius: 6px;
             border: 1px solid #475569;
-            background: #0f172a;
+            background: #1e293b;
             color: #f8fafc;
-            font-size: 16px;
+            font-size: 14px;
+            box-sizing: border-box;
         }
-        button {
+        button.btn-accion {
             background-color: #3b82f6;
             color: white;
-            padding: 12px 25px;
+            padding: 10px 20px;
             border: none;
             border-radius: 6px;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 15px;
+            width: 100%;
         }
-        button:hover {
-            background-color: #2563eb;
-        }
+        button.btn-accion:hover { background-color: #2563eb; }
+        
         .resultado {
             margin-top: 30px;
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #10b981;
         }
         img, video {
             max-width: 100%;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            border-radius: 6px;
             margin-top: 10px;
         }
-        .seccion-archivo {
-            text-align: left; 
-            margin: 15px 5%;
-            background: #0f172a;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px dashed #475569;
+        pre {
+            background: #090d16;
+            padding: 12px;
+            border-radius: 6px;
+            color: #38bdf8;
+            text-align: left;
+            overflow-x: auto;
+            font-size: 13px;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>Generador Multimedia con IA</h2>
-        <p style="color: #94a3b8; font-size: 14px;">Crea contenido, reportes o edita tus documentos automáticamente.</p>
+        <h2>Suite Inteligente Empresarial</h2>
+        <p class="sub">Selecciona la herramienta que necesitas usar hoy de forma ordenada y directa.</p>
         
-        <form method="POST" enctype="multipart/form-data">
-            <input type="text" name="prompt" placeholder="Ej: Actualiza este reporte con las ventas de hoy..." required>
-            <br>
-            
-            <div class="seccion-archivo">
-                <label style="font-size: 14px; color: #cbd5e1; display: block; margin-bottom: 5px;">Sube archivo de referencia (Word, Excel, Imagen o Video):</label>
-                <input type="file" name="archivo_referencia" accept=".docx,.xlsx,image/*,video/*">
-            </div>
-            
-            <select name="tipo_salida">
-                <option value="auto">Detectar automáticamente según mi texto</option>
-                <option value="excel">Generar Reporte Excel</option>
-                <option value="video">Generar Video</option>
-                <option value="imagen">Generar Imagen</option>
-            </select>
-            <br>
+        <!-- HERRAMIENTA 1: EXTRACTOR OCR (FOTOS A TEXTO / EXCEL) -->
+        <div class="card-seccion">
+            <h3>1. Extractor OCR (Escanear Tickets o Documentos)</h3>
+            <form method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="accion" value="ocr">
+                <label style="font-size: 13px; color: #94a3b8;">Sube una foto de un ticket, factura o texto físico:</label>
+                <input type="file" name="archivo_ocr" accept="image/*" required>
+                <button type="submit" class="btn-accion" style="background-color: #8b5cf6;">Extraer Texto y Generar Reporte</button>
+            </form>
+        </div>
 
-            <select name="resolucion">
-                <option value="hd">Calidad HD (1280x720)</option>
-                <option value="fhd">Calidad Full HD (1920x1080)</option>
-                <option value="4k">Calidad Ultra HD / 4K</option>
-            </select>
-            <br>
-            
-            <select name="estilo">
-                <option value="anime">Estilo Anime / Manga Pro</option>
-                <option value="realista">Estilo Fotorrealista</option>
-                <option value="3d">Estilo Render 3D / Unreal Engine</option>
-            </select>
-            <br>
-            
-            <button type="submit">Procesar con IA</button>
-        </form>
+        <!-- HERRAMIENTA 2: GENERADOR MULTIMEDIA (Imágenes, Videos y Office) -->
+        <div class="card-seccion">
+            <h3>2. Generador Creativo y de Documentos</h3>
+            <form method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="accion" value="creativo">
+                <label style="font-size: 13px; color: #94a3b8;">¿Qué deseas crear o modificar?</label>
+                <input type="text" name="prompt" placeholder="Ej: Reporte de gastos mensuales / Paisaje futurista..." required>
+                
+                <label style="font-size: 13px; color: #94a3b8;">Archivo de referencia opcional (Word o Excel):</label>
+                <input type="file" name="archivo_referencia" accept=".docx,.xlsx">
 
-        {% if tipo_generado == "excel" %}
+                <label style="font-size: 13px; color: #94a3b8;">Selecciona el formato de salida:</label>
+                <select name="tipo_salida">
+                    <option value="auto">Detectar automáticamente según mi texto</option>
+                    <option value="excel">Generar / Editar Excel</option>
+                    <option value="word">Generar / Editar Word</option>
+                    <option value="video">Generar Video con IA</option>
+                    <option value="imagen">Generar Imagen con IA</option>
+                </select>
+
+                <button type="submit" class="btn-accion">Ejecutar Comando IA</button>
+            </form>
+        </div>
+
+        <!-- ZONA DE RESULTADOS -->
+        {% if tipo_generado == "ocr" %}
             <div class="resultado">
-                <h3>¡Archivo de Excel Listo!</h3>
-                <p style="color: #94a3b8; font-size: 14px;">Tu documento empresarial ha sido procesado o creado con éxito.</p>
+                <h3 style="color: #10b981; margin-top:0;">¡Texto Extraído con Éxito!</h3>
+                <p style="font-size: 13px; color: #94a3b8;">Esto es lo que leyó el sistema de tu imagen:</p>
+                <pre>{{ texto_extraido }}</pre>
+                <br>
                 <a href="{{ resultado_url }}" download>
-                    <button style="background-color: #10b981;">Descargar Archivo Excel (.xlsx)</button>
+                    <button class="btn-accion" style="background-color: #10b981;">Descargar Reporte en Excel (.xlsx)</button>
+                </a>
+            </div>
+        {% elif tipo_generado == "excel" %}
+            <div class="resultado">
+                <h3 style="color: #10b981; margin-top:0;">¡Archivo de Excel Listo!</h3>
+                <a href="{{ resultado_url }}" download>
+                    <button class="btn-accion" style="background-color: #10b981;">Descargar Archivo Excel (.xlsx)</button>
                 </a>
             </div>
         {% elif tipo_generado == "word" %}
             <div class="resultado">
-                <h3>¡Documento de Word Actualizado!</h3>
-                <p style="color: #94a3b8; font-size: 14px;">Se han aplicado los cambios solicitados en tu archivo.</p>
+                <h3 style="color: #10b981; margin-top:0;">¡Documento de Word Listo!</h3>
                 <a href="{{ resultado_url }}" download>
-                    <button style="background-color: #10b981;">Descargar Documento Word (.docx)</button>
+                    <button class="btn-accion" style="background-color: #10b981;">Descargar Documento Word (.docx)</button>
                 </a>
             </div>
         {% elif resultado_url %}
             <div class="resultado">
-                <h3>Resultado Generado:</h3>
+                <h3 style="color: #10b981; margin-top:0;">Resultado Multimedia:</h3>
                 {% if es_video %}
                     <video controls autoplay>
                         <source src="{{ resultado_url }}" type="video/mp4">
                     </video>
                 {% else %}
-                    <img src="{{ resultado_url }}" alt="Resultado generado">
+                    <img src="{{ resultado_url }}" alt="Resultado">
                 {% endif %}
             </div>
         {% endif %}
