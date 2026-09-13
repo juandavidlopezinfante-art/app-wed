@@ -1,4 +1,2 @@
-flask
-gunicorn
-requests
-huggingface_hub
+Flask
+openpyxl
