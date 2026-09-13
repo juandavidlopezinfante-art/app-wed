@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, send_from_directory
 import os
+import openpyxl
 
 app = Flask(__name__)
 
-# Carpeta temporal para guardar lo que el usuario suba
+# Carpeta para guardar los archivos generados
 UPLOAD_FOLDER = 'static/uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -12,46 +13,52 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def index():
     resultado_url = None
     es_video = False
-    resolucion_elegida = "hd"
+    tipo_generado = None
 
     if request.method == "POST":
         prompt = request.form.get("prompt")
-        tipo_salida = request.form.get("tipo_salida") # 'imagen' o 'video'
-        resolucion = request.form.get("resolucion") # 'hd', 'fhd', '4k'
-        estilo = request.form.get("estilo")
+        tipo_salida = request.form.get("tipo_salida")
         
-        resolucion_elegida = resolucion
-
-        # Manejo del archivo subido (imagen o video de referencia)
-        if "archivo_referencia" in request.files:
-            archivo = request.files["archivo_referencia"]
-            if archivo.filename != "":
-                ruta_archivo = os.path.join(app.config['UPLOAD_FOLDER'], archivo.filename)
-                archivo.save(ruta_archivo)
-                # Aquí puedes usar 'ruta_archivo' para enviarla a tu API de IA si requiere referencia
-
-        # Lógica según lo que el usuario pidió generar
-        if tipo_salida == "video":
-            es_video = True
-            # AQUÍ CONECTAS TU API DE VIDEOS (Ej: Replicate, Runway, etc.)
-            # Puedes ajustar los parámetros de resolución según 'resolucion' (HD, 4K)
-            print(f"Generando video en {resolucion} con estilo {estilo} para el prompt: {prompt}")
+        if tipo_salida == "excel":
+            tipo_generado = "excel"
             
-            # URL de ejemplo de video generado
+            # Creamos el archivo de Excel profesional con openpyxl
+            wb = openpyxl.Workbook()
+            ws = wb.active
+            ws.title = "Reporte Ejecutivo"
+            
+            # Estilos básicos simulando datos empresariales basados en el prompt del usuario
+            ws['A1'] = "REPORTE EMPRESARIAL GENERADO POR IA"
+            ws['A3'] = "Concepto / Descripción"
+            ws['B3'] = "Detalle del Prompt"
+            ws['C3'] = "Estado"
+            
+            ws['A4'] = prompt
+            ws['B4'] = "Datos procesados y optimizados"
+            ws['C4'] = "Completado"
+            
+            # Guardamos el archivo en la carpeta de subidas estáticas
+            nombre_archivo = "reporte_empresarial.xlsx"
+            ruta_excel = os.path.join(app.config['UPLOAD_FOLDER'], nombre_archivo)
+            wb.save(ruta_excel)
+            
+            # URL de descarga para la plantilla
+            resultado_url = f"/static/uploads/{nombre_archivo}"
+
+        elif tipo_salida == "video":
+            tipo_generado = "video"
+            es_video = True
             resultado_url = "https://www.w3schools.com/html/mov_bbb.mp4"
         else:
+            tipo_generado = "imagen"
             es_video = False
-            # AQUÍ TU LÓGICA ACTUAL DE IMÁGENES
-            print(f"Generando imagen en {resolucion} con estilo {estilo} para el prompt: {prompt}")
-            
-            # URL de ejemplo de imagen generada
             resultado_url = "https://picsum.photos/800/450"
 
     return render_template(
         "index.html", 
         resultado_url=resultado_url, 
         es_video=es_video, 
-        resolucion_elegida=resolucion_elegida
+        tipo_generado=tipo_generado
     )
 
 if __name__ == "__main__":
