@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Imágenes</title>
+</head>
+<body>
+    <h1>Genera una imagen con IA</h1>
+    <form method="POST">
+        <input type="text" name="prompt" placeholder="Escribe lo que quieres generar..." required style="width: 300px;">
+        <button type="submit">Generar</button>
+    </form>
+
+    {% if imagen_url %}
+        <div>
+            <h2>Resultado:</h2>
+            <img src="{{ imagen_url }}" alt="Imagen generada" style="max-width: 500px;">
+        </div>
+    {% endif %}
+</body>
+</html>
