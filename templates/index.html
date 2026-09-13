@@ -68,21 +68,22 @@
 
     <div class="container">
         <h2>Generador Multimedia con IA</h2>
-        <p style="color: #94a3b8; font-size: 14px;">Crea contenido en alta calidad, videos o reportes empresariales.</p>
+        <p style="color: #94a3b8; font-size: 14px;">Crea contenido, reportes o edita tus documentos automáticamente.</p>
         
         <form method="POST" enctype="multipart/form-data">
-            <input type="text" name="prompt" placeholder="Ej: Reporte de ventas / Paisaje futurista..." required>
+            <input type="text" name="prompt" placeholder="Ej: Actualiza este reporte con las ventas de hoy..." required>
             <br>
             
             <div class="seccion-archivo">
-                <label style="font-size: 14px; color: #cbd5e1; display: block; margin-bottom: 5px;">Sube archivo de referencia (Imagen o Video):</label>
-                <input type="file" name="archivo_referencia" accept="image/*,video/*">
+                <label style="font-size: 14px; color: #cbd5e1; display: block; margin-bottom: 5px;">Sube archivo de referencia (Word, Excel, Imagen o Video):</label>
+                <input type="file" name="archivo_referencia" accept=".docx,.xlsx,image/*,video/*">
             </div>
             
             <select name="tipo_salida">
-                <option value="imagen">Generar Imagen</option>
+                <option value="auto">Detectar automáticamente según mi texto</option>
+                <option value="excel">Generar Reporte Excel</option>
                 <option value="video">Generar Video</option>
-                <option value="excel">Generar Reporte de Excel (Empresarial)</option>
+                <option value="imagen">Generar Imagen</option>
             </select>
             <br>
 
@@ -100,15 +101,23 @@
             </select>
             <br>
             
-            <button type="submit">Generar Contenido</button>
+            <button type="submit">Procesar con IA</button>
         </form>
 
         {% if tipo_generado == "excel" %}
             <div class="resultado">
-                <h3>¡Reporte de Excel Creado con Éxito!</h3>
-                <p style="color: #94a3b8; font-size: 14px;">Tu archivo profesional está listo para descargarse.</p>
+                <h3>¡Archivo de Excel Listo!</h3>
+                <p style="color: #94a3b8; font-size: 14px;">Tu documento empresarial ha sido procesado o creado con éxito.</p>
                 <a href="{{ resultado_url }}" download>
                     <button style="background-color: #10b981;">Descargar Archivo Excel (.xlsx)</button>
+                </a>
+            </div>
+        {% elif tipo_generado == "word" %}
+            <div class="resultado">
+                <h3>¡Documento de Word Actualizado!</h3>
+                <p style="color: #94a3b8; font-size: 14px;">Se han aplicado los cambios solicitados en tu archivo.</p>
+                <a href="{{ resultado_url }}" download>
+                    <button style="background-color: #10b981;">Descargar Documento Word (.docx)</button>
                 </a>
             </div>
         {% elif resultado_url %}
@@ -117,7 +126,6 @@
                 {% if es_video %}
                     <video controls autoplay>
                         <source src="{{ resultado_url }}" type="video/mp4">
-                        Tu navegador no soporta la reproducción de video.
                     </video>
                 {% else %}
                     <img src="{{ resultado_url }}" alt="Resultado generado">
