@@ -4,17 +4,25 @@
     <meta charset="UTF-8">
     <title>Genera una imagen con IA</title>
 </head>
-<body>
-    <h2>Genera una imagen con IA</h2>
+<body style="font-family: Arial, sans-serif; text-align: center; margin-top: 50px;">
+    <h2>Generador Inteligente de Imágenes</h2>
     
-    <form method="POST">
-        <input type="text" name="prompt" placeholder="Escribe lo que quieres generar..." required>
-        <button type="submit">Generar</button>
+    <form method="POST" style="margin-bottom: 20px;">
+        <input type="text" name="prompt" placeholder="Ej: Boruto Uzumaki con capa..." style="width: 300px; padding: 8px;" required>
+        <br><br>
+        <select name="estilo" style="padding: 8px;">
+            <option value="anime">Estilo Anime / Dibujo</option>
+            <option value="realista">Estilo Fotorrealista</option>
+            <option value="3d">Estilo Render 3D</option>
+        </select>
+        <br><br>
+        <button type="submit" style="padding: 8px 15px;">Generar Imagen</button>
     </form>
 
     {% if imagen_url %}
-        <div style="margin-top: 20px;">
-            <img src="{{ imagen_url }}" alt="Imagen generada" style="max-width: 100%; border-radius: 8px;">
+        <div>
+            <h3>Resultado:</h3>
+            <img src="{{ imagen_url }}" alt="Imagen generada" style="max-width: 100%; border-radius: 8px; max-height: 500px;">
         </div>
     {% endif %}
 </body>
