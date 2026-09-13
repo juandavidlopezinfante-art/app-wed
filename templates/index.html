@@ -90,37 +90,48 @@
 
     <div class="container">
         <h2>Suite Inteligente Empresarial</h2>
-        <p class="sub">Selecciona la herramienta que necesitas usar hoy de forma ordenada y directa.</p>
+        <p class="sub">Herramientas profesionales ordenadas para optimizar tu flujo de trabajo.</p>
         
-        <!-- HERRAMIENTA 1: EXTRACTOR OCR (FOTOS A TEXTO / EXCEL) -->
+        <!-- HERRAMIENTA 1: EXTRACTOR OCR -->
         <div class="card-seccion">
             <h3>1. Extractor OCR (Escanear Tickets o Documentos)</h3>
             <form method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="accion" value="ocr">
-                <label style="font-size: 13px; color: #94a3b8;">Sube una foto de un ticket, factura o texto físico:</label>
+                <label style="font-size: 13px; color: #94a3b8;">Sube una foto de un ticket o factura:</label>
                 <input type="file" name="archivo_ocr" accept="image/*" required>
-                <button type="submit" class="btn-accion" style="background-color: #8b5cf6;">Extraer Texto y Generar Reporte</button>
+                <button type="submit" class="btn-accion" style="background-color: #8b5cf6;">Extraer Texto y Generar Excel</button>
             </form>
         </div>
 
-        <!-- HERRAMIENTA 2: GENERADOR MULTIMEDIA (Imágenes, Videos y Office) -->
+        <!-- HERRAMIENTA 2: LECTOR Y PROCESADOR DE PDF -->
         <div class="card-seccion">
-            <h3>2. Generador Creativo y de Documentos</h3>
+            <h3>2. Lector y Procesador de PDFs</h3>
+            <form method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="accion" value="pdf">
+                <label style="font-size: 13px; color: #94a3b8;">Sube un archivo PDF (contrato, manual, reporte):</label>
+                <input type="file" name="archivo_pdf" accept=".pdf" required>
+                <button type="submit" class="btn-accion" style="background-color: #f59e0b;">Analizar PDF y Convertir a Word</button>
+            </form>
+        </div>
+
+        <!-- HERRAMIENTA 3: GENERADOR CREATIVO -->
+        <div class="card-seccion">
+            <h3>3. Generador Creativo y de Documentos</h3>
             <form method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="accion" value="creativo">
                 <label style="font-size: 13px; color: #94a3b8;">¿Qué deseas crear o modificar?</label>
-                <input type="text" name="prompt" placeholder="Ej: Reporte de gastos mensuales / Paisaje futurista..." required>
+                <input type="text" name="prompt" placeholder="Ej: Reporte de gastos / Paisaje..." required>
                 
                 <label style="font-size: 13px; color: #94a3b8;">Archivo de referencia opcional (Word o Excel):</label>
                 <input type="file" name="archivo_referencia" accept=".docx,.xlsx">
 
-                <label style="font-size: 13px; color: #94a3b8;">Selecciona el formato de salida:</label>
+                <label style="font-size: 13px; color: #94a3b8;">Formato de salida:</label>
                 <select name="tipo_salida">
-                    <option value="auto">Detectar automáticamente según mi texto</option>
+                    <option value="auto">Detectar automáticamente</option>
                     <option value="excel">Generar / Editar Excel</option>
                     <option value="word">Generar / Editar Word</option>
-                    <option value="video">Generar Video con IA</option>
-                    <option value="imagen">Generar Imagen con IA</option>
+                    <option value="video">Generar Video</option>
+                    <option value="imagen">Generar Imagen</option>
                 </select>
 
                 <button type="submit" class="btn-accion">Ejecutar Comando IA</button>
@@ -131,34 +142,40 @@
         {% if tipo_generado == "ocr" %}
             <div class="resultado">
                 <h3 style="color: #10b981; margin-top:0;">¡Texto Extraído con Éxito!</h3>
-                <p style="font-size: 13px; color: #94a3b8;">Esto es lo que leyó el sistema de tu imagen:</p>
                 <pre>{{ texto_extraido }}</pre>
                 <br>
                 <a href="{{ resultado_url }}" download>
                     <button class="btn-accion" style="background-color: #10b981;">Descargar Reporte en Excel (.xlsx)</button>
                 </a>
             </div>
+        {% elif tipo_generado == "pdf_resumen" %}
+            <div class="resultado">
+                <h3 style="color: #10b981; margin-top:0;">¡PDF Procesado y Convertido!</h3>
+                <pre>{{ texto_extraido }}</pre>
+                <br>
+                <a href="{{ resultado_url }}" download>
+                    <button class="btn-accion" style="background-color: #10b981;">Descargar Resumen en Word (.docx)</button>
+                </a>
+            </div>
         {% elif tipo_generado == "excel" %}
             <div class="resultado">
                 <h3 style="color: #10b981; margin-top:0;">¡Archivo de Excel Listo!</h3>
                 <a href="{{ resultado_url }}" download>
-                    <button class="btn-accion" style="background-color: #10b981;">Descargar Archivo Excel (.xlsx)</button>
+                    <button class="btn-accion" style="background-color: #10b981;">Descargar Excel (.xlsx)</button>
                 </a>
             </div>
         {% elif tipo_generado == "word" %}
             <div class="resultado">
                 <h3 style="color: #10b981; margin-top:0;">¡Documento de Word Listo!</h3>
                 <a href="{{ resultado_url }}" download>
-                    <button class="btn-accion" style="background-color: #10b981;">Descargar Documento Word (.docx)</button>
+                    <button class="btn-accion" style="background-color: #10b981;">Descargar Word (.docx)</button>
                 </a>
             </div>
         {% elif resultado_url %}
             <div class="resultado">
                 <h3 style="color: #10b981; margin-top:0;">Resultado Multimedia:</h3>
                 {% if es_video %}
-                    <video controls autoplay>
-                        <source src="{{ resultado_url }}" type="video/mp4">
-                    </video>
+                    <video controls autoplay><source src="{{ resultado_url }}" type="video/mp4"></video>
                 {% else %}
                     <img src="{{ resultado_url }}" alt="Resultado">
                 {% endif %}
