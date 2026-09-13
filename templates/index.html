@@ -68,10 +68,10 @@
 
     <div class="container">
         <h2>Generador Multimedia con IA</h2>
-        <p style="color: #94a3b8; font-size: 14px;">Crea contenido en alta calidad usando referencias.</p>
+        <p style="color: #94a3b8; font-size: 14px;">Crea contenido en alta calidad, videos o reportes empresariales.</p>
         
         <form method="POST" enctype="multipart/form-data">
-            <input type="text" name="prompt" placeholder="Ej: Paisaje futurista en movimiento..." required>
+            <input type="text" name="prompt" placeholder="Ej: Reporte de ventas / Paisaje futurista..." required>
             <br>
             
             <div class="seccion-archivo">
@@ -82,6 +82,7 @@
             <select name="tipo_salida">
                 <option value="imagen">Generar Imagen</option>
                 <option value="video">Generar Video</option>
+                <option value="excel">Generar Reporte de Excel (Empresarial)</option>
             </select>
             <br>
 
@@ -102,9 +103,17 @@
             <button type="submit">Generar Contenido</button>
         </form>
 
-        {% if resultado_url %}
+        {% if tipo_generado == "excel" %}
             <div class="resultado">
-                <h3>Resultado Generado ({{ resolucion_elegida.upper() }}):</h3>
+                <h3>¡Reporte de Excel Creado con Éxito!</h3>
+                <p style="color: #94a3b8; font-size: 14px;">Tu archivo profesional está listo para descargarse.</p>
+                <a href="{{ resultado_url }}" download>
+                    <button style="background-color: #10b981;">Descargar Archivo Excel (.xlsx)</button>
+                </a>
+            </div>
+        {% elif resultado_url %}
+            <div class="resultado">
+                <h3>Resultado Generado:</h3>
                 {% if es_video %}
                     <video controls autoplay>
                         <source src="{{ resultado_url }}" type="video/mp4">
