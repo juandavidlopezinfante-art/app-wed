@@ -7,7 +7,7 @@ from huggingface_hub import InferenceClient
 app = Flask(__name__)
 
 API_TOKEN = os.environ.get("HUGGINGFACE_TOKEN")
-client = InferenceClient("runwayml/stable-diffusion-v1-5", token=API_TOKEN)
+client = InferenceClient(token=API_TOKEN)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -18,7 +18,10 @@ def index():
         
         if prompt_usuario:
             try:
-                image = client.text_to_image(prompt_usuario)
+                image = client.text_to_image(
+                    prompt_usuario,
+                    model="runwayml/stable-diffusion-v1-5"
+                )
                 
                 import io
                 buffered = io.BytesIO()
