@@ -1,48 +1,58 @@
+from flask import Flask, render_template, request, redirect, url_for
 import os
-import random
-import base64
-from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
+# Carpeta temporal para guardar lo que el usuario suba
+UPLOAD_FOLDER = 'static/uploads'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 @app.route("/", methods=["GET", "POST"])
 def index():
-    imagen_url = None
-    imagen_usuario_base64 = None
-    
+    resultado_url = None
+    es_video = False
+    resolucion_elegida = "hd"
+
     if request.method == "POST":
-        prompt_usuario = request.form.get("prompt")
+        prompt = request.form.get("prompt")
+        tipo_salida = request.form.get("tipo_salida") # 'imagen' o 'video'
+        resolucion = request.form.get("resolucion") # 'hd', 'fhd', '4k'
         estilo = request.form.get("estilo")
         
-        # 1. Procesar si el usuario subió una imagen
-        archivo = request.files.get("imagen_subida")
-        if archivo and archivo.filename != '':
-            encoded_string = base64.b64encode(archivo.read()).decode('utf-8')
-            imagen_usuario_base64 = f"data:image/jpeg;base64,{encoded_string}"
-            if not prompt_usuario:
-                prompt_usuario = "High quality enhancement of the uploaded photo"
+        resolucion_elegida = resolucion
 
-        # 2. Inteligencia de Prompts y Estilos (Mejora radical de calidad)
-        if prompt_usuario:
-            # Optimizamos los modificadores según el estilo elegido para que la IA nunca falle
-            if estilo == "anime":
-                prompt_completo = f"{prompt_usuario}, masterpiece, high quality anime style, studio trigger or ufotable style, detailed line art, vibrant cinematic colors, 4k"
-            elif estilo == "realista":
-                prompt_completo = f"{prompt_usuario}, ultra realistic photography, 8k resolution, shot on 35mm lens, hyperdetailed skin texture, dramatic cinematic lighting, photorealistic"
-            elif estilo == "3d":
-                prompt_completo = f"{prompt_usuario}, 3d character render, blender cycles, octane render, unreal engine 5, clay render, smooth lighting, volumetric effects"
-            else:
-                prompt_completo = f"{prompt_usuario}, highly detailed, professional digital painting"
-                
-            prompt_formateado = prompt_completo.replace(" ", "%20")
+        # Manejo del archivo subido (imagen o video de referencia)
+        if "archivo_referencia" in request.files:
+            archivo = request.files["archivo_referencia"]
+            if archivo.filename != "":
+                ruta_archivo = os.path.join(app.config['UPLOAD_FOLDER'], archivo.filename)
+                archivo.save(ruta_archivo)
+                # Aquí puedes usar 'ruta_archivo' para enviarla a tu API de IA si requiere referencia
+
+        # Lógica según lo que el usuario pidió generar
+        if tipo_salida == "video":
+            es_video = True
+            # AQUÍ CONECTAS TU API DE VIDEOS (Ej: Replicate, Runway, etc.)
+            # Puedes ajustar los parámetros de resolución según 'resolucion' (HD, 4K)
+            print(f"Generando video en {resolucion} con estilo {estilo} para el prompt: {prompt}")
             
-            # Generamos un número aleatorio único para evitar caché y garantizar variedad
-            seed_aleatorio = random.randint(1, 99999999)
+            # URL de ejemplo de video generado
+            resultado_url = "https://www.w3schools.com/html/mov_bbb.mp4"
+        else:
+            es_video = False
+            # AQUÍ TU LÓGICA ACTUAL DE IMÁGENES
+            print(f"Generando imagen en {resolucion} con estilo {estilo} para el prompt: {prompt}")
             
-            # Usamos parámetros avanzados de la API para asegurar máxima nitidez
-            imagen_url = f"https://image.pollinations.ai/prompt/{prompt_formateado}?seed={seed_aleatorio}&width=768&height=768&nologo=true&enhance=true"
-                
-    return render_template("index.html", imagen_url=imagen_url, imagen_usuario=imagen_usuario_base64)
+            # URL de ejemplo de imagen generada
+            resultado_url = "https://picsum.photos/800/450"
+
+    return render_template(
+        "index.html", 
+        resultado_url=resultado_url, 
+        es_video=es_video, 
+        resolucion_elegida=resolucion_elegida
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)
