@@ -1,10 +1,9 @@
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request
 import os
 import openpyxl
 
 app = Flask(__name__)
 
-# Carpeta para guardar los archivos generados
 UPLOAD_FOLDER = 'static/uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -16,33 +15,38 @@ def index():
     tipo_generado = None
 
     if request.method == "POST":
-        prompt = request.form.get("prompt")
-        tipo_salida = request.form.get("tipo_salida")
+        # Capturar el prompt y pasarlo a minúsculas para entender jerga, modismos y lenguaje informal
+        prompt = request.form.get("prompt", "")
+        prompt_lower = prompt.lower()
         
+        # --- FILTRO INTELIGENTE DE LENGUAJE NATURAL ---
+        # Analiza la frase del usuario y decide automáticamente qué herramienta usar
+        if any(palabra in prompt_lower for palabra in ["excel", "tabla", "reporte", "cuentas", "datos", "inventario", "ventas", "listado", "tablita"]):
+            tipo_salida = "excel"
+        elif any(palabra in prompt_lower for palabra in ["video", "animacion", "movimiento", "gif", "videito", "clip", "grabar"]):
+            tipo_salida = "video"
+        else:
+            tipo_salida = "imagen" # Interpreta cualquier otro término como solicitud visual
+        
+        # Lógica de procesamiento según la intención detectada
         if tipo_salida == "excel":
             tipo_generado = "excel"
-            
-            # Creamos el archivo de Excel profesional con openpyxl
             wb = openpyxl.Workbook()
             ws = wb.active
-            ws.title = "Reporte Ejecutivo"
+            ws.title = "Reporte Inteligente"
             
-            # Estilos básicos simulando datos empresariales basados en el prompt del usuario
-            ws['A1'] = "REPORTE EMPRESARIAL GENERADO POR IA"
-            ws['A3'] = "Concepto / Descripción"
-            ws['B3'] = "Detalle del Prompt"
+            ws['A1'] = "REPORTE EMPRESARIAL AUTOMATIZADO"
+            ws['A3'] = "Petición del Usuario"
+            ws['B3'] = "Análisis de Intención"
             ws['C3'] = "Estado"
             
             ws['A4'] = prompt
-            ws['B4'] = "Datos procesados y optimizados"
-            ws['C4'] = "Completado"
+            ws['B4'] = "Procesado mediante lenguaje natural"
+            ws['C4'] = "Exitoso"
             
-            # Guardamos el archivo en la carpeta de subidas estáticas
-            nombre_archivo = "reporte_empresarial.xlsx"
+            nombre_archivo = "reporte_inteligente.xlsx"
             ruta_excel = os.path.join(app.config['UPLOAD_FOLDER'], nombre_archivo)
             wb.save(ruta_excel)
-            
-            # URL de descarga para la plantilla
             resultado_url = f"/static/uploads/{nombre_archivo}"
 
         elif tipo_salida == "video":
