@@ -4,6 +4,7 @@ import openpyxl
 import docx
 from PIL import Image
 import pytesseract
+from pypdf import PdfReader
 
 app = Flask(__name__)
 
@@ -21,7 +22,7 @@ def index():
     if request.method == "POST":
         accion = request.form.get("accion")
         
-        # --- CASO 1: EXTRACTOR OCR (FOTO A TEXTO / EXCEL) ---
+        # --- CASO 1: EXTRACTOR OCR ---
         if accion == "ocr":
             archivo_ocr = request.files.get("archivo_ocr")
             if archivo_ocr and archivo_ocr.filename != "":
@@ -29,23 +30,19 @@ def index():
                 archivo_ocr.save(ruta_imagen)
                 
                 try:
-                    # Procesar imagen con OCR
                     imagen = Image.open(ruta_imagen)
                     texto_extraido = pytesseract.image_to_string(imagen)
                     if not texto_extraido.strip():
-                        texto_extraido = "No se detectó texto claro en la imagen. Intenta con otra foto más iluminada."
+                        texto_extraido = "No se detectó texto claro en la imagen."
                 except Exception as e:
-                    texto_extraido = f"Error al procesar la imagen: {str(e)}"
+                    texto_extraido = f"Error: {str(e)}"
 
-                # Generar un Excel automático con el texto extraído
                 wb = openpyxl.Workbook()
                 ws = wb.active
                 ws.title = "Datos OCR"
+                ws['A1'] = "REPORTE OCR"
+                ws['A3'] = "Texto Detectado"
                 
-                ws['A1'] = "REPORTE EXTRAÍDO DE IMAGEN (OCR)"
-                ws['A3'] = "Línea / Texto Detectado"
-                
-                # Dividir el texto por líneas y agregarlo a filas del Excel
                 lineas = texto_extraido.split('\n')
                 fila = 4
                 for linea in lineas:
@@ -56,11 +53,44 @@ def index():
                 nombre_excel = "reporte_ocr.xlsx"
                 ruta_excel = os.path.join(app.config['UPLOAD_FOLDER'], nombre_excel)
                 wb.save(ruta_excel)
-                
                 tipo_generado = "ocr"
                 resultado_url = f"/static/uploads/{nombre_excel}"
 
-        # --- CASO 2: GENERADOR CREATIVO Y DE DOCUMENTOS ---
+        # --- CASO 2: LECTOR Y PROCESADOR DE PDF ---
+        elif accion == "pdf":
+            archivo_pdf = request.files.get("archivo_pdf")
+            if archivo_pdf and archivo_pdf.filename != "":
+                ruta_pdf = os.path.join(app.config['UPLOAD_FOLDER'], archivo_pdf.filename)
+                archivo_pdf.save(ruta_pdf)
+                
+                try:
+                    lector = PdfReader(ruta_pdf)
+                    texto_extraido = ""
+                    for pagina in lector.pages:
+                        extraido = pagina.extract_text()
+                        if extraido:
+                            texto_extraido += extraido + "\n"
+                    
+                    if not texto_extraido.strip():
+                        texto_extraido = "El PDF no contiene texto seleccionable (puede ser una imagen escaneada)."
+                except Exception as e:
+                    texto_extraido = f"Error al leer el PDF: {str(e)}"
+
+                # Crear un documento Word limpio con el contenido del PDF
+                doc = docx.Document()
+                doc.add_heading('Resumen de Documento PDF', 0)
+                doc.add_paragraph("Contenido extraído automáticamente:")
+                for bloque in texto_extraido.split('\n\n'):
+                    if bloque.strip():
+                        doc.add_paragraph(bloque.strip())
+
+                nombre_word = "resumen_pdf.docx"
+                ruta_word = os.path.join(app.config['UPLOAD_FOLDER'], nombre_word)
+                doc.save(ruta_word)
+                tipo_generado = "pdf_resumen"
+                resultado_url = f"/static/uploads/{nombre_word}"
+
+        # --- CASO 3: GENERADOR CREATIVO ---
         elif accion == "creativo":
             prompt = request.form.get("prompt", "")
             prompt_lower = prompt.lower()
