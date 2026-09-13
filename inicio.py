@@ -72,11 +72,10 @@ def index():
                             texto_extraido += extraido + "\n"
                     
                     if not texto_extraido.strip():
-                        texto_extraido = "El PDF no contiene texto seleccionable (puede ser una imagen escaneada)."
+                        texto_extraido = "El PDF no contiene texto seleccionable."
                 except Exception as e:
                     texto_extraido = f"Error al leer el PDF: {str(e)}"
 
-                # Crear un documento Word limpio con el contenido del PDF
                 doc = docx.Document()
                 doc.add_heading('Resumen de Documento PDF', 0)
                 doc.add_paragraph("Contenido extraído automáticamente:")
@@ -90,7 +89,34 @@ def index():
                 tipo_generado = "pdf_resumen"
                 resultado_url = f"/static/uploads/{nombre_word}"
 
-        # --- CASO 3: GENERADOR CREATIVO ---
+        # --- CASO 3: MINI-PROGRAMADOR DE CÓDIGO ---
+        elif accion == "codigo":
+            prompt_codigo = request.form.get("prompt_codigo", "")
+            lenguaje = request.form.get("lenguaje", "python")
+            
+            # Generar una estructura limpia basada en la petición del usuario
+            if lenguaje == "python":
+                codigo_generado = f"# Script automatizado generado por IA\n# Petición: {prompt_codigo}\n\nimport os\n\ndef ejecutar_tarea():\n    print('Iniciando proceso...')\n    # TODO: Implementar lógica de {prompt_codigo}\n    print('¡Tarea finalizada con éxito!')\n\nif __name__ == '__main__':\n    ejecutar_tarea()\n"
+                extension = "py"
+            elif lenguaje == "html":
+                codigo_generado = f"<!DOCTYPE html>\n<html lang='es'>\n<head>\n    <meta charset='UTF-8'>\n    <title>Página Generada por IA</title>\n</head>\n<body>\n    <h1>Automatización Web</h1>\n    <p>Proyecto basado en: {prompt_codigo}</p>\n</body>\n</html>\n"
+                extension = "html"
+            else:
+                codigo_generado = f"// Script JavaScript generado por IA\n// Petición: {prompt_codigo}\n\nfunction iniciarAutomatizacion() {{\n    console.log('Ejecutando proceso para: {prompt_codigo}');\n}}\n\niniciarAutomatizacion();\n"
+                extension = "js"
+
+            texto_extraido = codigo_generado
+            
+            # Guardar como archivo descargable
+            nombre_archivo_codigo = f"script_generado.{extension}"
+            ruta_codigo = os.path.join(app.config['UPLOAD_FOLDER'], nombre_archivo_codigo)
+            with open(ruta_codigo, "w", encoding="utf-8") as f:
+                f.write(codigo_generado)
+
+            tipo_generado = "codigo"
+            resultado_url = f"/static/uploads/{nombre_archivo_codigo}"
+
+        # --- CASO 4: GENERADOR CREATIVO ---
         elif accion == "creativo":
             prompt = request.form.get("prompt", "")
             prompt_lower = prompt.lower()
