@@ -90,7 +90,7 @@
 
     <div class="container">
         <h2>Suite Inteligente Empresarial</h2>
-        <p class="sub">Herramientas profesionales ordenadas para optimizar tu flujo de trabajo.</p>
+        <p class="sub">Plataforma multifuncional de IA y automatización avanzada.</p>
         
         <!-- HERRAMIENTA 1: EXTRACTOR OCR -->
         <div class="card-seccion">
@@ -103,7 +103,7 @@
             </form>
         </div>
 
-        <!-- HERRAMIENTA 2: LECTOR Y PROCESADOR DE PDF -->
+        <!-- HERRAMIENTA 2: LECTOR DE PDF -->
         <div class="card-seccion">
             <h3>2. Lector y Procesador de PDFs</h3>
             <form method="POST" enctype="multipart/form-data">
@@ -114,9 +114,28 @@
             </form>
         </div>
 
-        <!-- HERRAMIENTA 3: GENERADOR CREATIVO -->
+        <!-- HERRAMIENTA 3: MINI-PROGRAMADOR DE CÓDIGO -->
         <div class="card-seccion">
-            <h3>3. Generador Creativo y de Documentos</h3>
+            <h3>3. Generador de Código y Automatizaciones</h3>
+            <form method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="accion" value="codigo">
+                <label style="font-size: 13px; color: #94a3b8;">¿Qué script o automatización necesitas programar?</label>
+                <input type="text" name="prompt_codigo" placeholder="Ej: Script en Python para renombrar archivos masivamente..." required>
+                
+                <label style="font-size: 13px; color: #94a3b8;">Lenguaje o formato:</label>
+                <select name="lenguaje">
+                    <option value="python">Python (.py)</option>
+                    <option value="html">HTML / CSS Web (.html)</option>
+                    <option value="javascript">JavaScript (.js)</option>
+                </select>
+
+                <button type="submit" class="btn-accion" style="background-color: #ec4899;">Generar Código y Script</button>
+            </form>
+        </div>
+
+        <!-- HERRAMIENTA 4: GENERADOR CREATIVO -->
+        <div class="card-seccion">
+            <h3>4. Generador Creativo y de Documentos</h3>
             <form method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="accion" value="creativo">
                 <label style="font-size: 13px; color: #94a3b8;">¿Qué deseas crear o modificar?</label>
@@ -155,6 +174,15 @@
                 <br>
                 <a href="{{ resultado_url }}" download>
                     <button class="btn-accion" style="background-color: #10b981;">Descargar Resumen en Word (.docx)</button>
+                </a>
+            </div>
+        {% elif tipo_generado == "codigo" %}
+            <div class="resultado">
+                <h3 style="color: #10b981; margin-top:0;">¡Código Generado con Éxito!</h3>
+                <pre>{{ texto_extraido }}</pre>
+                <br>
+                <a href="{{ resultado_url }}" download>
+                    <button class="btn-accion" style="background-color: #ec4899;">Descargar Archivo de Código</button>
                 </a>
             </div>
         {% elif tipo_generado == "excel" %}
