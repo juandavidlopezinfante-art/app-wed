@@ -8,49 +8,32 @@
     <style>
         body { background-color: #0f172a; color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .navbar { background-color: #1e293b; border-bottom: 1px solid #334155; }
-        .card { background-color: #1e293b; border: 1px solid #334155; color: #f8fafc; }
+        .card { background-color: #1e293b; border: 1px solid #334155; color: #f8fafc; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
         .form-control, .form-select { background-color: #0f172a; border: 1px solid #475569; color: #fff; }
         .form-control:focus, .form-select:focus { background-color: #0f172a; color: #fff; border-color: #38bdf8; box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.25); }
         .btn-primary { background-color: #2563eb; border: none; }
         .btn-primary:hover { background-color: #1d4ed8; }
-        .tool-section { display: none; }
-        .tool-section.active { display: block; }
-        .chat-box { background-color: #090d16; border: 1px solid #334155; height: 250px; overflow-y: auto; padding: 15px; border-radius: 6px; margin-top: 15px; }
+        .chat-box { background-color: #090d16; border: 1px solid #334155; height: 220px; overflow-y: auto; padding: 15px; border-radius: 6px; margin-top: 15px; font-size: 0.9rem; }
+        .manual-box { background-color: #1e293b; border-left: 4px solid #38bdf8; padding: 10px 15px; font-size: 0.85srem; margin-bottom: 15px; border-radius: 4px; display: none; }
     </style>
 </head>
 <body>
 
-    <!-- Barra de Navegación con accesos rápidos -->
+    <!-- Barra de Navegación -->
     <nav class="navbar navbar-expand-lg navbar-dark px-4">
-        <a class="navbar-brand fw-bold" href="#">Digital Business IA</a>
+        <a class="navbar-brand fw-bold" href="#">Digital Business IA - Panel Maestro</a>
         <div class="ms-auto d-flex gap-2">
             <button class="btn btn-sm btn-outline-light" onclick="activarModoCelular()">📱 Versión Celular</button>
-            <button class="btn btn-sm btn-outline-warning" onclick="mostrarAyuda()">❓ Ayuda e Informar Problemas</button>
             <span class="badge bg-info text-dark align-self-center" id="proBadge">Versión Estándar</span>
         </div>
     </nav>
 
     <div class="container my-4">
-        <!-- Selector de Herramientas -->
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <label for="toolSelector" class="form-label fw-bold">Selecciona una Herramienta o Módulo:</label>
-                <select id="toolSelector" class="form-select" onchange="cambiarHerramienta()">
-                    <option value="chat">💬 Chat Libre Inteligente</option>
-                    <option value="imagen">🎨 Generador de Imágenes con IA</option>
-                    <option value="video">🎬 Generador de Videos de Alta Resolución</option>
-                    <option value="excel">📊 Generador y Asistente de Excel</option>
-                    <option value="word">📝 Generador y Redactor de Word</option>
-                    <option value="traductor">🌐 Traductor de Videos, Audios y Textos (Voces IA)</option>
-                </select>
-            </div>
-        </div>
-
         <!-- Clave PRO Global -->
         <div class="card p-3 mb-4">
             <div class="row align-items-center">
                 <div class="col-md-8">
-                    <input type="password" id="globalProKey" class="form-control" placeholder="Ingresa tu Clave PRO (Opcional)">
+                    <input type="password" id="globalProKey" class="form-control" placeholder="Ingresa tu Clave PRO (Opcional: PRO-150-ACTIVO o PROMO-99-3MESES)">
                 </div>
                 <div class="col-md-4 mt-2 mt-md-0">
                     <button class="btn btn-outline-info w-100" onclick="validarClavePro()">Validar Membresía</button>
@@ -58,122 +41,150 @@
             </div>
         </div>
 
-        <!-- 1. Módulo: Chat Libre -->
-        <div id="section-chat" class="tool-section active">
-            <div class="card p-4">
-                <h3 class="mb-3">Chat Libre con IA</h3>
-                <div class="mb-3">
-                    <label class="form-label">Escribe tu consulta o mensaje:</label>
-                    <textarea id="promptChat" class="form-control" rows="2" placeholder="Conversa libremente con el asistente..."></textarea>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Adjuntar referencia (Archivos, audios, fotos, textos):</label>
-                    <input type="file" id="fileChat" class="form-control" multiple>
-                </div>
-                <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Chat Libre', 'promptChat', 'fileChat', 'chatBoxResult')">Enviar al Chat Libre</button>
-                <div class="chat-box" id="chatBoxResult">Historial del chat independiente...</div>
-            </div>
-        </div>
+        <!-- CONTENEDOR DE CUADROS / MÓDULOS MÚLTIPLES -->
+        <div class="row">
 
-        <!-- 2. Módulo: Generador de Imágenes -->
-        <div id="section-imagen" class="tool-section">
-            <div class="card p-4">
-                <h3 class="mb-3">Generador de Imágenes con IA</h3>
-                <form action="/generar" method="POST" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label class="form-label">Describe la imagen que deseas crear:</label>
-                        <input type="text" name="prompt" class="form-control" placeholder="Ej. Un atardecer en una ciudad futurista..." required>
+            <!-- 1. Módulo: Chat Libre -->
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">💬 Chat Libre</h4>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="toggleManual('manual-chat')">📖 Manual</button>
+                    </div>
+                    <div id="manual-chat" class="manual-box">
+                        <strong>Cómo usar:</strong> Escribe cualquier consulta general. El modelo responderá de forma fluida manteniendo contexto libre.
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Adjuntar foto o referencia visual base:</label>
-                        <input type="file" name="referencia_imagen" class="form-control">
+                        <textarea id="promptChat" class="form-control" rows="2" placeholder="Escribe tu consulta..."></textarea>
                     </div>
-                    <input type="hidden" name="pro_key" id="hiddenProKey">
-                    <button type="submit" class="btn btn-primary w-100" onclick="sincronizarClave()">Generar Imagen en su Chat</button>
-                </form>
-                {% if imagen_url %}
-                <div class="text-center mt-4">
-                    <h5 class="text-success">¡Imagen generada con éxito!</h5>
-                    <img src="{{ url_for('static', filename=imagen_url) }}" class="img-fluid rounded shadow mt-2" style="max-height: 400px;" alt="Imagen IA">
+                    <div class="mb-3">
+                        <input type="file" id="fileChat" class="form-control form-control-sm" multiple>
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Chat Libre', 'promptChat', 'fileChat', 'chatBoxResult')">Enviar a Chat Libre</button>
+                    <div class="chat-box" id="chatBoxResult">Historial del chat independiente...</div>
                 </div>
-                {% endif %}
             </div>
-        </div>
 
-        <!-- 3. Módulo: Generador de Videos -->
-        <div id="section-video" class="tool-section">
-            <div class="card p-4">
-                <h3 class="mb-3">Generador de Videos de Alta Resolución</h3>
-                <div class="mb-3">
-                    <label class="form-label">Describe la secuencia o escena para tu video HD:</label>
-                    <textarea id="promptVideo" class="form-control" rows="2" placeholder="Toma cinematográfica 4K..."></textarea>
+            <!-- 2. Módulo: Generador de Imágenes -->
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">🎨 Imágenes IA</h4>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="toggleManual('manual-imagen')">📖 Manual</button>
+                    </div>
+                    <div id="manual-imagen" class="manual-box">
+                        <strong>Cómo usar:</strong> Describe detalladamente la imagen que deseas generar (ej. estilo, colores, iluminación). Se renderizará directo abajo.
+                    </div>
+                    <form action="/generar" method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <input type="text" name="prompt" class="form-control" placeholder="Describe tu imagen..." required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="file" name="referencia_imagen" class="form-control form-control-sm">
+                        </div>
+                        <input type="hidden" name="pro_key" id="hiddenProKey">
+                        <button type="submit" class="btn btn-primary w-100" onclick="sincronizarClave()">Generar Imagen</button>
+                    </form>
+                    {% if imagen_url %}
+                    <div class="text-center mt-3">
+                        <span class="text-success small">¡Generada con éxito!</span>
+                        <img src="{{ url_for('static', filename=imagen_url) }}" class="img-fluid rounded shadow mt-1" style="max-height: 180px;" alt="Imagen IA">
+                    </div>
+                    {% endif %}
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Adjuntar referencias (Guion, imágenes o audios):</label>
-                    <input type="file" id="fileVideo" class="form-control" multiple>
-                </div>
-                <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Generador de Videos HD', 'promptVideo', 'fileVideo', 'resultVideo')">Procesar Video en su Chat</button>
-                <div class="chat-box" id="resultVideo" style="display:none;"></div>
             </div>
-        </div>
 
-        <!-- 4. Módulo: Excel -->
-        <div id="section-excel" class="tool-section">
-            <div class="card p-4">
-                <h3 class="mb-3">Generador y Asistente de Excel</h3>
-                <div class="mb-3">
-                    <label class="form-label">¿Qué deseas calcular, formular u organizar en Excel?</label>
-                    <textarea id="promptExcel" class="form-control" rows="2" placeholder="Fórmulas, tablas dinámicas..."></textarea>
+            <!-- 3. Módulo: Generador de Videos -->
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">🎬 Videos HD</h4>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="toggleManual('manual-video')">📖 Manual</button>
+                    </div>
+                    <div id="manual-video" class="manual-box">
+                        <strong>Cómo usar:</strong> Detalla la escena, movimientos de cámara y elementos visuales para estructurar tu proyecto en video.
+                    </div>
+                    <div class="mb-3">
+                        <textarea id="promptVideo" class="form-control" rows="2" placeholder="Describe la secuencia..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <input type="file" id="fileVideo" class="form-control form-control-sm" multiple>
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Generador de Videos HD', 'promptVideo', 'fileVideo', 'resultVideo')">Procesar Video</button>
+                    <div class="chat-box" id="resultVideo">Historial de Videos...</div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Adjuntar archivos de datos (CSV, Excel, textos):</label>
-                    <input type="file" id="fileExcel" class="form-control" multiple>
-                </div>
-                <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Asistente Excel', 'promptExcel', 'fileExcel', 'resultExcel')">Ejecutar en su Chat de Excel</button>
-                <div class="chat-box" id="resultExcel" style="display:none;"></div>
             </div>
-        </div>
 
-        <!-- 5. Módulo: Word -->
-        <div id="section-word" class="tool-section">
-            <div class="card p-4">
-                <h3 class="mb-3">Generador y Redactor de Word</h3>
-                <div class="mb-3">
-                    <label class="form-label">Tema o estructura para tu documento:</label>
-                    <textarea id="promptWord" class="form-control" rows="2" placeholder="Contratos, cartas formales..."></textarea>
+            <!-- 4. Módulo: Excel -->
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">📊 Asistente Excel</h4>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="toggleManual('manual-excel')">📖 Manual</button>
+                    </div>
+                    <div id="manual-excel" class="manual-box">
+                        <strong>Cómo usar:</strong> Solicita fórmulas avanzadas, macros o esquemas de bases de datos y adjunta tus archivos si requieres análisis.
+                    </div>
+                    <div class="mb-3">
+                        <textarea id="promptExcel" class="form-control" rows="2" placeholder="¿Qué deseas calcular u organizar?"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <input type="file" id="fileExcel" class="form-control form-control-sm" multiple>
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Asistente Excel', 'promptExcel', 'fileExcel', 'resultExcel')">Ejecutar en Chat Excel</button>
+                    <div class="chat-box" id="resultExcel">Historial de Excel...</div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Adjuntar documentos base o notas:</label>
-                    <input type="file" id="fileWord" class="form-control" multiple>
-                </div>
-                <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Redactor Word', 'promptWord', 'fileWord', 'resultWord')">Generar en su Chat de Word</button>
-                <div class="chat-box" id="resultWord" style="display:none;"></div>
             </div>
-        </div>
 
-        <!-- 6. Módulo: Traductor de Videos, Audios y Textos -->
-        <div id="section-traductor" class="tool-section">
-            <div class="card p-4">
-                <h3 class="mb-3">Traductor con Voces IA Naturales</h3>
-                <div class="mb-3">
-                    <label class="form-label">Instrucciones de traducción y síntesis de voz:</label>
-                    <textarea id="promptTraductor" class="form-control" rows="2" placeholder="Traducir y generar voz natural..."></textarea>
+            <!-- 5. Módulo: Word -->
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">📝 Redactor Word</h4>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="toggleManual('manual-word')">📖 Manual</button>
+                    </div>
+                    <div id="manual-word" class="manual-box">
+                        <strong>Cómo usar:</strong> Pide redacción de contratos, cartas o ensayos formales especificando tono y estructura deseada.
+                    </div>
+                    <div class="mb-3">
+                        <textarea id="promptWord" class="form-control" rows="2" placeholder="Tema o estructura del documento..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <input type="file" id="fileWord" class="form-control form-control-sm" multiple>
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Redactor Word', 'promptWord', 'fileWord', 'resultWord')">Generar en Chat Word</button>
+                    <div class="chat-box" id="resultWord">Historial de Word...</div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Adjuntar archivo de video, audio o texto:</label>
-                    <input type="file" id="fileTraductor" class="form-control" multiple>
-                </div>
-                <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Traductor IA', 'promptTraductor', 'fileTraductor', 'resultTraductor')">Procesar en su Chat de Traducción</button>
-                <div class="chat-box" id="resultTraductor" style="display:none;"></div>
             </div>
+
+            <!-- 6. Módulo: Traductor con Voces IA -->
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">🌐 Traductor IA</h4>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="toggleManual('manual-traductor')">📖 Manual</button>
+                    </div>
+                    <div id="manual-traductor" class="manual-box">
+                        <strong>Cómo usar:</strong> Traduce textos, audios o fragmentos de video y genera síntesis de voz natural en múltiples idiomas.
+                    </div>
+                    <div class="mb-3">
+                        <textarea id="promptTraductor" class="form-control" rows="2" placeholder="Instrucciones de traducción..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <input type="file" id="fileTraductor" class="form-control form-control-sm" multiple>
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Traductor IA', 'promptTraductor', 'fileTraductor', 'resultTraductor')">Procesar Traducción</button>
+                    <div class="chat-box" id="resultTraductor">Historial de Traductor...</div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script>
-        function cambiarHerramienta() {
-            const seleccion = document.getElementById('toolSelector').value;
-            document.querySelectorAll('.tool-section').forEach(sec => sec.classList.remove('active'));
-            document.getElementById('section-' + seleccion).classList.add('active');
+        function toggleManual(id) {
+            const box = document.getElementById(id);
+            box.style.display = box.style.display === 'block' ? 'none' : 'block';
         }
 
         function sincronizarClave() {
@@ -203,12 +214,8 @@
             } else {
                 body.style.maxWidth = '480px';
                 body.style.margin = '0 auto';
-                alert("Modo celular activado. La interfaz se adaptará.");
+                alert("Modo celular activado.");
             }
-        }
-
-        function mostrarAyuda() {
-            alert("Ayuda y Soporte:\n- Si experimentas problemas, verifica tu conexión o el uso de tus claves API.\n- Puedes adjuntar archivos de cualquier formato sin alterar su integridad nativa.\n- Contacta a soporte técnico ante cualquier incidencia.");
         }
 
         async function consultarChatIndependiente(toolName, inputId, fileId, resultId) {
@@ -222,9 +229,8 @@
                 return;
             }
 
-            resultBox.style.display = 'block';
             resultBox.innerHTML += `<div><strong>Tú:</strong> ${prompt} ${fileInput.files.length > 0 ? '(<i>Archivo adjunto</i>)' : ''}</div>`;
-            resultBox.innerHTML += `<div><em>🔄 Procesando en el chat independiente de ${toolName}...</em></div>`;
+            resultBox.innerHTML += `<div><em>🔄 Procesando en ${toolName}...</em></div>`;
             resultBox.scrollTop = resultBox.scrollHeight;
 
             try {
@@ -239,7 +245,7 @@
                     resultBox.innerHTML += `<div class="text-info mt-2"><strong>${toolName}:</strong> ${data.response}</div>`;
                     if (data.is_pro) {
                         document.getElementById('proBadge').className = "badge bg-success";
-                        document.getElementById('proBadge'].innerText = "¡Membresía PRO Activa!";
+                        document.getElementById('proBadge').innerText = "¡Membresía PRO Activa!";
                     }
                 } else {
                     resultBox.innerHTML += `<div class="text-danger mt-2"><strong>Error:</strong> ${data.error}</div>`;
