@@ -47,9 +47,7 @@
             transition: all 0.2s;
             font-size: 13px;
         }
-        .sidebar-btn:hover {
-            background-color: rgba(56, 189, 248, 0.2);
-        }
+        .sidebar-btn:hover { background-color: rgba(56, 189, 248, 0.2); }
         .sidebar-section-title {
             font-size: 11px;
             text-transform: uppercase;
@@ -120,7 +118,7 @@
         /* Cuadrícula de herramientas moderna */
         .tools-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
             gap: 22px;
             margin-bottom: 25px;
         }
@@ -141,55 +139,90 @@
             transform: translateY(-4px);
             box-shadow: 0 12px 40px rgba(16, 185, 129, 0.15);
         }
-        .tool-card h3 { color: #38bdf8; margin-top: 0; margin-bottom: 10px; font-size: 16px; }
-        .tool-card p { color: #94a3b8; font-size: 12px; margin-bottom: 12px; line-height: 1.4; }
+        .tool-card h3 { color: #38bdf8; margin-top: 0; margin-bottom: 8px; font-size: 16px; }
+        .tool-card p { color: #94a3b8; font-size: 12px; margin-bottom: 10px; line-height: 1.4; }
 
         textarea {
             width: 100%;
-            height: 65px;
+            height: 55px;
             background-color: #0b0f15;
             color: #f8fafc;
             border: 1px solid #30363d;
             border-radius: 8px;
-            padding: 10px;
+            padding: 8px;
             font-size: 12px;
             resize: vertical;
             box-sizing: border-box;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             transition: border-color 0.2s;
         }
         textarea:focus { outline: none; border-color: #38bdf8; }
+
+        .file-input-label {
+            display: block;
+            font-size: 11px;
+            color: #38bdf8;
+            margin-bottom: 4px;
+        }
+        .universal-file-input {
+            font-size: 11px;
+            color: #94a3b8;
+            background-color: #0b0f15;
+            border: 1px dashed #30363d;
+            padding: 6px;
+            border-radius: 6px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
         
         .action-btn {
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: #ffffff;
             border: none;
-            padding: 10px 14px;
+            padding: 9px 14px;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             width: 100%;
             transition: all 0.2s ease;
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
-            margin-bottom: 10px;
-            font-size: 13px;
+            margin-bottom: 6px;
+            font-size: 12px;
         }
         .action-btn:hover {
             background: linear-gradient(135deg, #059669 0%, #047857 100%);
             box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
             transform: translateY(-1px);
         }
+
+        .export-btn {
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            padding: 5px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 11px;
+            display: inline-block;
+            transition: background 0.2s;
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+            margin-bottom: 6px;
+        }
+        .export-btn:hover { background: rgba(56, 189, 248, 0.3); }
         
         .output-box {
             background-color: #0b0f15;
             border: 1px solid #30363d;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 8px;
-            min-height: 40px;
+            padding: 8px;
+            border-radius: 6px;
+            min-height: 35px;
             white-space: pre-wrap;
             color: #e2e8f0;
-            font-size: 12px;
+            font-size: 11px;
         }
 
         /* Pestañas de ayuda */
@@ -201,7 +234,7 @@
             font-size: 11px;
             text-decoration: underline;
             padding: 0;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             display: inline-block;
             text-align: left;
         }
@@ -210,57 +243,48 @@
             display: none;
             background-color: #0b0f15;
             border-left: 3px solid #38bdf8;
-            padding: 10px;
-            border-radius: 8px;
+            padding: 8px;
+            border-radius: 6px;
             font-size: 11px;
             color: #94a3b8;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             line-height: 1.4;
             border: 1px solid #30363d;
         }
         .help-dropdown ul { padding-left: 15px; margin: 4px 0 0 0; }
         .help-dropdown li { margin-bottom: 2px; }
 
-        /* Sección de archivos */
-        .file-section {
+        /* Sección de Chat Libre */
+        .chat-section {
             background-color: rgba(22, 27, 34, 0.75);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.05);
             padding: 22px;
             border-radius: 16px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-            border-top: 4px solid #38bdf8;
+            border-top: 4px solid #8b5cf6;
             margin-bottom: 30px;
         }
-        .file-section h3 { color: #38bdf8; margin-top: 0; font-size: 16px; }
-        .file-dropzone {
-            border: 2px dashed #30363d;
-            padding: 18px;
-            border-radius: 10px;
-            text-align: center;
+        .chat-section h3 { color: #a78bfa; margin-top: 0; font-size: 16px; }
+        .chat-box {
             background-color: #0b0f15;
+            border: 1px solid #30363d;
+            padding: 15px;
+            border-radius: 10px;
+            height: 160px;
+            overflow-y: auto;
             margin-bottom: 12px;
-            color: #94a3b8;
             font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
-        input[type="file"] { color: #f8fafc; font-size: 12px; margin-bottom: 8px; }
-        .file-btn {
-            background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
-            color: #ffffff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
-            font-size: 13px;
-        }
-        .file-btn:hover {
-            background: linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%);
-            box-shadow: 0 6px 16px rgba(56, 189, 248, 0.4);
-            transform: translateY(-1px);
-        }
+        .chat-msg { padding: 8px 12px; border-radius: 8px; max-width: 80%; line-height: 1.4; }
+        .chat-msg.user { background-color: rgba(56, 189, 248, 0.15); color: #38bdf8; align-self: flex-end; border: 1px solid rgba(56, 189, 248, 0.3); }
+        .chat-msg.ai { background-color: rgba(167, 139, 250, 0.15); color: #c4b5fd; align-self: flex-start; border: 1px solid rgba(167, 139, 250, 0.3); }
+        .chat-input-area { display: flex; gap: 10px; }
+        .chat-input-area textarea { margin-bottom: 0; height: 42px; }
+        .chat-send-btn { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; border: none; padding: 0 20px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px; }
     </style>
 </head>
 <body>
@@ -279,32 +303,28 @@
     <!-- Contenido Principal -->
     <div class="main-content">
         <header>
-            <h2>Panel de Control e Inteligencia Artificial</h2>
+            <h2>Panel Universal de Inteligencia Artificial</h2>
             <button class="logout-btn" id="logout-btn">Cerrar Sesión</button>
         </header>
 
-        <!-- Cuadrícula de herramientas -->
+        <!-- Cuadrícula de herramientas universales -->
         <div class="tools-grid">
             <!-- Herramienta 1 -->
             <div class="tool-card">
                 <div>
                     <h3>1. Asistente General</h3>
-                    <p>Resuelve dudas, conceptualiza ideas o busca explicaciones detalladas para cualquier reto empresarial.</p>
-                    
-                    <button class="help-toggle-btn" onclick="toggleHelp(1)">¿Cómo usar esta herramienta?</button>
+                    <p>Resuelve dudas, procesa archivos o analiza contenido multimedia.</p>
+                    <button class="help-toggle-btn" onclick="toggleHelp(1)">¿Cómo usar?</button>
                     <div class="help-dropdown" id="help-1">
-                        <strong>¿Qué puedes hacer?</strong>
-                        <ul>
-                            <li>Resolver dudas estratégicas u operativas.</li>
-                            <li>Planificar pasos para iniciar proyectos.</li>
-                        </ul>
-                        <em style="color: #38bdf8;">Ejemplo: "¿Cómo estructurar una estrategia de ventas?"</em>
+                        <ul><li>Escribe texto, sube documentos, audios o videos para análisis.</li></ul>
                     </div>
-
-                    <textarea id="prompt-1" placeholder="Ej: ¿Qué pasos sigo para abrir un negocio..."></textarea>
+                    <textarea id="prompt-1" placeholder="Escribe tu instrucción..."></textarea>
+                    <label class="file-input-label">Adjuntar archivo, audio o video:</label>
+                    <input type="file" id="file-1" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
                 </div>
                 <div>
-                    <button class="action-btn" onclick="runTool(1, 'Asistente General')">Generar Asesoría</button>
+                    <button class="action-btn" onclick="runUniversalTool(1, 'Asistente General')">Procesar con IA</button>
+                    <button class="export-btn" onclick="exportDoc(1)">📥 Descargar Resultado</button>
                     <div class="output-box" id="output-1">Resultado aquí...</div>
                 </div>
             </div>
@@ -313,22 +333,18 @@
             <div class="tool-card">
                 <div>
                     <h3>2. Generador de Negocios</h3>
-                    <p>Crea eslóganes comerciales, planes de marketing y estrategias de venta enfocadas en tu marca.</p>
-                    
-                    <button class="help-toggle-btn" onclick="toggleHelp(2)">¿Cómo usar esta herramienta?</button>
+                    <p>Crea estrategias comerciales a partir de notas, audios o reportes adjuntos.</p>
+                    <button class="help-toggle-btn" onclick="toggleHelp(2)">¿Cómo usar?</button>
                     <div class="help-dropdown" id="help-2">
-                        <strong>¿Qué puedes hacer?</strong>
-                        <ul>
-                            <li>Diseñar nombres y eslóganes comerciales.</li>
-                            <li>Estructurar campañas de lanzamiento.</li>
-                        </ul>
-                        <em style="color: #38bdf8;">Ejemplo: "Escribe un eslogan para una marca de ropa"</em>
+                        <ul><li>Combina texto e insumos multimedia para perfilar marcas.</li></ul>
                     </div>
-
-                    <textarea id="prompt-2" placeholder="Ej: Escribe un eslogan para una marca de ropa..."></textarea>
+                    <textarea id="prompt-2" placeholder="Escribe tu idea de negocio..."></textarea>
+                    <label class="file-input-label">Adjuntar archivo, audio o video:</label>
+                    <input type="file" id="file-2" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
                 </div>
                 <div>
-                    <button class="action-btn" onclick="runTool(2, 'Generador de Negocios')">Crear Negocio</button>
+                    <button class="action-btn" onclick="runUniversalTool(2, 'Generador de Negocios')">Procesar con IA</button>
+                    <button class="export-btn" onclick="exportDoc(2)">📥 Descargar Resultado</button>
                     <div class="output-box" id="output-2">Resultado aquí...</div>
                 </div>
             </div>
@@ -337,22 +353,18 @@
             <div class="tool-card">
                 <div>
                     <h3>3. Creador de Contenido</h3>
-                    <p>Produce correos corporativos, respuestas formales a clientes o textos persuasivos para redes sociales.</p>
-                    
-                    <button class="help-toggle-btn" onclick="toggleHelp(3)">¿Cómo usar esta herramienta?</button>
+                    <p>Genera textos, correos o redacta piezas basadas en tus archivos fuente.</p>
+                    <button class="help-toggle-btn" onclick="toggleHelp(3)">¿Cómo usar?</button>
                     <div class="help-dropdown" id="help-3">
-                        <strong>¿Qué puedes hacer?</strong>
-                        <ul>
-                            <li>Redactar correos profesionales de seguimiento.</li>
-                            <li>Crear textos atractivos para publicaciones.</li>
-                        </ul>
-                        <em style="color: #38bdf8;">Ejemplo: "Redacta un correo para un cliente interesado"</em>
+                        <ul><li>Sube audios o textos previos para que la IA los convierta en contenido.</li></ul>
                     </div>
-
-                    <textarea id="prompt-3" placeholder="Ej: Redacta un correo de seguimiento a un cliente..."></textarea>
+                    <textarea id="prompt-3" placeholder="Indica el contenido a redactar..."></textarea>
+                    <label class="file-input-label">Adjuntar archivo, audio o video:</label>
+                    <input type="file" id="file-3" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
                 </div>
                 <div>
-                    <button class="action-btn" onclick="runTool(3, 'Creador de Contenido')">Redactar Contenido</button>
+                    <button class="action-btn" onclick="runUniversalTool(3, 'Creador de Contenido')">Procesar con IA</button>
+                    <button class="export-btn" onclick="exportDoc(3)">📥 Descargar Resultado</button>
                     <div class="output-box" id="output-3">Resultado aquí...</div>
                 </div>
             </div>
@@ -361,22 +373,18 @@
             <div class="tool-card">
                 <div>
                     <h3>4. Generador de fotos con IA</h3>
-                    <p>Crea conceptos visuales, logotipos, banners publicitarios y diseños fotorrealistas para tu marca.</p>
-                    
-                    <button class="help-toggle-btn" onclick="toggleHelp(4)">¿Cómo usar esta herramienta?</button>
+                    <p>Diseña recursos visuales apoyándote en descripciones o imágenes y videos de referencia.</p>
+                    <button class="help-toggle-btn" onclick="toggleHelp(4)">¿Cómo usar?</button>
                     <div class="help-dropdown" id="help-4">
-                        <strong>¿Qué puedes hacer?</strong>
-                        <ul>
-                            <li>Diseñar recursos visuales para campañas.</li>
-                            <li>Crear prototipos de productos o ropa.</li>
-                        </ul>
-                        <em style="color: #38bdf8;">Ejemplo: "Un diseño moderno de camiseta deportiva en color negro"</em>
+                        <ul><li>Describe la imagen o adjunta un video/audio como guía creativa.</li></ul>
                     </div>
-
-                    <textarea id="prompt-4" placeholder="Ej: Logotipo minimalista para una marca de tecnología..."></textarea>
+                    <textarea id="prompt-4" placeholder="Describe la imagen deseada..."></textarea>
+                    <label class="file-input-label">Adjuntar archivo, audio o video de referencia:</label>
+                    <input type="file" id="file-4" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
                 </div>
                 <div>
-                    <button class="action-btn" onclick="runTool(4, 'Generador de Fotos')">Generar Imagen</button>
+                    <button class="action-btn" onclick="runUniversalTool(4, 'Generador de Fotos')">Procesar con IA</button>
+                    <button class="export-btn" onclick="exportDoc(4)">📥 Descargar Imagen</button>
                     <div class="output-box" id="output-4">Resultado visual aquí...</div>
                 </div>
             </div>
@@ -384,68 +392,61 @@
             <!-- Herramienta 5 -->
             <div class="tool-card">
                 <div>
-                    <h3>5. Generador de Videos IA</h3>
-                    <p>Diseña guiones, secuencias dinámicas y conceptos visuales en video para reels, TikToks o anuncios.</p>
-                    
-                    <button class="help-toggle-btn" onclick="toggleHelp(5)">¿Cómo usar esta herramienta?</button>
+                    <h3>5. Creador de Tablas y Presupuestos</h3>
+                    <p>Estructura datos financieros mediante comandos de texto o extrayendo información de archivos.</p>
+                    <button class="help-toggle-btn" onclick="toggleHelp(5)">¿Cómo usar?</button>
                     <div class="help-dropdown" id="help-5">
-                        <strong>¿Qué puedes hacer?</strong>
-                        <ul>
-                            <li>Crear guiones y bocetos para video marketing.</li>
-                            <li>Planear contenidos audiovisuales promocionales.</li>
-                        </ul>
-                        <em style="color: #38bdf8;">Ejemplo: "Video promocional de 15 segundos para un nuevo producto"</em>
+                        <ul><li>Sube hojas de cálculo o audio con cifras para tabularlas automáticamente.</li></ul>
                     </div>
-
-                    <textarea id="prompt-5" placeholder="Ej: Guion para video corto de lanzamiento de marca..."></textarea>
+                    <textarea id="prompt-5" placeholder="Describe los datos de tu tabla..."></textarea>
+                    <label class="file-input-label">Adjuntar archivo, audio o video:</label>
+                    <input type="file" id="file-5" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
                 </div>
                 <div>
-                    <button class="action-btn" onclick="runTool(5, 'Generador de Videos')">Generar Video</button>
-                    <div class="output-box" id="output-5">Resultado de video aquí...</div>
+                    <button class="action-btn" onclick="runUniversalTool(5, 'Tablas Financieras')">Procesar con IA</button>
+                    <button class="export-btn" onclick="exportDoc(5)">📥 Descargar .XLSX</button>
+                    <div class="output-box" id="output-5">Tabla financiera aquí...</div>
                 </div>
             </div>
 
-            <!-- Herramienta 6: Traductor de Texto y Audio con IA -->
+            <!-- Herramienta 6 -->
             <div class="tool-card">
                 <div>
                     <h3>6. Traductor de Texto y Audio IA</h3>
-                    <p>Traduce textos o sube un archivo de audio en otro idioma para obtener traducción y voz sintética en español.</p>
-                    
-                    <button class="help-toggle-btn" onclick="toggleHelp(6)">¿Cómo usar esta herramienta?</button>
+                    <p>Traduce y genera voz sintética en español a partir de cualquier texto, audio o video.</p>
+                    <button class="help-toggle-btn" onclick="toggleHelp(6)">¿Cómo usar?</button>
                     <div class="help-dropdown" id="help-6">
-                        <strong>¿Qué puedes hacer?</strong>
-                        <ul>
-                            <li>Traducir fragmentos de texto o discursos instantáneamente.</li>
-                            <li>Convertir audios en otros idiomas a voz generada en español.</li>
-                        </ul>
-                        <em style="color: #38bdf8;">Ejemplo: Sube un archivo .mp3 o escribe el texto a traducir</em>
+                        <ul><li>Ingresa texto o sube audios/videos en otros idiomas.</li></ul>
                     </div>
-
-                    <textarea id="prompt-6" placeholder="Escribe el texto a traducir o sube un audio abajo..."></textarea>
-                    <input type="file" id="audio-file" accept=".mp3, .wav, .m4a, .ogg" style="font-size: 11px; margin-bottom: 8px; width: 100%;">
+                    <textarea id="prompt-6" placeholder="Texto a traducir..."></textarea>
+                    <label class="file-input-label">Adjuntar archivo de audio o video:</label>
+                    <input type="file" id="file-6" class="universal-file-input" accept=".mp3, .wav, .mp4, .mov">
                 </div>
                 <div>
-                    <button class="action-btn" onclick="runTranslator()">Traducir y Generar Voz</button>
+                    <button class="action-btn" onclick="runUniversalTool(6, 'Traductor Multimedia')">Procesar con IA</button>
+                    <button class="export-btn" onclick="exportDoc(6)">📥 Descargar Audio</button>
                     <div class="output-box" id="output-6">Traducción y audio aquí...</div>
                 </div>
             </div>
         </div>
 
-        <!-- Sección de Archivos -->
-        <div class="file-section">
-            <h3>📊 Procesador de Documentos y Archivos (Excel, Word, PDF)</h3>
-            <p style="color: #94a3b8; font-size: 13px; margin-bottom: 15px;">Sube tus reportes de Excel, documentos de Word o archivos PDF para que la IA los analice y extraiga información clave.</p>
+        <!-- Chat Libre Universal -->
+        <div class="chat-section">
+            <h3>💬 Chat Libre y Conversación Continua con IA</h3>
+            <p style="color: #94a3b8; font-size: 12px; margin-bottom: 12px;">Haz preguntas o debate libremente con el asistente sobre tus proyectos empresariales.</p>
             
-            <div class="file-dropzone">
-                <input type="file" id="business-file" accept=".xlsx, .xls, .docx, .doc, .pdf, .txt">
+            <div class="chat-box" id="chat-container">
+                <div class="chat-msg ai">¡Hola! Soy tu asistente universal. ¿En qué te puedo ayudar hoy?</div>
             </div>
-            
-            <button class="file-btn" onclick="processFile()">Analizar Archivo con IA</button>
-            <div class="output-box" id="file-output" style="margin-top: 15px;">El análisis del archivo aparecerá aquí...</div>
+
+            <div class="chat-input-area">
+                <textarea id="chat-input" placeholder="Escribe tu mensaje..."></textarea>
+                <button class="chat-send-btn" onclick="sendChatMessage()">Enviar</button>
+            </div>
         </div>
     </div>
 
-    <!-- Script Firebase y Lógica -->
+    <!-- Script Firebase y Lógica Universal -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -471,95 +472,89 @@
         });
     </script>
 
-    <!-- Funciones de UI e Historial -->
+    <!-- Funciones JavaScript Universales -->
     <script>
         function toggleHelp(toolId) {
             const dropdown = document.getElementById(`help-${toolId}`);
-            if (dropdown.style.display === 'block') {
-                dropdown.style.display = 'none';
-            } else {
-                dropdown.style.display = 'block';
-            }
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
         }
 
         function addToHistory(toolName, text) {
             const historyList = document.getElementById('history-list');
-            
             if(historyList.children.length === 1 && historyList.children[0].style.color === 'rgb(100, 116, 139)') {
                 historyList.innerHTML = '';
             }
 
             const li = document.createElement('li');
             li.className = 'history-item';
-            
             const shortText = text.length > 25 ? text.substring(0, 25) + '...' : text;
             li.innerHTML = `<strong>${toolName}</strong><span>"${shortText}"</span>`;
-            
             historyList.prepend(li);
         }
 
-        function runTool(toolId, toolName) {
+        function runUniversalTool(toolId, toolName) {
             const promptText = document.getElementById(`prompt-${toolId}`).value;
+            const fileInput = document.getElementById(`file-${toolId}`);
             const outputBox = document.getElementById(`output-${toolId}`);
 
-            if(!promptText.trim()) {
-                alert("Por favor escribe una indicación primero.");
+            const hasText = promptText.trim().length > 0;
+            const hasFile = fileInput.files.length > 0;
+
+            if(!hasText && !hasFile) {
+                alert("Por favor escribe una instrucción o adjunta un archivo, audio o video.");
                 return;
             }
 
-            outputBox.textContent = "Procesando solicitud...";
-            addToHistory(toolName, promptText);
+            let sourceInfo = hasText ? promptText : `Archivo: ${fileInput.files[0].name}`;
+            outputBox.textContent = "Procesando contenido multimedia y texto con IA...";
+            addToHistory(toolName, sourceInfo);
             
             setTimeout(() => {
-                outputBox.textContent = `[Resultado de ${toolName}]: Procesado con éxito para: "${promptText}".`;
+                outputBox.textContent = `✅ [${toolName}] procesado con éxito.\n- Entrada: ${hasText ? '"' + promptText + '"' : 'Archivo adjunto'}\n- Resultado optimizado y listo para exportar.`;
+            }, 1200);
+        }
+
+        function exportDoc(toolId) {
+            const outputText = document.getElementById(`output-${toolId}`).textContent;
+            if(outputText.includes("Resultado aquí...")) {
+                alert("Primero procesa información en esta herramienta antes de exportar.");
+                return;
+            }
+            alert(`📥 Exportando resultado de la herramienta ${toolId}... ¡Descarga completada con éxito!`);
+        }
+
+        function sendChatMessage() {
+            const inputField = document.getElementById('chat-input');
+            const chatContainer = document.getElementById('chat-container');
+            const text = inputField.value.trim();
+
+            if(!text) return;
+
+            const userMsg = document.createElement('div');
+            userMsg.className = 'chat-msg user';
+            userMsg.textContent = text;
+            chatContainer.appendChild(userMsg);
+
+            inputField.value = '';
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            addToHistory('Chat Libre', text);
+
+            setTimeout(() => {
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'chat-msg ai';
+                aiMsg.textContent = `Procesando tu consulta sobre "${text}": Analizando contexto de texto y multimedia. ¿Deseas que profundicemos en algún aspecto en particular?`;
+                chatContainer.appendChild(aiMsg);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
             }, 1000);
-        }
-
-        function runTranslator() {
-            const promptText = document.getElementById('prompt-6').value;
-            const audioInput = document.getElementById('audio-file');
-            const outputBox = document.getElementById('output-6');
-
-            if(!promptText.trim() && audioInput.files.length === 0) {
-                alert("Por favor escribe un texto o sube un archivo de audio para traducir.");
-                return;
-            }
-
-            const targetName = audioInput.files.length > 0 ? audioInput.files[0].name : promptText;
-            outputBox.textContent = "Traduciendo y sintetizando voz con IA...";
-            addToHistory('Traductor Audio/Texto', targetName);
-
-            setTimeout(() => {
-                outputBox.textContent = `✅ Traducción al español completada con éxito.\n🔊 Audio sintético generado y listo para reproducción.`;
-            }, 1500);
-        }
-
-        function processFile() {
-            const fileInput = document.getElementById('business-file');
-            const outputBox = document.getElementById('file-output');
-
-            if(fileInput.files.length === 0) {
-                alert("Por favor selecciona un archivo de Excel, Word o PDF primero.");
-                return;
-            }
-
-            const fileName = fileInput.files[0].name;
-            outputBox.textContent = `Analizando el archivo "${fileName}"...`;
-            addToHistory('Procesador Archivos', fileName);
-
-            setTimeout(() => {
-                outputBox.textContent = `✅ Archivo "${fileName}" analizado con éxito. Se han extraído los datos principales para optimizar tu gestión empresarial.`;
-            }, 1500);
         }
 
         function clearAllOutputs() {
             for(let i=1; i<=6; i++) {
                 if(document.getElementById(`prompt-${i}`)) document.getElementById(`prompt-${i}`).value = '';
+                if(document.getElementById(`file-${i}`)) document.getElementById(`file-${i}`).value = '';
                 if(document.getElementById(`output-${i}`)) document.getElementById(`output-${i}`).textContent = 'Resultado aquí...';
             }
-            if(document.getElementById('audio-file')) document.getElementById('audio-file').value = '';
-            if(document.getElementById('business-file')) document.getElementById('business-file').value = '';
-            if(document.getElementById('file-output')) document.getElementById('file-output').textContent = 'El análisis del archivo aparecerá aquí...';
+            document.getElementById('chat-container').innerHTML = '<div class="chat-msg ai">¡Hola! Soy tu asistente universal. ¿En qué te puedo ayudar hoy?</div>';
         }
     </script>
 </body>
