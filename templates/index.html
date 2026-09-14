@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Business IA - Panel Maestro</title>
+    <title>Digital Business IA - Panel Pro Empresarial</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background-color: #0f172a; color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -13,7 +13,8 @@
         .form-control:focus, .form-select:focus { background-color: #0f172a; color: #fff; border-color: #38bdf8; box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.25); }
         .btn-primary { background-color: #2563eb; border: none; font-weight: 600; border-radius: 6px; }
         .btn-primary:hover { background-color: #1d4ed8; }
-        .chat-box { background-color: #090d16; border: 1px solid #334155; height: 240px; overflow-y: auto; padding: 15px; border-radius: 6px; margin-top: 15px; font-size: 0.9rem; }
+        .btn-success { font-weight: 600; border-radius: 6px; }
+        .chat-box { background-color: #090d16; border: 1px solid #334155; height: 220px; overflow-y: auto; padding: 15px; border-radius: 6px; margin-top: 15px; font-size: 0.9rem; }
         .manual-box { background-color: #131c31; border-left: 4px solid #38bdf8; padding: 12px 15px; font-size: 0.85rem; margin-bottom: 15px; border-radius: 4px; display: none; }
         .file-indicator { font-size: 0.8rem; color: #38bdf8; margin-top: 5px; display: block; }
         .banner-libre { background: linear-gradient(135deg, #1e3a8a, #2563eb); border: 1px solid #3b82f6; border-radius: 8px; padding: 12px 20px; margin-bottom: 25px; text-align: center; font-weight: 600; }
@@ -23,10 +24,10 @@
 
     <!-- Barra de Navegación -->
     <nav class="navbar navbar-expand-lg navbar-dark px-4 py-3">
-        <a class="navbar-brand fw-bold fs-4" href="#">⚡ Digital Business IA</a>
+        <a class="navbar-brand fw-bold fs-4" href="#">⚡ Digital Business IA Pro</a>
         <div class="ms-auto d-flex gap-2">
             <button class="btn btn-sm btn-outline-light" onclick="activarModoCelular()">📱 Modo Celular</button>
-            <span class="badge bg-success align-self-center p-2 fs-6" id="proBadge">🟢 Acceso Libre Activo</span>
+            <span class="badge bg-success align-self-center p-2 fs-6" id="proBadge">🟢 Acceso Libre Pro</span>
         </div>
     </nav>
 
@@ -34,54 +35,136 @@
         
         <!-- Banner Informativo de Acceso Libre -->
         <div class="banner-libre shadow-sm">
-            🎉 <strong>¡Acceso Libre Temporal Activado!</strong> Todas las herramientas, chats inteligentes y motores de IA están habilitados sin restricciones de pago ni claves.
+            🚀 <strong>Suite Comercial Activada:</strong> Todas las herramientas para empresarios y creadores de contenido operan sin restricciones.
         </div>
 
         <!-- CONTENEDOR DE CUADROS / MÓDULOS MÚLTIPLES -->
         <div class="row">
 
-            <!-- 1. Módulo: Chat Libre -->
+            <!-- 1. NUEVO MÓDULO: Guiones Virales para Creadores -->
             <div class="col-md-6">
                 <div class="card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">💬 Chat Libre Inteligente</h4>
+                        <h4 class="m-0">🎬 Guiones Virales (Reels/TikTok)</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-guiones')">📖 Manual</button>
+                    </div>
+                    <div id="manual-guiones" class="manual-box">
+                        <strong>Cómo usar:</strong> Indica el nicho, el tema principal y el objetivo de tu video (ej. educar, entretener, vender). La IA generará un guion con gancho de retención de 3 segundos y llamado a la acción.
+                    </div>
+                    <div class="mb-3">
+                        <textarea id="promptGuiones" class="form-control" rows="2" placeholder="Ej. Nicho fitness, tema: 3 errores al entrenar abdomen..."></textarea>
+                    </div>
+                    <div class="mb-2">
+                        <input type="file" id="fileGuiones" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileGuiones', 'fileNameGuiones')" multiple>
+                        <span id="fileNameGuiones" class="file-indicator"></span>
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Guiones Virales', 'promptGuiones', 'fileGuiones', 'resultGuiones')">Generar Guion Viral</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultGuiones', 'Guion_Viral.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultGuiones')">🧹 Limpiar</button>
+                    </div>
+                    <div class="chat-box" id="resultGuiones">Historial de Guiones...</div>
+                </div>
+            </div>
+
+            <!-- 2. NUEVO MÓDULO: Copys y Anuncios de Conversión -->
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">✍️ Copys Publicitarios (Ads/Ventas)</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-copys')">📖 Manual</button>
+                    </div>
+                    <div id="manual-copys" class="manual-box">
+                        <strong>Cómo usar:</strong> Describe tu producto, servicio o oferta especial. La IA redactará anuncios persuasivos utilizando fórmulas de marketing de alta conversión (AIDA / PAS).
+                    </div>
+                    <div class="mb-3">
+                        <textarea id="promptCopys" class="form-control" rows="2" placeholder="Ej. Lanzamiento de curso de repostería para principiantes..."></textarea>
+                    </div>
+                    <div class="mb-2">
+                        <input type="file" id="fileCopys" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileCopys', 'fileNameCopys')" multiple>
+                        <span id="fileNameCopys" class="file-indicator"></span>
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Copys Publicitarios', 'promptCopys', 'fileCopys', 'resultCopys')">Generar Copy de Ventas</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultCopys', 'Copy_Publicitario.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultCopys')">🧹 Limpiar</button>
+                    </div>
+                    <div class="chat-box" id="resultCopys">Historial de Copys...</div>
+                </div>
+            </div>
+
+            <!-- 3. NUEVO MÓDULO: Propuestas Comerciales B2B -->
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">💼 Propuestas y Cotizaciones B2B</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-b2b')">📖 Manual</button>
+                    </div>
+                    <div id="manual-b2b" class="manual-box">
+                        <strong>Cómo usar:</strong> Detalla los servicios que ofreces a una empresa cliente, los entregables y costos estimados. Obtén una propuesta comercial formal y profesional lista para enviar.
+                    </div>
+                    <div class="mb-3">
+                        <textarea id="promptB2B" class="form-control" rows="2" placeholder="Ej. Propuesta de marketing digital para clínica dental..."></textarea>
+                    </div>
+                    <div class="mb-2">
+                        <input type="file" id="fileB2B" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileB2B', 'fileNameB2B')" multiple>
+                        <span id="fileNameB2B" class="file-indicator"></span>
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Propuestas B2B', 'promptB2B', 'fileB2B', 'resultB2B')">Generar Propuesta Comercial</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultB2B', 'Propuesta_Comercial.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultB2B')">🧹 Limpiar</button>
+                    </div>
+                    <div class="chat-box" id="resultB2B">Historial de Propuestas B2B...</div>
+                </div>
+            </div>
+
+            <!-- 4. Módulo: Chat Libre Inteligente -->
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">💬 Chat Libre General</h4>
                         <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-chat')">📖 Manual</button>
                     </div>
                     <div id="manual-chat" class="manual-box">
-                        <strong>Instrucciones:</strong> Escribe cualquier consulta o pregunta general. Puedes adjuntar documentos, audios o imágenes como referencia para que el asistente los analice.
+                        <strong>Cómo usar:</strong> Espacio de consulta abierta para resolver dudas generales, lluvia de ideas o análisis de documentos adjuntos de cualquier formato.
                     </div>
                     <div class="mb-3">
-                        <textarea id="promptChat" class="form-control" rows="2" placeholder="Escribe tu consulta o mensaje aquí..."></textarea>
+                        <textarea id="promptChat" class="form-control" rows="2" placeholder="Escribe tu consulta general..."></textarea>
                     </div>
                     <div class="mb-2">
                         <input type="file" id="fileChat" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileChat', 'fileNameChat')" multiple>
                         <span id="fileNameChat" class="file-indicator"></span>
                     </div>
                     <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Chat Libre', 'promptChat', 'fileChat', 'chatBoxResult')">Enviar a Chat Libre</button>
-                    <div class="chat-box" id="chatBoxResult">Historial del chat independiente...</div>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('chatBoxResult', 'Chat_General.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('chatBoxResult')">🧹 Limpiar</button>
+                    </div>
+                    <div class="chat-box" id="chatBoxResult">Historial de Chat Libre...</div>
                 </div>
             </div>
 
-            <!-- 2. Módulo: Generador de Imágenes -->
+            <!-- 5. Módulo: Generador de Imágenes -->
             <div class="col-md-6">
                 <div class="card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">🎨 Generador de Imágenes IA</h4>
+                        <h4 class="m-0">🎨 Imágenes IA (Publicidad/Brand)</h4>
                         <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-imagen')">📖 Manual</button>
                     </div>
                     <div id="manual-imagen" class="manual-box">
-                        <strong>Instrucciones:</strong> Describe detalladamente la imagen que deseas crear (estilo, colores, iluminación). Opcionalmente adjunta una foto base como referencia visual.
+                        <strong>Cómo usar:</strong> Diseña recursos visuales para tus marcas o campañas describiendo la escena detalladamente. Renderizado directo en pantalla.
                     </div>
                     <form action="/generar" method="POST" enctype="multipart/form-data">
                         <div class="mb-3">
-                            <input type="text" name="prompt" class="form-control" placeholder="Ej. Un paisaje cyberpunk al atardecer..." required>
+                            <input type="text" name="prompt" class="form-control" placeholder="Ej. Mockup de producto tecnológico minimalista..." required>
                         </div>
                         <div class="mb-2">
                             <input type="file" name="referencia_imagen" id="fileImagen" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileImagen', 'fileNameImagen')">
                             <span id="fileNameImagen" class="file-indicator"></span>
                         </div>
                         <input type="hidden" name="pro_key" value="PRO-150-ACTIVO">
-                        <button type="submit" class="btn btn-primary w-100 mt-2">Generar Imagen en su Chat</button>
+                        <button type="submit" class="btn btn-primary w-100 mt-2">Generar Imagen</button>
                     </form>
                     {% if imagen_url %}
                     <div class="text-center mt-3">
@@ -92,90 +175,106 @@
                 </div>
             </div>
 
-            <!-- 3. Módulo: Generador de Videos -->
+            <!-- 6. Módulo: Generador de Videos -->
             <div class="col-md-6">
                 <div class="card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">🎬 Generador de Videos HD</h4>
+                        <h4 class="m-0">🎬 Videos HD (Storyboard)</h4>
                         <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-video')">📖 Manual</button>
                     </div>
                     <div id="manual-video" class="manual-box">
-                        <strong>Instrucciones:</strong> Detalla la secuencia cinematográfica, el movimiento de cámara y la trama. Adjunta guiones o recursos visuales de apoyo.
+                        <strong>Cómo usar:</strong> Estructura secuencias audiovisuales y planeaciones de producción profesional para anuncios de video.
                     </div>
                     <div class="mb-3">
-                        <textarea id="promptVideo" class="form-control" rows="2" placeholder="Describe la escena o toma cinematográfica..."></textarea>
+                        <textarea id="promptVideo" class="form-control" rows="2" placeholder="Describe la secuencia del comercial..."></textarea>
                     </div>
                     <div class="mb-2">
                         <input type="file" id="fileVideo" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileVideo', 'fileNameVideo')" multiple>
                         <span id="fileNameVideo" class="file-indicator"></span>
                     </div>
                     <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Generador de Videos HD', 'promptVideo', 'fileVideo', 'resultVideo')">Procesar Video</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultVideo', 'Storyboard_Video.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultVideo')">🧹 Limpiar</button>
+                    </div>
                     <div class="chat-box" id="resultVideo">Historial de Videos HD...</div>
                 </div>
             </div>
 
-            <!-- 4. Módulo: Excel -->
+            <!-- 7. Módulo: Excel -->
             <div class="col-md-6">
                 <div class="card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">📊 Asistente y Fórmulas Excel</h4>
+                        <h4 class="m-0">📊 Asistente de Finanzas y Excel</h4>
                         <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-excel')">📖 Manual</button>
                     </div>
                     <div id="manual-excel" class="manual-box">
-                        <strong>Instrucciones:</strong> Solicita fórmulas complejas, macros de VBA o tablas estructuradas. Sube tus planillas de datos para depuración y análisis directo.
+                        <strong>Cómo usar:</strong> Diseña presupuestos, flujos de caja y fórmulas financieras avanzadas adjuntando tus planillas de datos.
                     </div>
                     <div class="mb-3">
-                        <textarea id="promptExcel" class="form-control" rows="2" placeholder="¿Qué deseas calcular, formular u organizar?"></textarea>
+                        <textarea id="promptExcel" class="form-control" rows="2" placeholder="¿Qué cálculo financiero u organizacional necesitas?"></textarea>
                     </div>
                     <div class="mb-2">
                         <input type="file" id="fileExcel" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileExcel', 'fileNameExcel')" multiple>
                         <span id="fileNameExcel" class="file-indicator"></span>
                     </div>
                     <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Asistente Excel', 'promptExcel', 'fileExcel', 'resultExcel')">Ejecutar Asistente Excel</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultExcel', 'Reporte_Excel.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultExcel')">🧹 Limpiar</button>
+                    </div>
                     <div class="chat-box" id="resultExcel">Historial de Excel...</div>
                 </div>
             </div>
 
-            <!-- 5. Módulo: Word -->
+            <!-- 8. Módulo: Word -->
             <div class="col-md-6">
                 <div class="card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">📝 Redactor Profesional Word</h4>
+                        <h4 class="m-0">📝 Redactor de Contratos y Word</h4>
                         <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-word')">📖 Manual</button>
                     </div>
                     <div id="manual-word" class="manual-box">
-                        <strong>Instrucciones:</strong> Pide la redacción de contratos, cartas formales, ensayos o reportes especificando el tono y la estructura requerida.
+                        <strong>Cómo usar:</strong> Genera contratos de prestación de servicios, políticas de privacidad, acuerdos de confidencialidad (NDA) y reportes corporativos.
                     </div>
                     <div class="mb-3">
-                        <textarea id="promptWord" class="form-control" rows="2" placeholder="Tema, estructura o lineamientos del documento..."></textarea>
+                        <textarea id="promptWord" class="form-control" rows="2" placeholder="Tipo de documento o cláusulas requeridas..."></textarea>
                     </div>
                     <div class="mb-2">
                         <input type="file" id="fileWord" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileWord', 'fileNameWord')" multiple>
                         <span id="fileNameWord" class="file-indicator"></span>
                     </div>
                     <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Redactor Word', 'promptWord', 'fileWord', 'resultWord')">Generar Documento Word</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultWord', 'Documento_Legal.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultWord')">🧹 Limpiar</button>
+                    </div>
                     <div class="chat-box" id="resultWord">Historial de Word...</div>
                 </div>
             </div>
 
-            <!-- 6. Módulo: Traductor con Voces IA -->
+            <!-- 9. Módulo: Traductor con Voces IA -->
             <div class="col-md-6">
                 <div class="card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">🌐 Traductor y Voces IA</h4>
+                        <h4 class="m-0">🌐 Traduктор Global y Voces</h4>
                         <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-traductor')">📖 Manual</button>
                     </div>
                     <div id="manual-traductor" class="manual-box">
-                        <strong>Instrucciones:</strong> Realiza traducciones precisas de textos, audios o fragmentos de video y obtén síntesis de voz natural en múltiples idiomas.
+                        <strong>Cómo usar:</strong> Adapta contenidos comerciales a mercados internacionales con traducciones adaptadas al contexto y síntesis de voz multilingüe.
                     </div>
                     <div class="mb-3">
-                        <textarea id="promptTraductor" class="form-control" rows="2" placeholder="Instrucciones de traducción y síntesis..."></textarea>
+                        <textarea id="promptTraductor" class="form-control" rows="2" placeholder="Texto o instrucciones de localización..."></textarea>
                     </div>
                     <div class="mb-2">
                         <input type="file" id="fileTraductor" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileTraductor', 'fileNameTraductor')" multiple>
                         <span id="fileNameTraductor" class="file-indicator"></span>
                     </div>
                     <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Traductor IA', 'promptTraductor', 'fileTraductor', 'resultTraductor')">Procesar Traducción</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultTraductor', 'Traduccion_Global.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultTraductor')">🧹 Limpiar</button>
+                    </div>
                     <div class="chat-box" id="resultTraductor">Historial de Traductor...</div>
                 </div>
             </div>
@@ -186,7 +285,7 @@
     <script>
         // Cargar historiales almacenados al iniciar la página
         window.onload = function() {
-            const boxes = ['chatBoxResult', 'resultVideo', 'resultExcel', 'resultWord', 'resultTraductor'];
+            const boxes = ['resultGuiones', 'resultCopys', 'resultB2B', 'chatBoxResult', 'resultVideo', 'resultExcel', 'resultWord', 'resultTraductor'];
             boxes.forEach(boxId => {
                 const saved = localStorage.getItem(boxId);
                 if (saved) {
@@ -205,10 +304,28 @@
             const span = document.getElementById(spanId);
             if (input.files.length > 0) {
                 let nombres = Array.from(input.files).map(f => f.name).join(', ');
-                span.innerText = `📎 Archivo(s) seleccionado(s): ${nombres}`;
+                span.innerText = `📎 Archivo(s): ${nombres}`;
             } else {
                 span.innerText = '';
             }
+        }
+
+        function limpiarChat(boxId) {
+            if (confirm("¿Deseas limpiar el historial de este chat?")) {
+                const box = document.getElementById(boxId);
+                box.innerHTML = 'Historial limpio...';
+                localStorage.removeItem(boxId);
+            }
+        }
+
+        function descargarChatTXT(boxId, filename) {
+            const box = document.getElementById(boxId);
+            const text = box.innerText || box.textContent;
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
         }
 
         function activarModoCelular() {
@@ -242,7 +359,6 @@
             resultBox.innerHTML += `<div id="${loadingId}" class="text-warning mb-2"><em>🔄 Procesando en ${toolName}...</em></div>`;
             resultBox.scrollTop = resultBox.scrollHeight;
 
-            // Limpiar campo de texto para la siguiente consulta
             promptInput.value = '';
 
             try {
@@ -253,18 +369,15 @@
                 });
 
                 const data = await response.json();
-                
-                // Remover mensaje de carga
                 document.getElementById(loadingId).remove();
 
                 if (response.ok) {
                     const responseContainerId = 'resp_' + Date.now();
                     resultBox.innerHTML += `<div class="text-info mb-3"><strong>${toolName}:</strong> <span id="${responseContainerId}"></span></div>`;
                     
-                    // Efecto de máquina de escribir (Streaming visual)
                     const respuestaTexto = data.response;
                     let i = 0;
-                    const speed = 10; // Velocidad de tipeo en ms
+                    const speed = 10;
                     function typeWriter() {
                         if (i < respuestaTexto.length) {
                             document.getElementById(responseContainerId).innerHTML += respuestaTexto.charAt(i);
@@ -272,7 +385,6 @@
                             resultBox.scrollTop = resultBox.scrollHeight;
                             setTimeout(typeWriter, speed);
                         } else {
-                            // Guardar en LocalStorage al terminar la animación
                             localStorage.setItem(resultId, resultBox.innerHTML);
                         }
                     }
