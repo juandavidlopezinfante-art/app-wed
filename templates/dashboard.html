@@ -1,113 +1,62 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Business IA - Dashboard</title>
+    <title>Digital Business IA - Inicio</title>
     <style>
-        :root {
-            --bg-dark: #0f172a;
-            --bg-card: #1e293b;
-            --accent-green: #10b981;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: #334155;
-        }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
             display: flex;
-        }
-
-        /* Botón de menú hamburguesa (oculto en PC, visible en celular) */
-        .menu-btn {
-            display: none;
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            background: var(--accent-green);
-            color: white;
-            border: none;
-            padding: 10px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            z-index: 1100;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-
-        /* Estilo base de la barra lateral */
-        .sidebar {
-            width: 280px;
+            justify-content: center;
+            align-items: center;
             height: 100vh;
-            background-color: var(--bg-card);
-            border-right: 1px solid var(--border-color);
-            position: fixed;
-            top: 0;
-            left: 0;
-            transition: left 0.3s ease;
-            z-index: 1000;
+            margin: 0;
         }
-
-        /* Ajustes responsivos para celulares: Ocultar barra lateral y mostrar botón */
-        @media (max-width: 768px) {
-            .menu-btn {
-                display: block; 
-            }
-            .sidebar {
-                left: -280px !important; 
-            }
-            .sidebar.open {
-                left: 0 !important; 
-            }
-            .main-content {
-                margin-left: 0 !important;
-                width: 100% !important;
-                padding-top: 60px;
-            }
+        .login-card {
+            background-color: #1e293b;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            text-align: center;
+            width: 320px;
         }
-
-        .main-content {
-            margin-left: 280px;
-            padding: 30px;
-            width: calc(100% - 280px);
-            box-sizing: border-box;
+        h1 { font-size: 24px; margin-bottom: 10px; color: #10b981; }
+        p { color: #94a3b8; font-size: 14px; margin-bottom: 30px; }
+        .btn-google {
+            background-color: #ffffff;
+            color: #334155;
+            padding: 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            display: block;
+            font-weight: bold;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .btn-incognito {
+            background-color: #334155;
+            color: #f8fafc;
+            padding: 10px;
+            border-radius: 6px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-
-    <!-- Botón de menú para celulares -->
-    <button class="menu-btn" onclick="toggleSidebar()">☰ Menú</button>
-
-    <!-- Barra lateral -->
-    <div class="sidebar">
-        <h2 style="padding: 20px; margin: 0; color: var(--accent-green);">Digital Business IA</h2>
-        <div style="padding: 20px;">
-            <a href="#" style="background: var(--accent-green); color: white; padding: 10px; display: block; text-align: center; border-radius: 6px; text-decoration: none; font-weight: bold;">+ Nueva Consulta</a>
-        </div>
-        <div style="padding: 20px;">
-            <p style="color: var(--text-muted); font-size: 12px; font-weight: bold;">HISTORIAL RECIENTE</p>
-            <p style="color: var(--border-color); font-size: 14px;">No hay solicitudes aún...</p>
-        </div>
+    <div class="login-card">
+        <h1>Digital Business IA</h1>
+        <p>Inicia sesión para continuar</p>
+        
+        <!-- Botón de Google Auth -->
+        <a href="/login" class="btn-google">Iniciar sesión con Google</a>
+        
+        <!-- Acceso en Modo Incognito -->
+        <a href="/dashboard" class="btn-incognito">Entrar en Modo Incógnito</a>
     </div>
-
-    <!-- Contenido principal -->
-    <div class="main-content">
-        <h1>Panel de Control</h1>
-        <p>Tu aplicación optimizada para dispositivos móviles.</p>
-        <!-- Aquí puedes integrar el resto de tus componentes y chat -->
-    </div>
-
-    <script>
-        function toggleSidebar() {
-            const sidebar = document.querySelector('.sidebar');
-            if (sidebar) {
-                sidebar.classList.toggle('open');
-            }
-        }
-    </script>
 </body>
 </html>
