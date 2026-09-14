@@ -2,144 +2,81 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Digital Business IA - Iniciar Sesión</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Business IA - Dashboard</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
             background-color: #0f172a;
             color: #f8fafc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            flex-direction: column;
         }
-        .login-card {
-            background-color: #1e293b;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-            text-align: center;
-            width: 320px;
-        }
-        h2 { margin-bottom: 10px; color: #38bdf8; }
-        p { color: #94a3b8; font-size: 14px; margin-bottom: 30px; }
-        .btn {
-            border: none;
-            width: 100%;
-            padding: 12px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 12px;
-            transition: background 0.2s;
-        }
-        .btn-google { background-color: #ffffff; color: #1e293b; }
-        .btn-google:hover { background-color: #f1f5f9; }
-        
-        .btn-anon { background-color: #334155; color: #f8fafc; }
-        .btn-anon:hover { background-color: #475569; }
 
-        .help-toggle {
-            background: none;
-            border: none;
-            color: #38bdf8;
-            cursor: pointer;
-            margin-top: 15px;
-            font-size: 14px;
-            text-decoration: underline;
-        }
-        .help-panel {
+        /* Botón de menú hamburguesa (solo visible en móviles) */
+        .menu-btn {
             display: none;
-            background-color: #1e293b;
-            border-left: 4px solid #38bdf8;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-            width: 320px;
-            text-align: left;
-            font-size: 13px;
-            color: #94a3b8;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            background: #10B981;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 15px;
         }
-        .help-panel h4 { color: #f8fafc; margin-top: 0; margin-bottom: 8px; }
-        .help-panel ul { padding-left: 15px; margin: 0; }
-        .help-panel li { margin-bottom: 5px; }
+
+        /* Estilos del menú lateral */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100%;
+            background-color: #1e293b;
+            transition: left 0.3s ease;
+            z-index: 1000;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.5);
+        }
+
+        /* Adaptación para pantallas de celular */
+        @media (max-width: 768px) {
+            .menu-btn {
+                display: block; /* Muestra el botón en celulares */
+            }
+            .sidebar {
+                left: -280px; /* Oculta el menú por defecto en celulares */
+            }
+            .sidebar.open {
+                left: 0; /* Muestra el menú al activarlo */
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="login-card">
-        <h2>Digital Business IA</h2>
-        <p>Inicia sesión con tu cuenta para acceder a la suite</p>
-        
-        <!-- Botones de Acceso -->
-        <button id="google-login-btn" class="btn btn-google">Continuar con Google</button>
-        <button id="anon-login-btn" class="btn btn-anon">Entrar de forma anónima</button>
 
-        <!-- Botón para desplegar instrucciones -->
-        <button class="help-toggle" id="toggle-help-btn">¿Cómo usar la plataforma?</button>
+    <!-- Botón para abrir/cerrar el menú en celular -->
+    <button onclick="toggleSidebar()" class="menu-btn">☰ Menú</button>
+
+    <!-- Tu barra lateral -->
+    <div class="sidebar">
+        <h2 style="padding: 20px; margin: 0; color: #10B981;">Digital Business IA</h2>
+        <div style="padding: 20px;">
+            <a href="#" style="background: #10B981; color: white; padding: 10px; display: block; text-align: center; border-radius: 6px; text-decoration: none; font-weight: bold;">+ Nueva Consulta</a>
+        </div>
+        <div style="padding: 20px;">
+            <p style="color: #94a3b8; font-size: 12px; font-weight: bold;">HISTORIAL RECIENTE</p>
+            <p style="color: #64748b; font-size: 14px;">No hay solicitudes aún...</p>
+        </div>
     </div>
 
-    <!-- Panel desplegable de instrucciones -->
-    <div class="help-panel" id="help-panel">
-        <h4>Instrucciones de Uso</h4>
-        <ul>
-            <li><strong>Acceso con Google:</strong> Guarda tu progreso e historial de forma segura.</li>
-            <li><strong>Acceso Anónimo:</strong> Ingresa de inmediato para explorar sin registrar datos personales (válido por 30 días).</li>
-            <li><strong>Navegación:</strong> Una vez dentro, utiliza el panel principal para gestionar tus herramientas de inteligencia artificial.</li>
-        </ul>
-    </div>
-
-    <!-- Script de autenticación mediante Firebase CDN -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyAgiappqV0mXtAT0iQSN0uuFhUOHYqfBRI",
-            authDomain: "digital-business-ia.firebaseapp.com",
-            projectId: "digital-business-ia",
-            storageBucket: "digital-business-ia.firebasestorage.app",
-            messagingSenderId: "221344612488",
-            appId: "1:221344612488:web:0f4dd98c920cd1739e5f3d"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const googleProvider = new GoogleAuthProvider();
-
-        // Lógica de Google
-        document.getElementById('google-login-btn').addEventListener('click', () => {
-            signInWithPopup(auth, googleProvider)
-            .then(() => { window.location.href = "/dashboard"; })
-            .catch((error) => { console.error("Error en Google:", error); });
-        });
-
-        // Lógica de Acceso Anónimo
-        document.getElementById('anon-login-btn').addEventListener('click', () => {
-            signInAnonymously(auth)
-            .then(() => { window.location.href = "/dashboard"; })
-            .catch((error) => { console.error("Error en Anónimo:", error); });
-        });
-
-        // Lógica para abrir y cerrar el panel de instrucciones
-        const toggleBtn = document.getElementById('toggle-help-btn');
-        const helpPanel = document.getElementById('help-panel');
-
-        toggleBtn.addEventListener('click', () => {
-            if (helpPanel.style.display === 'block') {
-                helpPanel.style.display = 'none';
-                toggleBtn.textContent = '¿Cómo usar la plataforma?';
-            } else {
-                helpPanel.style.display = 'block';
-                toggleBtn.textContent = 'Ocultar instrucciones';
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) {
+                sidebar.classList.toggle('open');
             }
-        });
+        }
     </script>
 </body>
 </html>
