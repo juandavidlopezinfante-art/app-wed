@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Panel Principal - Digital Business IA</title>
+    <title>Panel Universal - Digital Business IA</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -13,7 +13,7 @@
             min-height: 100vh;
         }
 
-        /* Barra Lateral Izquierda (Historial) */
+        /* Barra Lateral Izquierda (Historial Interactivo) */
         .sidebar {
             width: 260px;
             background-color: rgba(15, 23, 42, 0.95);
@@ -73,6 +73,12 @@
             text-overflow: ellipsis;
             background-color: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.03);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .history-item:hover {
+            background-color: rgba(56, 189, 248, 0.1);
+            color: #38bdf8;
         }
         .history-item span {
             display: block;
@@ -158,12 +164,7 @@
         }
         textarea:focus { outline: none; border-color: #38bdf8; }
 
-        .file-input-label {
-            display: block;
-            font-size: 11px;
-            color: #38bdf8;
-            margin-bottom: 4px;
-        }
+        .file-input-label { display: block; font-size: 11px; color: #38bdf8; margin-bottom: 4px; }
         .universal-file-input {
             font-size: 11px;
             color: #94a3b8;
@@ -223,6 +224,15 @@
             white-space: pre-wrap;
             color: #e2e8f0;
             font-size: 11px;
+        }
+
+        /* Animación de carga */
+        @keyframes pulseGlow {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; color: #38bdf8; }
+            100% { opacity: 0.6; }
+        .loading-pulse {
+            animation: pulseGlow 1.2s infinite ease-in-out;
         }
 
         /* Pestañas de ayuda */
@@ -289,21 +299,21 @@
 </head>
 <body>
 
-    <!-- Barra Lateral Izquierda (Historial) -->
+    <!-- Barra Lateral Izquierda (Historial Interactivo) -->
     <div class="sidebar">
         <div class="sidebar-brand">Digital Business IA</div>
         <button class="sidebar-btn" onclick="clearAllOutputs()">+ Nueva Consulta</button>
         
         <div class="sidebar-section-title">Historial Reciente</div>
         <ul class="history-list" id="history-list">
-            <li class="history-item" style="color: #64748b; background: transparent; border: none;">No hay solicitudes aún...</li>
+            <li class="history-item" style="color: #64748b; background: transparent; border: none; cursor: default;">No hay solicitudes aún...</li>
         </ul>
     </div>
 
     <!-- Contenido Principal -->
     <div class="main-content">
         <header>
-            <h2>Panel Universal de Inteligencia Artificial</h2>
+            <h2>Panel Universal Optimizado</h2>
             <button class="logout-btn" id="logout-btn">Cerrar Sesión</button>
         </header>
 
@@ -315,11 +325,9 @@
                     <h3>1. Asistente General</h3>
                     <p>Resuelve dudas, procesa archivos o analiza contenido multimedia.</p>
                     <button class="help-toggle-btn" onclick="toggleHelp(1)">¿Cómo usar?</button>
-                    <div class="help-dropdown" id="help-1">
-                        <ul><li>Escribe texto, sube documentos, audios o videos para análisis.</li></ul>
-                    </div>
+                    <div class="help-dropdown" id="help-1"><ul><li>Escribe texto, sube documentos, audios o videos.</li></ul></div>
                     <textarea id="prompt-1" placeholder="Escribe tu instrucción..."></textarea>
-                    <label class="file-input-label">Adjuntar archivo, audio o video:</label>
+                    <label class="file-input-label">Adjuntar archivo:</label>
                     <input type="file" id="file-1" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
                 </div>
                 <div>
@@ -335,11 +343,9 @@
                     <h3>2. Generador de Negocios</h3>
                     <p>Crea estrategias comerciales a partir de notas, audios o reportes adjuntos.</p>
                     <button class="help-toggle-btn" onclick="toggleHelp(2)">¿Cómo usar?</button>
-                    <div class="help-dropdown" id="help-2">
-                        <ul><li>Combina texto e insumos multimedia para perfilar marcas.</li></ul>
-                    </div>
+                    <div class="help-dropdown" id="help-2"><ul><li>Combina texto e insumos para perfilar marcas.</li></ul></div>
                     <textarea id="prompt-2" placeholder="Escribe tu idea de negocio..."></textarea>
-                    <label class="file-input-label">Adjuntar archivo, audio o video:</label>
+                    <label class="file-input-label">Adjuntar archivo:</label>
                     <input type="file" id="file-2" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
                 </div>
                 <div>
@@ -355,11 +361,9 @@
                     <h3>3. Creador de Contenido</h3>
                     <p>Genera textos, correos o redacta piezas basadas en tus archivos fuente.</p>
                     <button class="help-toggle-btn" onclick="toggleHelp(3)">¿Cómo usar?</button>
-                    <div class="help-dropdown" id="help-3">
-                        <ul><li>Sube audios o textos previos para que la IA los convierta en contenido.</li></ul>
-                    </div>
+                    <div class="help-dropdown" id="help-3"><ul><li>Sube audios o textos previos para convertirlos.</li></ul></div>
                     <textarea id="prompt-3" placeholder="Indica el contenido a redactar..."></textarea>
-                    <label class="file-input-label">Adjuntar archivo, audio o video:</label>
+                    <label class="file-input-label">Adjuntar archivo:</label>
                     <input type="file" id="file-3" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
                 </div>
                 <div>
@@ -373,13 +377,11 @@
             <div class="tool-card">
                 <div>
                     <h3>4. Generador de fotos con IA</h3>
-                    <p>Diseña recursos visuales apoyándote en descripciones o imágenes y videos de referencia.</p>
+                    <p>Diseña recursos visuales apoyándote en descripciones o referencias.</p>
                     <button class="help-toggle-btn" onclick="toggleHelp(4)">¿Cómo usar?</button>
-                    <div class="help-dropdown" id="help-4">
-                        <ul><li>Describe la imagen o adjunta un video/audio como guía creativa.</li></ul>
-                    </div>
+                    <div class="help-dropdown" id="help-4"><ul><li>Describe la imagen o adjunta referencias.</li></ul></div>
                     <textarea id="prompt-4" placeholder="Describe la imagen deseada..."></textarea>
-                    <label class="file-input-label">Adjuntar archivo, audio o video de referencia:</label>
+                    <label class="file-input-label">Adjuntar archivo de referencia:</label>
                     <input type="file" id="file-4" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
                 </div>
                 <div>
@@ -393,13 +395,11 @@
             <div class="tool-card">
                 <div>
                     <h3>5. Creador de Tablas y Presupuestos</h3>
-                    <p>Estructura datos financieros mediante comandos de texto o extrayendo información de archivos.</p>
+                    <p>Estructura datos financieros mediante comandos o archivos.</p>
                     <button class="help-toggle-btn" onclick="toggleHelp(5)">¿Cómo usar?</button>
-                    <div class="help-dropdown" id="help-5">
-                        <ul><li>Sube hojas de cálculo o audio con cifras para tabularlas automáticamente.</li></ul>
-                    </div>
+                    <div class="help-dropdown" id="help-5"><ul><li>Sube hojas de cálculo o datos para tabularlos.</li></ul></div>
                     <textarea id="prompt-5" placeholder="Describe los datos de tu tabla..."></textarea>
-                    <label class="file-input-label">Adjuntar archivo, audio o video:</label>
+                    <label class="file-input-label">Adjuntar archivo:</label>
                     <input type="file" id="file-5" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
                 </div>
                 <div>
@@ -413,13 +413,11 @@
             <div class="tool-card">
                 <div>
                     <h3>6. Traductor de Texto y Audio IA</h3>
-                    <p>Traduce y genera voz sintética en español a partir de cualquier texto, audio o video.</p>
+                    <p>Traduce y genera voz sintética en español a partir de audio o texto.</p>
                     <button class="help-toggle-btn" onclick="toggleHelp(6)">¿Cómo usar?</button>
-                    <div class="help-dropdown" id="help-6">
-                        <ul><li>Ingresa texto o sube audios/videos en otros idiomas.</li></ul>
-                    </div>
+                    <div class="help-dropdown" id="help-6"><ul><li>Ingresa texto o sube audios en otros idiomas.</li></ul></div>
                     <textarea id="prompt-6" placeholder="Texto a traducir..."></textarea>
-                    <label class="file-input-label">Adjuntar archivo de audio o video:</label>
+                    <label class="file-input-label">Adjuntar audio/video:</label>
                     <input type="file" id="file-6" class="universal-file-input" accept=".mp3, .wav, .mp4, .mov">
                 </div>
                 <div>
@@ -433,7 +431,7 @@
         <!-- Chat Libre Universal -->
         <div class="chat-section">
             <h3>💬 Chat Libre y Conversación Continua con IA</h3>
-            <p style="color: #94a3b8; font-size: 12px; margin-bottom: 12px;">Haz preguntas o debate libremente con el asistente sobre tus proyectos empresariales.</p>
+            <p style="color: #94a3b8; font-size: 12px; margin-bottom: 12px;">Haz preguntas o debate libremente con el asistente.</p>
             
             <div class="chat-box" id="chat-container">
                 <div class="chat-msg ai">¡Hola! Soy tu asistente universal. ¿En qué te puedo ayudar hoy?</div>
@@ -446,7 +444,7 @@
         </div>
     </div>
 
-    <!-- Script Firebase y Lógica Universal -->
+    <!-- Script Firebase y Lógica Optimizada -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -466,20 +464,18 @@
         document.getElementById('logout-btn').addEventListener('click', () => {
             signOut(auth).then(() => {
                 window.location.href = "/";
-            }).catch((error) => {
-                console.error("Error al cerrar sesión:", error);
-            });
+            }).catch((error) => console.error("Error al cerrar sesión:", error));
         });
     </script>
 
-    <!-- Funciones JavaScript Universales -->
+    <!-- Funciones JavaScript Mejoradas y Optimizadas -->
     <script>
-        function toggleHelp(toolId) {
-            const dropdown = document.getElementById(`help-${toolId}`);
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        function toggleHelp(id) {
+            const el = document.getElementById(`help-${id}`);
+            el.style.display = el.style.display === 'block' ? 'none' : 'block';
         }
 
-        function addToHistory(toolName, text) {
+        function addToHistory(toolName, text, resultText) {
             const historyList = document.getElementById('history-list');
             if(historyList.children.length === 1 && historyList.children[0].style.color === 'rgb(100, 116, 139)') {
                 historyList.innerHTML = '';
@@ -487,9 +483,38 @@
 
             const li = document.createElement('li');
             li.className = 'history-item';
-            const shortText = text.length > 25 ? text.substring(0, 25) + '...' : text;
+            const shortText = text.length > 22 ? text.substring(0, 22) + '...' : text;
             li.innerHTML = `<strong>${toolName}</strong><span>"${shortText}"</span>`;
+            
+            // Mejora 2: Historial interactivo que permite re-enfocar la consulta
+            li.onclick = () => {
+                alert(`Historial [${toolName}]:\nEntrada: "${text}"\nResultado almacenado: "${resultText.substring(0, 60)}..."`);
+            };
+
             historyList.prepend(li);
+        }
+
+        function validateInput(promptText, fileInput) {
+            const hasText = promptText.trim().length > 0;
+            const hasFile = fileInput.files.length > 0;
+
+            if (!hasText && !hasFile) {
+                alert("Por favor escribe una instrucción o adjunta un archivo válido antes de procesar.");
+                return false;
+            }
+
+            // Mejora 3: Validación estricta de extensiones de archivos
+            if (hasFile) {
+                const file = fileInput.files[0];
+                const validExtensions = ['.txt', '.pdf', '.docx', '.xlsx', '.xls', '.mp3', '.wav', '.mp4', '.mov'];
+                const fileExt = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+                
+                if (!validExtensions.includes(fileExt)) {
+                    alert(`El archivo "${file.name}" no tiene un formato compatible. Formatos permitidos: TXT, PDF, Word, Excel, MP3, WAV, MP4.`);
+                    return false;
+                }
+            }
+            return true;
         }
 
         function runUniversalTool(toolId, toolName) {
@@ -497,26 +522,25 @@
             const fileInput = document.getElementById(`file-${toolId}`);
             const outputBox = document.getElementById(`output-${toolId}`);
 
-            const hasText = promptText.trim().length > 0;
-            const hasFile = fileInput.files.length > 0;
+            if (!validateInput(promptText, fileInput)) return;
 
-            if(!hasText && !hasFile) {
-                alert("Por favor escribe una instrucción o adjunta un archivo, audio o video.");
-                return;
-            }
-
-            let sourceInfo = hasText ? promptText : `Archivo: ${fileInput.files[0].name}`;
-            outputBox.textContent = "Procesando contenido multimedia y texto con IA...";
-            addToHistory(toolName, sourceInfo);
+            const sourceInfo = promptText.trim() ? promptText : `Archivo: ${fileInput.files[0].name}`;
+            
+            // Mejora 1: Animación y feedback visual de carga en tiempo real
+            outputBox.className = "output-box loading-pulse";
+            outputBox.textContent = "⏳ Analizando datos y procesando con IA...";
             
             setTimeout(() => {
-                outputBox.textContent = `✅ [${toolName}] procesado con éxito.\n- Entrada: ${hasText ? '"' + promptText + '"' : 'Archivo adjunto'}\n- Resultado optimizado y listo para exportar.`;
+                outputBox.className = "output-box";
+                const result = `✅ [${toolName}] procesado con éxito.\n- Entrada: "${sourceInfo}"\n- Resultado generado y optimizado para su aplicación ejecutiva.`;
+                outputBox.textContent = result;
+                addToHistory(toolName, sourceInfo, result);
             }, 1200);
         }
 
         function exportDoc(toolId) {
             const outputText = document.getElementById(`output-${toolId}`).textContent;
-            if(outputText.includes("Resultado aquí...")) {
+            if(outputText.includes("Resultado aquí...") || outputText.includes("Tabla financiera aquí...")) {
                 alert("Primero procesa información en esta herramienta antes de exportar.");
                 return;
             }
@@ -537,12 +561,12 @@
 
             inputField.value = '';
             chatContainer.scrollTop = chatContainer.scrollHeight;
-            addToHistory('Chat Libre', text);
+            addToHistory('Chat Libre', text, 'Conversación continua');
 
             setTimeout(() => {
                 const aiMsg = document.createElement('div');
                 aiMsg.className = 'chat-msg ai';
-                aiMsg.textContent = `Procesando tu consulta sobre "${text}": Analizando contexto de texto y multimedia. ¿Deseas que profundicemos en algún aspecto en particular?`;
+                aiMsg.textContent = `Procesando consulta: Analizando contexto en tiempo real para "${text}". ¿Deseas afinar algún parámetro de tu estrategia?`;
                 chatContainer.appendChild(aiMsg);
                 chatContainer.scrollTop = chatContainer.scrollHeight;
             }, 1000);
@@ -552,7 +576,10 @@
             for(let i=1; i<=6; i++) {
                 if(document.getElementById(`prompt-${i}`)) document.getElementById(`prompt-${i}`).value = '';
                 if(document.getElementById(`file-${i}`)) document.getElementById(`file-${i}`).value = '';
-                if(document.getElementById(`output-${i}`)) document.getElementById(`output-${i}`).textContent = 'Resultado aquí...';
+                if(document.getElementById(`output-${i}`)) {
+                    document.getElementById(`output-${i}`).className = "output-box";
+                    document.getElementById(`output-${i}`).textContent = 'Resultado aquí...';
+                }
             }
             document.getElementById('chat-container').innerHTML = '<div class="chat-msg ai">¡Hola! Soy tu asistente universal. ¿En qué te puedo ayudar hoy?</div>';
         }
