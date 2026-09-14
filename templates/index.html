@@ -211,7 +211,7 @@
                 </div>
             </div>
 
-            <!-- 5. MÓDULO: Generador de Imágenes -->
+            <!-- 5. MÓDULO CON HISTORIAL CORREGIDO: Generador de Imágenes -->
             <div class="col-md-6">
                 <div class="card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -219,11 +219,11 @@
                         <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-imagen')">📖 Manual</button>
                     </div>
                     <div id="manual-imagen" class="manual-box">
-                        <strong>Cómo usar:</strong> Diseña recursos visuales para tus marcas o campañas describiendo la escena detalladamente.
+                        <strong>Cómo usar:</strong> Diseña recursos visuales describiendo la escena detalladamente. Las creaciones se quedan registradas en el historial.
                     </div>
-                    <form action="/generar" method="POST" enctype="multipart/form-data">
+                    <form action="/generar" method="POST" enctype="multipart/form-data" onsubmit="guardarHistorialImagen()">
                         <div class="mb-3">
-                            <input type="text" name="prompt" class="form-control" placeholder="Ej. Mockup de producto tecnológico minimalista..." required>
+                            <input type="text" name="prompt" id="promptImagenInput" class="form-control" placeholder="Ej. Mockup de producto tecnológico minimalista..." required>
                         </div>
                         <div class="mb-2">
                             <input type="file" name="referencia_imagen" id="fileImagen" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileImagen', 'fileNameImagen')">
@@ -232,12 +232,19 @@
                         <input type="hidden" name="pro_key" value="PRO-150-ACTIVO">
                         <button type="submit" class="btn btn-primary w-100 mt-2">Generar Imagen</button>
                     </form>
-                    {% if imagen_url %}
-                    <div class="text-center mt-3">
-                        <span class="text-success small fw-bold">¡Imagen generada con éxito!</span>
-                        <img src="{{ url_for('static', filename=imagen_url) }}" class="img-fluid rounded shadow mt-1" style="max-height: 180px;" alt="Imagen IA">
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-secondary w-100" onclick="limpiarChat('resultImagen')">🧹 Limpiar Historial de Imágenes</button>
                     </div>
-                    {% endif %}
+                    <div class="chat-box" id="resultImagen">
+                        Historial de Imágenes IA...
+                        {% if imagen_url %}
+                        <div class="text-center mt-3">
+                            <span class="text-success small fw-bold">¡Última imagen generada con éxito!</span>
+                            <br>
+                            <img src="{{ url_for('static', filename=imagen_url) }}" class="img-fluid rounded shadow mt-2" style="max-height: 160px;" alt="Imagen IA">
+                        </div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
 
@@ -352,7 +359,7 @@
     <script>
         // Cargar historiales almacenados al iniciar
         window.onload = function() {
-            const boxes = ['resultGuiones', 'resultCopys', 'resultB2B', 'chatBoxResult', 'resultVideo', 'resultExcel', 'resultWord', 'resultTraductor'];
+            const boxes = ['resultGuiones', 'resultCopys', 'resultB2B', 'chatBoxResult', 'resultImagen', 'resultVideo', 'resultExcel', 'resultWord', 'resultTraductor'];
             boxes.forEach(boxId => {
                 const saved = localStorage.getItem(boxId);
                 if (saved) {
@@ -360,6 +367,13 @@
                 }
             });
         };
+
+        function guardarHistorialImagen() {
+            const promptVal = document.getElementById('promptImagenInput').value;
+            const imgBox = document.getElementById('resultImagen');
+            imgBox.innerHTML += `<div class="mb-2 text-start"><strong>Prompt:</strong> ${promptVal}</div>`;
+            localStorage.setItem('resultImagen', imgBox.innerHTML);
+        }
 
         function abrirSidebar() {
             document.getElementById("mySidebar").style.width = "280px";
@@ -389,7 +403,7 @@
 
         function nuevoChatGeneral() {
             if (confirm("¿Deseas reiniciar todos los paneles para un nuevo flujo?")) {
-                const boxes = ['resultGuiones', 'resultCopys', 'resultB2B', 'chatBoxResult', 'resultVideo', 'resultExcel', 'resultWord', 'resultTraductor'];
+                const boxes = ['resultGuiones', 'resultCopys', 'resultB2B', 'chatBoxResult', 'resultImagen', 'resultVideo', 'resultExcel', 'resultWord', 'resultTraductor'];
                 boxes.forEach(boxId => {
                     document.getElementById(boxId).innerHTML = 'Nuevo chat iniciado...';
                     localStorage.removeItem(boxId);
