@@ -13,7 +13,7 @@
             min-height: 100vh;
         }
 
-        /* Barra Lateral Izquierda (Sidebar / Historial) */
+        /* Barra Lateral Izquierda (Historial) */
         .sidebar {
             width: 260px;
             background-color: rgba(15, 23, 42, 0.95);
@@ -146,7 +146,7 @@
 
         textarea {
             width: 100%;
-            height: 70px;
+            height: 65px;
             background-color: #0b0f15;
             color: #f8fafc;
             border: 1px solid #30363d;
@@ -404,6 +404,31 @@
                     <div class="output-box" id="output-5">Resultado de video aquí...</div>
                 </div>
             </div>
+
+            <!-- Herramienta 6: Traductor de Texto y Audio con IA -->
+            <div class="tool-card">
+                <div>
+                    <h3>6. Traductor de Texto y Audio IA</h3>
+                    <p>Traduce textos o sube un archivo de audio en otro idioma para obtener traducción y voz sintética en español.</p>
+                    
+                    <button class="help-toggle-btn" onclick="toggleHelp(6)">¿Cómo usar esta herramienta?</button>
+                    <div class="help-dropdown" id="help-6">
+                        <strong>¿Qué puedes hacer?</strong>
+                        <ul>
+                            <li>Traducir fragmentos de texto o discursos instantáneamente.</li>
+                            <li>Convertir audios en otros idiomas a voz generada en español.</li>
+                        </ul>
+                        <em style="color: #38bdf8;">Ejemplo: Sube un archivo .mp3 o escribe el texto a traducir</em>
+                    </div>
+
+                    <textarea id="prompt-6" placeholder="Escribe el texto a traducir o sube un audio abajo..."></textarea>
+                    <input type="file" id="audio-file" accept=".mp3, .wav, .m4a, .ogg" style="font-size: 11px; margin-bottom: 8px; width: 100%;">
+                </div>
+                <div>
+                    <button class="action-btn" onclick="runTranslator()">Traducir y Generar Voz</button>
+                    <div class="output-box" id="output-6">Traducción y audio aquí...</div>
+                </div>
+            </div>
         </div>
 
         <!-- Sección de Archivos -->
@@ -420,7 +445,7 @@
         </div>
     </div>
 
-    <!-- Script Firebase y Lógica del Historial -->
+    <!-- Script Firebase y Lógica -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -460,7 +485,6 @@
         function addToHistory(toolName, text) {
             const historyList = document.getElementById('history-list');
             
-            // Si es el mensaje por defecto, lo borramos
             if(historyList.children.length === 1 && historyList.children[0].style.color === 'rgb(100, 116, 139)') {
                 historyList.innerHTML = '';
             }
@@ -468,11 +492,10 @@
             const li = document.createElement('li');
             li.className = 'history-item';
             
-            // Recortar texto si es muy largo
             const shortText = text.length > 25 ? text.substring(0, 25) + '...' : text;
             li.innerHTML = `<strong>${toolName}</strong><span>"${shortText}"</span>`;
             
-            historyList.prepend(li); // Agregar al inicio de la lista
+            historyList.prepend(li);
         }
 
         function runTool(toolId, toolName) {
@@ -490,6 +513,25 @@
             setTimeout(() => {
                 outputBox.textContent = `[Resultado de ${toolName}]: Procesado con éxito para: "${promptText}".`;
             }, 1000);
+        }
+
+        function runTranslator() {
+            const promptText = document.getElementById('prompt-6').value;
+            const audioInput = document.getElementById('audio-file');
+            const outputBox = document.getElementById('output-6');
+
+            if(!promptText.trim() && audioInput.files.length === 0) {
+                alert("Por favor escribe un texto o sube un archivo de audio para traducir.");
+                return;
+            }
+
+            const targetName = audioInput.files.length > 0 ? audioInput.files[0].name : promptText;
+            outputBox.textContent = "Traduciendo y sintetizando voz con IA...";
+            addToHistory('Traductor Audio/Texto', targetName);
+
+            setTimeout(() => {
+                outputBox.textContent = `✅ Traducción al español completada con éxito.\n🔊 Audio sintético generado y listo para reproducción.`;
+            }, 1500);
         }
 
         function processFile() {
@@ -511,12 +553,13 @@
         }
 
         function clearAllOutputs() {
-            for(let i=1; i<=5; i++) {
-                document.getElementById(`prompt-${i}`).value = '';
-                document.getElementById(`output-${i}`).textContent = 'Resultado aquí...';
+            for(let i=1; i<=6; i++) {
+                if(document.getElementById(`prompt-${i}`)) document.getElementById(`prompt-${i}`).value = '';
+                if(document.getElementById(`output-${i}`)) document.getElementById(`output-${i}`).textContent = 'Resultado aquí...';
             }
-            document.getElementById('business-file').value = '';
-            document.getElementById('file-output').textContent = 'El análisis del archivo aparecerá aquí...';
+            if(document.getElementById('audio-file')) document.getElementById('audio-file').value = '';
+            if(document.getElementById('business-file')) document.getElementById('business-file').value = '';
+            if(document.getElementById('file-output')) document.getElementById('file-output').textContent = 'El análisis del archivo aparecerá aquí...';
         }
     </script>
 </body>
