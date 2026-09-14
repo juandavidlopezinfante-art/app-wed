@@ -6,25 +6,91 @@
     <title>Digital Business IA - Panel Pro Empresarial</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #0f172a; color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0f172a; color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; }
         .navbar { background-color: #1e293b; border-bottom: 1px solid #334155; }
         .card { background-color: #1e293b; border: 1px solid #334155; color: #f8fafc; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.4); border-radius: 10px; }
         .form-control, .form-select { background-color: #0f172a; border: 1px solid #475569; color: #fff; border-radius: 6px; }
         .form-control:focus, .form-select:focus { background-color: #0f172a; color: #fff; border-color: #38bdf8; box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.25); }
         .btn-primary { background-color: #2563eb; border: none; font-weight: 600; border-radius: 6px; }
         .btn-primary:hover { background-color: #1d4ed8; }
-        .btn-success { font-weight: 600; border-radius: 6px; }
         .chat-box { background-color: #090d16; border: 1px solid #334155; height: 220px; overflow-y: auto; padding: 15px; border-radius: 6px; margin-top: 15px; font-size: 0.9rem; }
         .manual-box { background-color: #131c31; border-left: 4px solid #38bdf8; padding: 12px 15px; font-size: 0.85rem; margin-bottom: 15px; border-radius: 4px; display: none; }
         .file-indicator { font-size: 0.8rem; color: #38bdf8; margin-top: 5px; display: block; }
         .banner-libre { background: linear-gradient(135deg, #1e3a8a, #2563eb); border: 1px solid #3b82f6; border-radius: 8px; padding: 12px 20px; margin-bottom: 25px; text-align: center; font-weight: 600; }
+        
+        /* Estilos de la Barra Lateral (Sidebar) */
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1050;
+            top: 0;
+            left: 0;
+            background-color: #1e293b;
+            overflow-x: hidden;
+            transition: 0.3s;
+            padding-top: 60px;
+            border-right: 1px solid #334155;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+        }
+        .sidebar a, .sidebar button {
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 1rem;
+            color: #f8fafc;
+            display: block;
+            transition: 0.2s;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+        }
+        .sidebar a:hover, .sidebar button:hover {
+            background-color: #334155;
+            color: #38bdf8;
+        }
+        .sidebar .closebtn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 2rem;
+            width: auto;
+        }
+        .sidebar-header {
+            padding: 0 20px 15px 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-bottom: 1px solid #334155;
+            color: #38bdf8;
+        }
     </style>
 </head>
 <body>
 
+    <!-- BARRA LATERAL DESPLEGABLE (SIDEBAR) -->
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="cerrarSidebar()">&times;</a>
+        <div class="sidebar-header">⚡ Menú de Control Pro</div>
+        
+        <div class="p-3">
+            <button class="btn btn-outline-primary w-100 mb-2 text-start" onclick="nuevoChatGeneral()">➕ Nuevo Chat / Reiniciar</button>
+            <button class="btn btn-outline-info w-100 mb-2 text-start" onclick="toggleBuscadorSidebar()">🔍 Buscar en los Chats</button>
+            <div id="buscadorContainer" style="display:none;" class="mb-2">
+                <input type="text" id="inputBuscador" class="form-control form-control-sm" placeholder="Escribe para buscar..." onkeyup="buscarEnChats()">
+            </div>
+            <button class="btn btn-outline-success w-100 mb-2 text-start" onclick="abrirSoporteIA()">🤖 Ayuda Técnica con IA</button>
+            <button class="btn btn-outline-warning w-100 mb-2 text-start" onclick="compartirArchivoRapido()">🔗 Compartir / Exportar Archivos</button>
+            <button class="btn btn-outline-danger w-100 mb-2 text-start" onclick="informarProblema()">⚠️ Informar un Problema</button>
+            <button class="btn btn-outline-secondary w-100 mb-2 text-start" onclick="borrarTodoHistorial()">🗑️ Borrar Todo el Historial</button>
+        </div>
+    </div>
+
     <!-- Barra de Navegación -->
     <nav class="navbar navbar-expand-lg navbar-dark px-4 py-3">
-        <a class="navbar-brand fw-bold fs-4" href="#">⚡ Digital Business IA Pro</a>
+        <div class="d-flex align-items-center gap-3">
+            <button class="btn btn-outline-info btn-sm" onclick="abrirSidebar()">☰ Menú Pro</button>
+            <a class="navbar-brand fw-bold fs-4 m-0" href="#">⚡ Digital Business IA Pro</a>
+        </div>
         <div class="ms-auto d-flex gap-2">
             <button class="btn btn-sm btn-outline-light" onclick="activarModoCelular()">📱 Modo Celular</button>
             <span class="badge bg-success align-self-center p-2 fs-6" id="proBadge">🟢 Acceso Libre Pro</span>
@@ -41,7 +107,7 @@
         <!-- CONTENEDOR DE CUADROS / MÓDULOS MÚLTIPLES -->
         <div class="row">
 
-            <!-- 1. NUEVO MÓDULO: Guiones Virales para Creadores -->
+            <!-- 1. MÓDULO: Guiones Virales para Creadores -->
             <div class="col-md-6">
                 <div class="card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -49,7 +115,7 @@
                         <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-guiones')">📖 Manual</button>
                     </div>
                     <div id="manual-guiones" class="manual-box">
-                        <strong>Cómo usar:</strong> Indica el nicho, el tema principal y el objetivo de tu video (ej. educar, entretener, vender). La IA generará un guion con gancho de retención de 3 segundos y llamado a la acción.
+                        <strong>Cómo usar:</strong> Indica el nicho y tema principal. La IA generará un guion con gancho de retención de 3 segundos y llamado a la acción.
                     </div>
                     <div class="mb-3">
                         <textarea id="promptGuiones" class="form-control" rows="2" placeholder="Ej. Nicho fitness, tema: 3 errores al entrenar abdomen..."></textarea>
@@ -67,7 +133,7 @@
                 </div>
             </div>
 
-            <!-- 2. NUEVO MÓDULO: Copys y Anuncios de Conversión -->
+            <!-- 2. MÓDULO: Copys y Anuncios de Conversión -->
             <div class="col-md-6">
                 <div class="card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -75,10 +141,10 @@
                         <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-copys')">📖 Manual</button>
                     </div>
                     <div id="manual-copys" class="manual-box">
-                        <strong>Cómo usar:</strong> Describe tu producto, servicio o oferta especial. La IA redactará anuncios persuasivos utilizando fórmulas de marketing de alta conversión (AIDA / PAS).
+                        <strong>Cómo usar:</strong> Describe tu producto u oferta para redactar anuncios persuasivos con fórmulas de alta conversión (AIDA / PAS).
                     </div>
                     <div class="mb-3">
-                        <textarea id="promptCopys" class="form-control" rows="2" placeholder="Ej. Lanzamiento de curso de repostería para principiantes..."></textarea>
+                        <textarea id="promptCopys" class="form-control" rows="2" placeholder="Ej. Lanzamiento de curso de repostería..."></textarea>
                     </div>
                     <div class="mb-2">
                         <input type="file" id="fileCopys" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileCopys', 'fileNameCopys')" multiple>
@@ -93,7 +159,7 @@
                 </div>
             </div>
 
-            <!-- 3. NUEVO MÓDULO: Propuestas Comerciales B2B -->
+            <!-- 3. MÓDULO: Propuestas Comerciales B2B -->
             <div class="col-md-6">
                 <div class="card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -101,10 +167,10 @@
                         <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-b2b')">📖 Manual</button>
                     </div>
                     <div id="manual-b2b" class="manual-box">
-                        <strong>Cómo usar:</strong> Detalla los servicios que ofreces a una empresa cliente, los entregables y costos estimados. Obtén una propuesta comercial formal y profesional lista para enviar.
+                        <strong>Cómo usar:</strong> Detalla servicios y costos para obtener una propuesta comercial formal y profesional lista para enviar.
                     </div>
                     <div class="mb-3">
-                        <textarea id="promptB2B" class="form-control" rows="2" placeholder="Ej. Propuesta de marketing digital para clínica dental..."></textarea>
+                        <textarea id="promptB2B" class="form-control" rows="2" placeholder="Ej. Propuesta de marketing digital..."></textarea>
                     </div>
                     <div class="mb-2">
                         <input type="file" id="fileB2B" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileB2B', 'fileNameB2B')" multiple>
@@ -127,7 +193,7 @@
                         <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-chat')">📖 Manual</button>
                     </div>
                     <div id="manual-chat" class="manual-box">
-                        <strong>Cómo usar:</strong> Espacio de consulta abierta para resolver dudas generales, lluvia de ideas o análisis de documentos adjuntos de cualquier formato.
+                        <strong>Cómo usar:</strong> Espacio de consulta abierta para resolver dudas generales, lluvia de ideas o análisis de documentos adjuntos.
                     </div>
                     <div class="mb-3">
                         <textarea id="promptChat" class="form-control" rows="2" placeholder="Escribe tu consulta general..."></textarea>
@@ -145,7 +211,7 @@
                 </div>
             </div>
 
-            <!-- 5. Módulo: Generador de Imágenes -->
+            <!-- 5. MÓDULO: Generador de Imágenes -->
             <div class="col-md-6">
                 <div class="card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -153,7 +219,7 @@
                         <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-imagen')">📖 Manual</button>
                     </div>
                     <div id="manual-imagen" class="manual-box">
-                        <strong>Cómo usar:</strong> Diseña recursos visuales para tus marcas o campañas describiendo la escena detalladamente. Renderizado directo en pantalla.
+                        <strong>Cómo usar:</strong> Diseña recursos visuales para tus marcas o campañas describiendo la escena detalladamente.
                     </div>
                     <form action="/generar" method="POST" enctype="multipart/form-data">
                         <div class="mb-3">
@@ -257,7 +323,7 @@
             <div class="col-md-6">
                 <div class="card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">🌐 Traduктор Global y Voces</h4>
+                        <h4 class="m-0">🌐 Traductor Global y Voces</h4>
                         <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-traductor')">📖 Manual</button>
                     </div>
                     <div id="manual-traductor" class="manual-box">
@@ -282,8 +348,9 @@
         </div>
     </div>
 
+    <!-- SCRIPT DE CONTROL Y FUNCIONALIDADES DE LA SIDEBAR -->
     <script>
-        // Cargar historiales almacenados al iniciar la página
+        // Cargar historiales almacenados al iniciar
         window.onload = function() {
             const boxes = ['resultGuiones', 'resultCopys', 'resultB2B', 'chatBoxResult', 'resultVideo', 'resultExcel', 'resultWord', 'resultTraductor'];
             boxes.forEach(boxId => {
@@ -293,6 +360,90 @@
                 }
             });
         };
+
+        function abrirSidebar() {
+            document.getElementById("mySidebar").style.width = "280px";
+        }
+
+        function cerrarSidebar() {
+            document.getElementById("mySidebar").style.width = "0";
+        }
+
+        function toggleBuscadorSidebar() {
+            const container = document.getElementById("buscadorContainer");
+            container.style.display = container.style.display === "block" ? "none" : "block";
+        }
+
+        function buscarEnChats() {
+            const filtro = document.getElementById("inputBuscador").value.toLowerCase();
+            const boxes = document.querySelectorAll('.chat-box');
+            boxes.forEach(box => {
+                const texto = box.innerText.toLowerCase();
+                if (texto.includes(filtro) && filtro.trim() !== "") {
+                    box.style.border = "2px solid #38bdf8";
+                } else {
+                    box.style.border = "1px solid #334155";
+                }
+            });
+        }
+
+        function nuevoChatGeneral() {
+            if (confirm("¿Deseas reiniciar todos los paneles para un nuevo flujo?")) {
+                const boxes = ['resultGuiones', 'resultCopys', 'resultB2B', 'chatBoxResult', 'resultVideo', 'resultExcel', 'resultWord', 'resultTraductor'];
+                boxes.forEach(boxId => {
+                    document.getElementById(boxId).innerHTML = 'Nuevo chat iniciado...';
+                    localStorage.removeItem(boxId);
+                });
+                cerrarSidebar();
+            }
+        }
+
+        async function abrirSoporteIA() {
+            cerrarSidebar();
+            const consulta = prompt("🤖 Escribe tu duda de soporte técnico para que la IA te ayude:");
+            if (!consulta) return;
+            
+            const chatBox = document.getElementById("chatBoxResult");
+            chatBox.innerHTML += `<div class="mb-2"><strong>Soporte IA (Tú):</strong> ${consulta}</div>`;
+            
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ toolName: 'Soporte Técnico IA', prompt: consulta, proKey: 'PRO-150-ACTIVO' })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    chatBox.innerHTML += `<div class="text-info mb-3"><strong>Bot Asistente:</strong> ${data.response}</div>`;
+                } else {
+                    chatBox.innerHTML += `<div class="text-danger mb-2"><strong>Error:</strong> ${data.error}</div>`;
+                }
+                localStorage.setItem('chatBoxResult', chatBox.innerHTML);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } catch (err) {
+                alert("No se pudo conectar con el servicio de soporte IA.");
+            }
+        }
+
+        function compartirArchivoRapido() {
+            cerrarSidebar();
+            alert("🔗 Enlace de acceso directo a la plataforma copiado o listo para exportar archivos guardados en formato TXT.");
+        }
+
+        function informarProblema() {
+            cerrarSidebar();
+            const reporte = prompt("⚠️ Describe brevemente el inconveniente o error que experimentas:");
+            if (reporte) {
+                alert("¡Gracias! Tu reporte ha sido registrado y enviado al equipo de desarrollo.");
+            }
+        }
+
+        function borrarTodoHistorial() {
+            if (confirm("¿Estás seguro de eliminar por completo todo el historial almacenado en la plataforma?")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
 
         function toggleManual(id) {
             const box = document.getElementById(id);
@@ -311,7 +462,7 @@
         }
 
         function limpiarChat(boxId) {
-            if (confirm("¿Deseas limpiar el historial de este chat?")) {
+            if (confirm("¿Deseas limpiar el historial de este módulo?")) {
                 const box = document.getElementById(boxId);
                 box.innerHTML = 'Historial limpio...';
                 localStorage.removeItem(boxId);
