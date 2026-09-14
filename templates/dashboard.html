@@ -80,6 +80,7 @@
             cursor: pointer;
             width: 100%;
             transition: background 0.2s;
+            margin-bottom: 10px;
         }
         .action-btn:hover { background-color: #0ea5e9; }
         
@@ -95,13 +96,41 @@
             font-size: 12px;
         }
 
-        /* Sección de archivos (Excel, Word, etc.) */
+        /* Estilo para los botones y paneles desplegables de ayuda */
+        .help-toggle-btn {
+            background: none;
+            border: none;
+            color: #38bdf8;
+            cursor: pointer;
+            font-size: 12px;
+            text-decoration: underline;
+            padding: 0;
+            margin-bottom: 12px;
+            display: inline-block;
+            text-align: left;
+        }
+        .help-dropdown {
+            display: none;
+            background-color: #0f172a;
+            border-left: 3px solid #38bdf8;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        .help-dropdown ul { padding-left: 15px; margin: 5px 0 0 0; }
+        .help-dropdown li { margin-bottom: 3px; }
+
+        /* Sección de archivos */
         .file-section {
             background-color: #1e293b;
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             border-top: 4px solid #10b981;
+            margin-bottom: 25px;
         }
         .file-section h3 { color: #10b981; margin-top: 0; }
         .file-dropzone {
@@ -136,12 +165,24 @@
             <button class="logout-btn" id="logout-btn">Cerrar Sesión</button>
         </header>
 
-        <!-- Cuadros interactivos de herramientas de texto -->
+        <!-- Cuadrícula de herramientas de texto, fotos y videos -->
         <div class="tools-grid">
+            <!-- Herramienta 1: Asistente General -->
             <div class="tool-card">
                 <div>
                     <h3>1. Asistente General</h3>
                     <p>Resuelve dudas, conceptualiza ideas o busca explicaciones detalladas para cualquier reto empresarial.</p>
+                    
+                    <button class="help-toggle-btn" onclick="toggleHelp(1)">¿Cómo usar esta herramienta?</button>
+                    <div class="help-dropdown" id="help-1">
+                        <strong>¿Qué puedes hacer?</strong>
+                        <ul>
+                            <li>Resolver dudas estratégicas o operativas.</li>
+                            <li>Planificar pasos para iniciar proyectos.</li>
+                        </ul>
+                        <em style="color: #38bdf8;">Ejemplo: "¿Cómo estructurar una estrategia de ventas?"</em>
+                    </div>
+
                     <textarea id="prompt-1" placeholder="Ej: ¿Qué pasos sigo para abrir un negocio..."></textarea>
                 </div>
                 <div>
@@ -150,10 +191,22 @@
                 </div>
             </div>
 
+            <!-- Herramienta 2: Generador de Negocios -->
             <div class="tool-card">
                 <div>
                     <h3>2. Generador de Negocios</h3>
                     <p>Crea eslóganes comerciales, planes de marketing y estrategias de venta enfocadas en tu marca.</p>
+                    
+                    <button class="help-toggle-btn" onclick="toggleHelp(2)">¿Cómo usar esta herramienta?</button>
+                    <div class="help-dropdown" id="help-2">
+                        <strong>¿Qué puedes hacer?</strong>
+                        <ul>
+                            <li>Diseñar nombres y eslóganes comerciales.</li>
+                            <li>Estructurar campañas de lanzamiento.</li>
+                        </ul>
+                        <em style="color: #38bdf8;">Ejemplo: "Escribe un eslogan para una marca de ropa"</em>
+                    </div>
+
                     <textarea id="prompt-2" placeholder="Ej: Escribe un eslogan para una marca de ropa..."></textarea>
                 </div>
                 <div>
@@ -162,15 +215,75 @@
                 </div>
             </div>
 
+            <!-- Herramienta 3: Creador de Contenido -->
             <div class="tool-card">
                 <div>
                     <h3>3. Creador de Contenido</h3>
                     <p>Produce correos corporativos, respuestas formales a clientes o textos persuasivos para redes sociales.</p>
+                    
+                    <button class="help-toggle-btn" onclick="toggleHelp(3)">¿Cómo usar esta herramienta?</button>
+                    <div class="help-dropdown" id="help-3">
+                        <strong>¿Qué puedes hacer?</strong>
+                        <ul>
+                            <li>Redactar correos profesionales de seguimiento.</li>
+                            <li>Crear textos atractivos para publicaciones.</li>
+                        </ul>
+                        <em style="color: #38bdf8;">Ejemplo: "Redacta un correo para un cliente interesado"</em>
+                    </div>
+
                     <textarea id="prompt-3" placeholder="Ej: Redacta un correo de seguimiento a un cliente..."></textarea>
                 </div>
                 <div>
                     <button class="action-btn" onclick="runTool(3)">Redactar Contenido</button>
                     <div class="output-box" id="output-3">Resultado aquí...</div>
+                </div>
+            </div>
+
+            <!-- Herramienta 4: Generador de Imágenes / Fotos -->
+            <div class="tool-card">
+                <div>
+                    <h3>4. Generador de Fotos e Imágenes</h3>
+                    <p>Crea conceptos visuales, logotipos, banners publicitarios y diseños fotorrealistas para tu marca.</p>
+                    
+                    <button class="help-toggle-btn" onclick="toggleHelp(4)">¿Cómo usar esta herramienta?</button>
+                    <div class="help-dropdown" id="help-4">
+                        <strong>¿Qué puedes hacer?</strong>
+                        <ul>
+                            <li>Diseñar recursos visuales para tus campañas.</li>
+                            <li>Crear prototipos de productos o ropa.</li>
+                        </ul>
+                        <em style="color: #38bdf8;">Ejemplo: "Un diseño moderno de camiseta deportiva en color negro"</em>
+                    </div>
+
+                    <textarea id="prompt-4" placeholder="Ej: Logotipo minimalista para una marca de tecnología..."></textarea>
+                </div>
+                <div>
+                    <button class="action-btn" onclick="runTool(4)">Generar Imagen</button>
+                    <div class="output-box" id="output-4">Resultado visual aquí...</div>
+                </div>
+            </div>
+
+            <!-- Herramienta 5: Generador de Videos -->
+            <div class="tool-card">
+                <div>
+                    <h3>5. Generador de Videos IA</h3>
+                    <p>Diseña guiones, secuencias dinámicas y conceptos visuales en video para reels, TikToks o anuncios.</p>
+                    
+                    <button class="help-toggle-btn" onclick="toggleHelp(5)">¿Cómo usar esta herramienta?</button>
+                    <div class="help-dropdown" id="help-5">
+                        <strong>¿Qué puedes hacer?</strong>
+                        <ul>
+                            <li>Crear guiones y bocetos para video marketing.</li>
+                            <li>Planear contenidos audiovisuales promocionales.</li>
+                        </ul>
+                        <em style="color: #38bdf8;">Ejemplo: "Video promocional de 15 segundos para un nuevo producto"</em>
+                    </div>
+
+                    <textarea id="prompt-5" placeholder="Ej: Guion para video corto de lanzamiento de marca..."></textarea>
+                </div>
+                <div>
+                    <button class="action-btn" onclick="runTool(5)">Generar Video</button>
+                    <div class="output-box" id="output-5">Resultado de video aquí...</div>
                 </div>
             </div>
         </div>
@@ -189,7 +302,7 @@
         </div>
     </div>
 
-    <!-- Script de control -->
+    <!-- Script de control de Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -215,8 +328,17 @@
         });
     </script>
 
-    <!-- Funciones globales -->
+    <!-- Funciones globales de las herramientas y pestañas desplegables -->
     <script>
+        function toggleHelp(toolId) {
+            const dropdown = document.getElementById(`help-${toolId}`);
+            if (dropdown.style.display === 'block') {
+                dropdown.style.display = 'none';
+            } else {
+                dropdown.style.display = 'block';
+            }
+        }
+
         function runTool(toolId) {
             const promptText = document.getElementById(`prompt-${toolId}`).value;
             const outputBox = document.getElementById(`output-${toolId}`);
