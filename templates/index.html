@@ -13,6 +13,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            flex-direction: column;
         }
         .login-card {
             background-color: #1e293b;
@@ -43,6 +44,32 @@
         
         .btn-anon { background-color: #334155; color: #f8fafc; }
         .btn-anon:hover { background-color: #475569; }
+
+        .help-toggle {
+            background: none;
+            border: none;
+            color: #38bdf8;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 14px;
+            text-decoration: underline;
+        }
+        .help-panel {
+            display: none;
+            background-color: #1e293b;
+            border-left: 4px solid #38bdf8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            width: 320px;
+            text-align: left;
+            font-size: 13px;
+            color: #94a3b8;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .help-panel h4 { color: #f8fafc; margin-top: 0; margin-bottom: 8px; }
+        .help-panel ul { padding-left: 15px; margin: 0; }
+        .help-panel li { margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -53,6 +80,19 @@
         <!-- Botones de Acceso -->
         <button id="google-login-btn" class="btn btn-google">Continuar con Google</button>
         <button id="anon-login-btn" class="btn btn-anon">Entrar de forma anónima</button>
+
+        <!-- Botón para desplegar instrucciones -->
+        <button class="help-toggle" id="toggle-help-btn">¿Cómo usar la plataforma?</button>
+    </div>
+
+    <!-- Panel desplegable de instrucciones -->
+    <div class="help-panel" id="help-panel">
+        <h4>Instrucciones de Uso</h4>
+        <ul>
+            <li><strong>Acceso con Google:</strong> Guarda tu progreso e historial de forma segura.</li>
+            <li><strong>Acceso Anónimo:</strong> Ingresa de inmediato para explorar sin registrar datos personales (válido por 30 días).</li>
+            <li><strong>Navegación:</strong> Una vez dentro, utiliza el panel principal para gestionar tus herramientas de inteligencia artificial.</li>
+        </ul>
     </div>
 
     <!-- Script de autenticación mediante Firebase CDN -->
@@ -61,7 +101,7 @@
         import { getAuth, GoogleAuthProvider, signInWithPopup, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
-            apiKey: "PEGA_AQUI_TU_API_KEY_REAL",
+            apiKey: "AIzaSyCy058MvYn1E2QjLS09uUlvMetf2UMP2JE",
             authDomain: "digital-business-ia.firebaseapp.com",
             projectId: "digital-business-ia",
             storageBucket: "digital-business-ia.firebasestorage.app",
@@ -85,6 +125,20 @@
             signInAnonymously(auth)
             .then(() => { window.location.href = "/dashboard"; })
             .catch((error) => { console.error("Error en Anónimo:", error); });
+        });
+
+        // Lógica para abrir y cerrar el panel de instrucciones
+        const toggleBtn = document.getElementById('toggle-help-btn');
+        const helpPanel = document.getElementById('help-panel');
+
+        toggleBtn.addEventListener('click', () => {
+            if (helpPanel.style.display === 'block') {
+                helpPanel.style.display = 'none';
+                toggleBtn.textContent = '¿Cómo usar la plataforma?';
+            } else {
+                helpPanel.style.display = 'block';
+                toggleBtn.textContent = 'Ocultar instrucciones';
+            }
         });
     </script>
 </body>
