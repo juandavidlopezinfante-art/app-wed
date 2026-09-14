@@ -1,7 +1,3 @@
 Flask
-openpyxl
-python-docx
-pytesseract
-Pillow
-pypdf
 gunicorn
+google-generativeai
