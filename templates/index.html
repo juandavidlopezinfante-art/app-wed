@@ -2,81 +2,33 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Business IA - Dashboard</title>
+    <title>Digital Business IA - Iniciar Sesión</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
             background-color: #0f172a;
             color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
         }
-
-        /* Botón de menú hamburguesa (solo visible en móviles) */
-        .menu-btn {
-            display: none;
-            background: #10B981;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            margin: 15px;
-        }
-
-        /* Estilos del menú lateral */
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 280px;
-            height: 100%;
+        .login-card {
             background-color: #1e293b;
-            transition: left 0.3s ease;
-            z-index: 1000;
-            box-shadow: 4px 0 10px rgba(0,0,0,0.5);
-        }
-
-        /* Adaptación para pantallas de celular */
-        @media (max-width: 768px) {
-            .menu-btn {
-                display: block; /* Muestra el botón en celulares */
-            }
-            .sidebar {
-                left: -280px; /* Oculta el menú por defecto en celulares */
-            }
-            .sidebar.open {
-                left: 0; /* Muestra el menú al activarlo */
-            }
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            text-align: center;
         }
     </style>
 </head>
 <body>
-
-    <!-- Botón para abrir/cerrar el menú en celular -->
-    <button onclick="toggleSidebar()" class="menu-btn">☰ Menú</button>
-
-    <!-- Tu barra lateral -->
-    <div class="sidebar">
-        <h2 style="padding: 20px; margin: 0; color: #10B981;">Digital Business IA</h2>
-        <div style="padding: 20px;">
-            <a href="#" style="background: #10B981; color: white; padding: 10px; display: block; text-align: center; border-radius: 6px; text-decoration: none; font-weight: bold;">+ Nueva Consulta</a>
-        </div>
-        <div style="padding: 20px;">
-            <p style="color: #94a3b8; font-size: 12px; font-weight: bold;">HISTORIAL RECIENTE</p>
-            <p style="color: #64748b; font-size: 14px;">No hay solicitudes aún...</p>
-        </div>
+    <div class="login-card">
+        <h1>Digital Business IA</h1>
+        <p>Inicia sesión para continuar</p>
+        <!-- Aquí va tu formulario o botones de login originales -->
     </div>
-
-    <script>
-        function toggleSidebar() {
-            const sidebar = document.querySelector('.sidebar');
-            if (sidebar) {
-                sidebar.classList.toggle('open');
-            }
-        }
-    </script>
 </body>
 </html>
