@@ -101,11 +101,53 @@
         
         <!-- Banner Informativo de Acceso Libre -->
         <div class="banner-libre shadow-sm">
-            🚀 <strong>Suite Comercial Activada:</strong> Todas las herramientas para empresarios y creadores de contenido operan sin restricciones.
+            🔥 <strong>Módulo de Tendencias Virales Activado:</strong> Prompts diarios actualizados para reventar el algoritmo de TikTok e Instagram.
         </div>
 
         <!-- CONTENEDOR DE CUADROS / MÓDULOS MÚLTIPLES -->
         <div class="row">
+
+            <!-- NUEVO MÓDULO 11: 🔥 Tendencias Virales & Prompts del Día -->
+            <div class="col-md-12">
+                <div class="card p-4 border-info">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0 text-info">🔥 Tendencias Virales & Prompts del Día (Modo Creador)</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-tendencias')">📖 Manual</button>
+                    </div>
+                    <div id="manual-tendencias" class="manual-box">
+                        <strong>Cómo usar:</strong> La IA te entrega los estilos de video de moda del día de hoy junto con sus enlaces de referencia en redes. Clickea en "Usar en Generador de Videos" para procesarlo de inmediato en nuestra plataforma.
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <button class="btn btn-outline-warning w-100 text-start py-2" onclick="cargarPromptTendencia('Estilo Cinematic Cyberpunk 3D: Cámara en movimiento rápido, iluminación neón, subtítulos dinámicos estilo MrBeast.', 'https://www.tiktok.com/tag/cyberpunkedit')">
+                                🎬 <strong>Tendencia 1:</strong> Cyberpunk Neón
+                            </button>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <button class="btn btn-outline-warning w-100 text-start py-2" onclick="cargarPromptTendencia('Estilo Historias Documentales Históricas con voz profunda y misteriosa, transiciones oscuras y subtítulos parpadeantes.', 'https://www.instagram.com/explore/tags/historyreels/')">
+                                📜 <strong>Tendencia 2:</strong> Documental Misterio
+                            </button>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <button class="btn btn-outline-warning w-100 text-start py-2" onclick="cargarPromptTendencia('Estilo Pixar 3D Animado vertical para Reels, colores vivos, emociones exageradas y gancho de retención de 3s.', 'https://www.tiktok.com/tag/pixarstyle')">
+                                🎨 <strong>Tendencia 3:</strong> Animación 3D Estilo Pixar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <textarea id="promptTendencias" class="form-control" rows="2" placeholder="Selecciona una tendencia arriba o pídele un prompt personalizado a la IA..."></textarea>
+                    </div>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-primary w-50" onclick="consultarChatIndependiente('Tendencias Virales', 'promptTendencias', 'fileTendencias', 'resultTendencias')">✨ Generar Estrategia Viral</button>
+                        <button class="btn btn-success w-50" onclick="enviarAlGeneradorDeVideos()">🚀 Usar en nuestro Generador de Videos</button>
+                    </div>
+                    <div class="mb-2">
+                        <input type="file" id="fileTendencias" class="form-control form-control-sm mt-2" onchange="mostrarNombreArchivo('fileTendencias', 'fileNameTendencias')" multiple>
+                        <span id="fileNameTendencias" class="file-indicator"></span>
+                    </div>
+                    <div class="chat-box" id="resultTendencias">Historial de Tendencias Virales y Referencias...</div>
+                </div>
+            </div>
 
             <!-- 1. MÓDULO: Guiones Virales para Creadores -->
             <div class="col-md-6">
@@ -211,7 +253,7 @@
                 </div>
             </div>
 
-            <!-- 5. MÓDULO CON HISTORIAL CORREGIDO: Generador de Imágenes -->
+            <!-- 5. MÓDULO CON HISTORIAL: Generador de Imágenes -->
             <div class="col-md-6">
                 <div class="card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -355,11 +397,11 @@
         </div>
     </div>
 
-    <!-- SCRIPT DE CONTROL Y FUNCIONALIDADES DE LA SIDEBAR -->
+    <!-- SCRIPT DE CONTROL Y FUNCIONALIDADES DE LA SIDEBAR Y TENDENCIAS -->
     <script>
         // Cargar historiales almacenados al iniciar
         window.onload = function() {
-            const boxes = ['resultGuiones', 'resultCopys', 'resultB2B', 'chatBoxResult', 'resultImagen', 'resultVideo', 'resultExcel', 'resultWord', 'resultTraductor'];
+            const boxes = ['resultTendencias', 'resultGuiones', 'resultCopys', 'resultB2B', 'chatBoxResult', 'resultImagen', 'resultVideo', 'resultExcel', 'resultWord', 'resultTraductor'];
             boxes.forEach(boxId => {
                 const saved = localStorage.getItem(boxId);
                 if (saved) {
@@ -367,6 +409,25 @@
                 }
             });
         };
+
+        function cargarPromptTendencia(promptTexto, urlReferencia) {
+            document.getElementById('promptTendencias').value = promptTexto;
+            const resultBox = document.getElementById('resultTendencias');
+            resultBox.innerHTML += `<div class="mb-2 text-info"><strong>Tendencia Seleccionada:</strong> ${promptTexto}<br><a href="${urlReferencia}" target="_blank" class="text-warning small">🔗 Ver video de referencia en redes</a></div>`;
+            resultBox.scrollTop = resultBox.scrollHeight;
+            localStorage.setItem('resultTendencias', resultBox.innerHTML);
+        }
+
+        function enviarAlGeneradorDeVideos() {
+            const promptActual = document.getElementById('promptTendencias').value;
+            if (!promptActual) {
+                alert("Primero selecciona o escribe una tendencia para enviarla al generador de videos.");
+                return;
+            }
+            document.getElementById('promptVideo').value = promptActual;
+            window.scrollTo({ top: document.getElementById('promptVideo').offsetTop - 100, behavior: 'smooth' });
+            alert("🚀 ¡Prompt transferido con éxito al módulo de Videos HD! Haz clic en 'Procesar Video' para crearlo.");
+        }
 
         function guardarHistorialImagen() {
             const promptVal = document.getElementById('promptImagenInput').value;
@@ -403,7 +464,7 @@
 
         function nuevoChatGeneral() {
             if (confirm("¿Deseas reiniciar todos los paneles para un nuevo flujo?")) {
-                const boxes = ['resultGuiones', 'resultCopys', 'resultB2B', 'chatBoxResult', 'resultImagen', 'resultVideo', 'resultExcel', 'resultWord', 'resultTraductor'];
+                const boxes = ['resultTendencias', 'resultGuiones', 'resultCopys', 'resultB2B', 'chatBoxResult', 'resultImagen', 'resultVideo', 'resultExcel', 'resultWord', 'resultTraductor'];
                 boxes.forEach(boxId => {
                     document.getElementById(boxId).innerHTML = 'Nuevo chat iniciado...';
                     localStorage.removeItem(boxId);
