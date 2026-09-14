@@ -9,34 +9,109 @@
             background: linear-gradient(135deg, #0d1117 0%, #171527 50%, #0d1117 100%);
             color: #f8fafc;
             margin: 0;
-            padding: 30px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             min-height: 100vh;
         }
-        .container { width: 100%; max-width: 1000px; }
+
+        /* Barra Lateral Izquierda (Sidebar / Historial) */
+        .sidebar {
+            width: 260px;
+            background-color: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .sidebar-brand {
+            font-size: 18px;
+            font-weight: 700;
+            color: #38bdf8;
+            margin-bottom: 25px;
+            letter-spacing: 0.5px;
+        }
+        .sidebar-btn {
+            background-color: rgba(56, 189, 248, 0.1);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            margin-bottom: 20px;
+            transition: all 0.2s;
+            font-size: 13px;
+        }
+        .sidebar-btn:hover {
+            background-color: rgba(56, 189, 248, 0.2);
+        }
+        .sidebar-section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .history-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+        .history-item {
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .history-item span {
+            display: block;
+            font-size: 10px;
+            color: #475569;
+        }
+
+        /* Contenido Principal a la Derecha */
+        .main-content {
+            margin-left: 260px;
+            flex-grow: 1;
+            padding: 30px;
+            box-sizing: border-box;
+            max-width: calc(100% - 260px);
+        }
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background-color: rgba(22, 27, 34, 0.85);
             backdrop-filter: blur(12px);
-            padding: 20px 25px;
+            padding: 18px 25px;
             border-radius: 16px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.4);
             border: 1px solid rgba(255, 255, 255, 0.05);
             margin-bottom: 30px;
         }
-        h1 { color: #38bdf8; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: 0.5px; }
+        h2 { color: #38bdf8; margin: 0; font-size: 20px; font-weight: 600; }
         .logout-btn {
             background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
             color: white;
             border: none;
-            padding: 9px 18px;
+            padding: 8px 16px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
+            font-size: 12px;
             transition: all 0.2s ease;
             box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
         }
@@ -45,7 +120,7 @@
         /* Cuadrícula de herramientas moderna */
         .tools-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
             gap: 22px;
             margin-bottom: 25px;
         }
@@ -66,32 +141,30 @@
             transform: translateY(-4px);
             box-shadow: 0 12px 40px rgba(16, 185, 129, 0.15);
         }
-        .tool-card h3 { color: #38bdf8; margin-top: 0; margin-bottom: 10px; font-size: 18px; }
-        .tool-card p { color: #94a3b8; font-size: 13px; margin-bottom: 15px; line-height: 1.4; }
+        .tool-card h3 { color: #38bdf8; margin-top: 0; margin-bottom: 10px; font-size: 16px; }
+        .tool-card p { color: #94a3b8; font-size: 12px; margin-bottom: 12px; line-height: 1.4; }
 
         textarea {
             width: 100%;
-            height: 75px;
+            height: 70px;
             background-color: #0b0f15;
             color: #f8fafc;
             border: 1px solid #30363d;
             border-radius: 8px;
-            padding: 12px;
-            font-size: 13px;
+            padding: 10px;
+            font-size: 12px;
             resize: vertical;
             box-sizing: border-box;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             transition: border-color 0.2s;
         }
-        textarea:focus {
-            outline: none;
-            border-color: #38bdf8;
-        }
+        textarea:focus { outline: none; border-color: #38bdf8; }
+        
         .action-btn {
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: #ffffff;
             border: none;
-            padding: 11px 16px;
+            padding: 10px 14px;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
@@ -99,6 +172,7 @@
             transition: all 0.2s ease;
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
             margin-bottom: 10px;
+            font-size: 13px;
         }
         .action-btn:hover {
             background: linear-gradient(135deg, #059669 0%, #047857 100%);
@@ -109,10 +183,10 @@
         .output-box {
             background-color: #0b0f15;
             border: 1px solid #30363d;
-            padding: 12px;
+            padding: 10px;
             border-radius: 8px;
-            margin-top: 10px;
-            min-height: 45px;
+            margin-top: 8px;
+            min-height: 40px;
             white-space: pre-wrap;
             color: #e2e8f0;
             font-size: 12px;
@@ -124,10 +198,10 @@
             border: none;
             color: #38bdf8;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
             text-decoration: underline;
             padding: 0;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             display: inline-block;
             text-align: left;
         }
@@ -136,50 +210,51 @@
             display: none;
             background-color: #0b0f15;
             border-left: 3px solid #38bdf8;
-            padding: 12px;
+            padding: 10px;
             border-radius: 8px;
-            font-size: 12px;
+            font-size: 11px;
             color: #94a3b8;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             line-height: 1.4;
             border: 1px solid #30363d;
         }
-        .help-dropdown ul { padding-left: 15px; margin: 6px 0 0 0; }
-        .help-dropdown li { margin-bottom: 4px; }
+        .help-dropdown ul { padding-left: 15px; margin: 4px 0 0 0; }
+        .help-dropdown li { margin-bottom: 2px; }
 
         /* Sección de archivos */
         .file-section {
             background-color: rgba(22, 27, 34, 0.75);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 25px;
+            padding: 22px;
             border-radius: 16px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.3);
             border-top: 4px solid #38bdf8;
             margin-bottom: 30px;
         }
-        .file-section h3 { color: #38bdf8; margin-top: 0; }
+        .file-section h3 { color: #38bdf8; margin-top: 0; font-size: 16px; }
         .file-dropzone {
             border: 2px dashed #30363d;
-            padding: 22px;
+            padding: 18px;
             border-radius: 10px;
             text-align: center;
             background-color: #0b0f15;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             color: #94a3b8;
-            font-size: 13px;
+            font-size: 12px;
         }
-        input[type="file"] { color: #f8fafc; margin-bottom: 10px; }
+        input[type="file"] { color: #f8fafc; font-size: 12px; margin-bottom: 8px; }
         .file-btn {
             background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
             color: #ffffff;
             border: none;
-            padding: 11px 22px;
+            padding: 10px 20px;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
+            font-size: 13px;
         }
         .file-btn:hover {
             background: linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%);
@@ -189,10 +264,22 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Cabecera -->
+
+    <!-- Barra Lateral Izquierda (Historial) -->
+    <div class="sidebar">
+        <div class="sidebar-brand">Digital Business IA</div>
+        <button class="sidebar-btn" onclick="clearAllOutputs()">+ Nueva Consulta</button>
+        
+        <div class="sidebar-section-title">Historial Reciente</div>
+        <ul class="history-list" id="history-list">
+            <li class="history-item" style="color: #64748b; background: transparent; border: none;">No hay solicitudes aún...</li>
+        </ul>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="main-content">
         <header>
-            <h1>Digital Business IA</h1>
+            <h2>Panel de Control e Inteligencia Artificial</h2>
             <button class="logout-btn" id="logout-btn">Cerrar Sesión</button>
         </header>
 
@@ -208,7 +295,7 @@
                     <div class="help-dropdown" id="help-1">
                         <strong>¿Qué puedes hacer?</strong>
                         <ul>
-                            <li>Resolver dudas estratégicas o operativas.</li>
+                            <li>Resolver dudas estratégicas u operativas.</li>
                             <li>Planificar pasos para iniciar proyectos.</li>
                         </ul>
                         <em style="color: #38bdf8;">Ejemplo: "¿Cómo estructurar una estrategia de ventas?"</em>
@@ -217,7 +304,7 @@
                     <textarea id="prompt-1" placeholder="Ej: ¿Qué pasos sigo para abrir un negocio..."></textarea>
                 </div>
                 <div>
-                    <button class="action-btn" onclick="runTool(1)">Generar Asesoría</button>
+                    <button class="action-btn" onclick="runTool(1, 'Asistente General')">Generar Asesoría</button>
                     <div class="output-box" id="output-1">Resultado aquí...</div>
                 </div>
             </div>
@@ -241,7 +328,7 @@
                     <textarea id="prompt-2" placeholder="Ej: Escribe un eslogan para una marca de ropa..."></textarea>
                 </div>
                 <div>
-                    <button class="action-btn" onclick="runTool(2)">Crear Negocio</button>
+                    <button class="action-btn" onclick="runTool(2, 'Generador de Negocios')">Crear Negocio</button>
                     <div class="output-box" id="output-2">Resultado aquí...</div>
                 </div>
             </div>
@@ -265,7 +352,7 @@
                     <textarea id="prompt-3" placeholder="Ej: Redacta un correo de seguimiento a un cliente..."></textarea>
                 </div>
                 <div>
-                    <button class="action-btn" onclick="runTool(3)">Redactar Contenido</button>
+                    <button class="action-btn" onclick="runTool(3, 'Creador de Contenido')">Redactar Contenido</button>
                     <div class="output-box" id="output-3">Resultado aquí...</div>
                 </div>
             </div>
@@ -289,7 +376,7 @@
                     <textarea id="prompt-4" placeholder="Ej: Logotipo minimalista para una marca de tecnología..."></textarea>
                 </div>
                 <div>
-                    <button class="action-btn" onclick="runTool(4)">Generar Imagen</button>
+                    <button class="action-btn" onclick="runTool(4, 'Generador de Fotos')">Generar Imagen</button>
                     <div class="output-box" id="output-4">Resultado visual aquí...</div>
                 </div>
             </div>
@@ -313,7 +400,7 @@
                     <textarea id="prompt-5" placeholder="Ej: Guion para video corto de lanzamiento de marca..."></textarea>
                 </div>
                 <div>
-                    <button class="action-btn" onclick="runTool(5)">Generar Video</button>
+                    <button class="action-btn" onclick="runTool(5, 'Generador de Videos')">Generar Video</button>
                     <div class="output-box" id="output-5">Resultado de video aquí...</div>
                 </div>
             </div>
@@ -333,7 +420,7 @@
         </div>
     </div>
 
-    <!-- Script Firebase -->
+    <!-- Script Firebase y Lógica del Historial -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -359,7 +446,7 @@
         });
     </script>
 
-    <!-- Funciones -->
+    <!-- Funciones de UI e Historial -->
     <script>
         function toggleHelp(toolId) {
             const dropdown = document.getElementById(`help-${toolId}`);
@@ -370,7 +457,25 @@
             }
         }
 
-        function runTool(toolId) {
+        function addToHistory(toolName, text) {
+            const historyList = document.getElementById('history-list');
+            
+            // Si es el mensaje por defecto, lo borramos
+            if(historyList.children.length === 1 && historyList.children[0].style.color === 'rgb(100, 116, 139)') {
+                historyList.innerHTML = '';
+            }
+
+            const li = document.createElement('li');
+            li.className = 'history-item';
+            
+            // Recortar texto si es muy largo
+            const shortText = text.length > 25 ? text.substring(0, 25) + '...' : text;
+            li.innerHTML = `<strong>${toolName}</strong><span>"${shortText}"</span>`;
+            
+            historyList.prepend(li); // Agregar al inicio de la lista
+        }
+
+        function runTool(toolId, toolName) {
             const promptText = document.getElementById(`prompt-${toolId}`).value;
             const outputBox = document.getElementById(`output-${toolId}`);
 
@@ -380,9 +485,10 @@
             }
 
             outputBox.textContent = "Procesando solicitud...";
+            addToHistory(toolName, promptText);
             
             setTimeout(() => {
-                outputBox.textContent = `[Resultado de Herramienta ${toolId}]: Procesado con éxito para: "${promptText}".`;
+                outputBox.textContent = `[Resultado de ${toolName}]: Procesado con éxito para: "${promptText}".`;
             }, 1000);
         }
 
@@ -397,10 +503,20 @@
 
             const fileName = fileInput.files[0].name;
             outputBox.textContent = `Analizando el archivo "${fileName}"...`;
+            addToHistory('Procesador Archivos', fileName);
 
             setTimeout(() => {
                 outputBox.textContent = `✅ Archivo "${fileName}" analizado con éxito. Se han extraído los datos principales para optimizar tu gestión empresarial.`;
             }, 1500);
+        }
+
+        function clearAllOutputs() {
+            for(let i=1; i<=5; i++) {
+                document.getElementById(`prompt-${i}`).value = '';
+                document.getElementById(`output-${i}`).textContent = 'Resultado aquí...';
+            }
+            document.getElementById('business-file').value = '';
+            document.getElementById('file-output').textContent = 'El análisis del archivo aparecerá aquí...';
         }
     </script>
 </body>
