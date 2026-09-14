@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+<<<<<<< HEAD
+    <title>Generador de Imágenes con IA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            text-align: center;
+            padding: 40px;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: inline-block;
+            max-width: 600px;
+            width: 100%;
+        }
+        input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        button:hover {
+            background-color: #4338ca;
+        }
+        #loading {
+            display: none;
+            margin-top: 20px;
+            color: #555;
+            font-style: italic;
+        }
+        .resultado {
+            margin-top: 25px;
+        }
+        img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            margin-bottom: 15px;
+        }
+        .btn-descargar {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #10b981;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .btn-descargar:hover {
+            background-color: #059669;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Generador de Imágenes con IA</h2>
+        <form action="/generar" method="POST" onsubmit="mostrarCarga()">
+            <input type="text" name="prompt" placeholder="Ej. Un astronauta paseando en bicicleta" required>
+            <button type="submit">Generar</button>
+        </form>
+
+        <div id="loading">🎨 La inteligencia artificial está creando tu imagen, por favor espera unos segundos...</div>
+
+        {% if imagen_url %}
+        <div class="resultado">
+            <h3>¡Imagen creada con éxito!</h3>
+            <img src="{{ url_for('static', filename=imagen_url) }}" alt="Imagen generada por IA"><br>
+            <a href="{{ url_for('static', filename=imagen_url) }}" class="btn-descargar" download>Descargar Imagen</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function mostrarCarga() {
+            document.getElementById('loading').style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
+=======
+    <title>Digital Business IA - Iniciar Sesión</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        .login-card {
+            background-color: #1e293b;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            text-align: center;
+            width: 320px;
+        }
+        h2 { margin-bottom: 10px; color: #38bdf8; }
+        p { color: #94a3b8; font-size: 14px; margin-bottom: 30px; }
+        .btn {
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            transition: background 0.2s;
+        }
+        .btn-google { background-color: #ffffff; color: #1e293b; }
+        .btn-google:hover { background-color: #f1f5f9; }
+        
+        .btn-anon { background-color: #334155; color: #f8fafc; }
+        .btn-anon:hover { background-color: #475569; }
+
+        .help-toggle {
+            background: none;
+            border: none;
+            color: #38bdf8;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 14px;
+            text-decoration: underline;
+        }
+        .help-panel {
+            display: none;
+            background-color: #1e293b;
+            border-left: 4px solid #38bdf8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            width: 320px;
+            text-align: left;
+            font-size: 13px;
+            color: #94a3b8;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .help-panel h4 { color: #f8fafc; margin-top: 0; margin-bottom: 8px; }
+        .help-panel ul { padding-left: 15px; margin: 0; }
+        .help-panel li { margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h2>Digital Business IA</h2>
+        <p>Inicia sesión con tu cuenta para acceder a la suite</p>
+        
+        <!-- Botones de Acceso -->
+        <button id="google-login-btn" class="btn btn-google">Continuar con Google</button>
+        <button id="anon-login-btn" class="btn btn-anon">Entrar de forma anónima</button>
+
+        <!-- Botón para desplegar instrucciones -->
+        <button class="help-toggle" id="toggle-help-btn">¿Cómo usar la plataforma?</button>
+    </div>
+
+    <!-- Panel desplegable de instrucciones -->
+    <div class="help-panel" id="help-panel">
+        <h4>Instrucciones de Uso</h4>
+        <ul>
+            <li><strong>Acceso con Google:</strong> Guarda tu progreso e historial de forma segura.</li>
+            <li><strong>Acceso Anónimo:</strong> Ingresa de inmediato para explorar sin registrar datos personales (válido por 30 días).</li>
+            <li><strong>Navegación:</strong> Una vez dentro, utiliza el panel principal para gestionar tus herramientas de inteligencia artificial.</li>
+        </ul>
+    </div>
+
+    <!-- Script de autenticación mediante Firebase CDN -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAgiappqV0mXtAT0iQSN0uuFhUOHYqfBRI",
+            authDomain: "digital-business-ia.firebaseapp.com",
+            projectId: "digital-business-ia",
+            storageBucket: "digital-business-ia.firebasestorage.app",
+            messagingSenderId: "221344612488",
+            appId: "1:221344612488:web:0f4dd98c920cd1739e5f3d"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        // Lógica de Google
+        document.getElementById('google-login-btn').addEventListener('click', () => {
+            signInWithPopup(auth, googleProvider)
+            .then(() => { window.location.href = "/dashboard"; })
+            .catch((error) => { console.error("Error en Google:", error); });
+        });
+
+        // Lógica de Acceso Anónimo
+        document.getElementById('anon-login-btn').addEventListener('click', () => {
+            signInAnonymously(auth)
+            .then(() => { window.location.href = "/dashboard"; })
+            .catch((error) => { console.error("Error en Anónimo:", error); });
+        });
+
+        // Lógica para abrir y cerrar el panel de instrucciones
+        const toggleBtn = document.getElementById('toggle-help-btn');
+        const helpPanel = document.getElementById('help-panel');
+
+        toggleBtn.addEventListener('click', () => {
+            if (helpPanel.style.display === 'block') {
+                helpPanel.style.display = 'none';
+                toggleBtn.textContent = '¿Cómo usar la plataforma?';
+            } else {
+                helpPanel.style.display = 'block';
+                toggleBtn.textContent = 'Ocultar instrucciones';
+            }
+        });
+    </script>
+</body>
+</html>
+>>>>>>> 3efc187d7ccc4d0cfb4d86f10b308675ed17e588
