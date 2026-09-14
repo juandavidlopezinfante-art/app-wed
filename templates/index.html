@@ -8,37 +8,33 @@
     <style>
         body { background-color: #0f172a; color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .navbar { background-color: #1e293b; border-bottom: 1px solid #334155; }
-        .card { background-color: #1e293b; border: 1px solid #334155; color: #f8fafc; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        .form-control, .form-select { background-color: #0f172a; border: 1px solid #475569; color: #fff; }
+        .card { background-color: #1e293b; border: 1px solid #334155; color: #f8fafc; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.4); border-radius: 10px; }
+        .form-control, .form-select { background-color: #0f172a; border: 1px solid #475569; color: #fff; border-radius: 6px; }
         .form-control:focus, .form-select:focus { background-color: #0f172a; color: #fff; border-color: #38bdf8; box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.25); }
-        .btn-primary { background-color: #2563eb; border: none; }
+        .btn-primary { background-color: #2563eb; border: none; font-weight: 600; border-radius: 6px; }
         .btn-primary:hover { background-color: #1d4ed8; }
-        .chat-box { background-color: #090d16; border: 1px solid #334155; height: 220px; overflow-y: auto; padding: 15px; border-radius: 6px; margin-top: 15px; font-size: 0.9rem; }
-        .manual-box { background-color: #1e293b; border-left: 4px solid #38bdf8; padding: 10px 15px; font-size: 0.85srem; margin-bottom: 15px; border-radius: 4px; display: none; }
+        .chat-box { background-color: #090d16; border: 1px solid #334155; height: 240px; overflow-y: auto; padding: 15px; border-radius: 6px; margin-top: 15px; font-size: 0.9rem; }
+        .manual-box { background-color: #131c31; border-left: 4px solid #38bdf8; padding: 12px 15px; font-size: 0.85rem; margin-bottom: 15px; border-radius: 4px; display: none; }
+        .file-indicator { font-size: 0.8rem; color: #38bdf8; margin-top: 5px; display: block; }
+        .banner-libre { background: linear-gradient(135deg, #1e3a8a, #2563eb); border: 1px solid #3b82f6; border-radius: 8px; padding: 12px 20px; margin-bottom: 25px; text-align: center; font-weight: 600; }
     </style>
 </head>
 <body>
 
     <!-- Barra de Navegación -->
-    <nav class="navbar navbar-expand-lg navbar-dark px-4">
-        <a class="navbar-brand fw-bold" href="#">Digital Business IA - Panel Maestro</a>
+    <nav class="navbar navbar-expand-lg navbar-dark px-4 py-3">
+        <a class="navbar-brand fw-bold fs-4" href="#">⚡ Digital Business IA</a>
         <div class="ms-auto d-flex gap-2">
-            <button class="btn btn-sm btn-outline-light" onclick="activarModoCelular()">📱 Versión Celular</button>
-            <span class="badge bg-info text-dark align-self-center" id="proBadge">Versión Estándar</span>
+            <button class="btn btn-sm btn-outline-light" onclick="activarModoCelular()">📱 Modo Celular</button>
+            <span class="badge bg-success align-self-center p-2 fs-6" id="proBadge">🟢 Acceso Libre Activo</span>
         </div>
     </nav>
 
     <div class="container my-4">
-        <!-- Clave PRO Global -->
-        <div class="card p-3 mb-4">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <input type="password" id="globalProKey" class="form-control" placeholder="Ingresa tu Clave PRO (Opcional: PRO-150-ACTIVO o PROMO-99-3MESES)">
-                </div>
-                <div class="col-md-4 mt-2 mt-md-0">
-                    <button class="btn btn-outline-info w-100" onclick="validarClavePro()">Validar Membresía</button>
-                </div>
-            </div>
+        
+        <!-- Banner Informativo de Acceso Libre -->
+        <div class="banner-libre shadow-sm">
+            🎉 <strong>¡Acceso Libre Temporal Activado!</strong> Todas las herramientas, chats inteligentes y motores de IA están habilitados sin restricciones de pago ni claves.
         </div>
 
         <!-- CONTENEDOR DE CUADROS / MÓDULOS MÚLTIPLES -->
@@ -48,17 +44,18 @@
             <div class="col-md-6">
                 <div class="card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">💬 Chat Libre</h4>
-                        <button class="btn btn-sm btn-outline-secondary" onclick="toggleManual('manual-chat')">📖 Manual</button>
+                        <h4 class="m-0">💬 Chat Libre Inteligente</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-chat')">📖 Manual</button>
                     </div>
                     <div id="manual-chat" class="manual-box">
-                        <strong>Cómo usar:</strong> Escribe cualquier consulta general. El modelo responderá de forma fluida manteniendo contexto libre.
+                        <strong>Instrucciones:</strong> Escribe cualquier consulta o pregunta general. Puedes adjuntar documentos, audios o imágenes como referencia para que el asistente los analice.
                     </div>
                     <div class="mb-3">
-                        <textarea id="promptChat" class="form-control" rows="2" placeholder="Escribe tu consulta..."></textarea>
+                        <textarea id="promptChat" class="form-control" rows="2" placeholder="Escribe tu consulta o mensaje aquí..."></textarea>
                     </div>
-                    <div class="mb-3">
-                        <input type="file" id="fileChat" class="form-control form-control-sm" multiple>
+                    <div class="mb-2">
+                        <input type="file" id="fileChat" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileChat', 'fileNameChat')" multiple>
+                        <span id="fileNameChat" class="file-indicator"></span>
                     </div>
                     <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Chat Libre', 'promptChat', 'fileChat', 'chatBoxResult')">Enviar a Chat Libre</button>
                     <div class="chat-box" id="chatBoxResult">Historial del chat independiente...</div>
@@ -69,25 +66,26 @@
             <div class="col-md-6">
                 <div class="card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">🎨 Imágenes IA</h4>
-                        <button class="btn btn-sm btn-outline-secondary" onclick="toggleManual('manual-imagen')">📖 Manual</button>
+                        <h4 class="m-0">🎨 Generador de Imágenes IA</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-imagen')">📖 Manual</button>
                     </div>
                     <div id="manual-imagen" class="manual-box">
-                        <strong>Cómo usar:</strong> Describe detalladamente la imagen que deseas generar (ej. estilo, colores, iluminación). Se renderizará directo abajo.
+                        <strong>Instrucciones:</strong> Describe detalladamente la imagen que deseas crear (estilo, colores, iluminación). Opcionalmente adjunta una foto base como referencia visual.
                     </div>
                     <form action="/generar" method="POST" enctype="multipart/form-data">
                         <div class="mb-3">
-                            <input type="text" name="prompt" class="form-control" placeholder="Describe tu imagen..." required>
+                            <input type="text" name="prompt" class="form-control" placeholder="Ej. Un paisaje cyberpunk al atardecer..." required>
                         </div>
-                        <div class="mb-3">
-                            <input type="file" name="referencia_imagen" class="form-control form-control-sm">
+                        <div class="mb-2">
+                            <input type="file" name="referencia_imagen" id="fileImagen" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileImagen', 'fileNameImagen')">
+                            <span id="fileNameImagen" class="file-indicator"></span>
                         </div>
-                        <input type="hidden" name="pro_key" id="hiddenProKey">
-                        <button type="submit" class="btn btn-primary w-100" onclick="sincronizarClave()">Generar Imagen</button>
+                        <input type="hidden" name="pro_key" value="PRO-150-ACTIVO">
+                        <button type="submit" class="btn btn-primary w-100 mt-2">Generar Imagen en su Chat</button>
                     </form>
                     {% if imagen_url %}
                     <div class="text-center mt-3">
-                        <span class="text-success small">¡Generada con éxito!</span>
+                        <span class="text-success small fw-bold">¡Imagen generada con éxito!</span>
                         <img src="{{ url_for('static', filename=imagen_url) }}" class="img-fluid rounded shadow mt-1" style="max-height: 180px;" alt="Imagen IA">
                     </div>
                     {% endif %}
@@ -98,20 +96,21 @@
             <div class="col-md-6">
                 <div class="card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">🎬 Videos HD</h4>
-                        <button class="btn btn-sm btn-outline-secondary" onclick="toggleManual('manual-video')">📖 Manual</button>
+                        <h4 class="m-0">🎬 Generador de Videos HD</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-video')">📖 Manual</button>
                     </div>
                     <div id="manual-video" class="manual-box">
-                        <strong>Cómo usar:</strong> Detalla la escena, movimientos de cámara y elementos visuales para estructurar tu proyecto en video.
+                        <strong>Instrucciones:</strong> Detalla la secuencia cinematográfica, el movimiento de cámara y la trama. Adjunta guiones o recursos visuales de apoyo.
                     </div>
                     <div class="mb-3">
-                        <textarea id="promptVideo" class="form-control" rows="2" placeholder="Describe la secuencia..."></textarea>
+                        <textarea id="promptVideo" class="form-control" rows="2" placeholder="Describe la escena o toma cinematográfica..."></textarea>
                     </div>
-                    <div class="mb-3">
-                        <input type="file" id="fileVideo" class="form-control form-control-sm" multiple>
+                    <div class="mb-2">
+                        <input type="file" id="fileVideo" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileVideo', 'fileNameVideo')" multiple>
+                        <span id="fileNameVideo" class="file-indicator"></span>
                     </div>
                     <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Generador de Videos HD', 'promptVideo', 'fileVideo', 'resultVideo')">Procesar Video</button>
-                    <div class="chat-box" id="resultVideo">Historial de Videos...</div>
+                    <div class="chat-box" id="resultVideo">Historial de Videos HD...</div>
                 </div>
             </div>
 
@@ -119,19 +118,20 @@
             <div class="col-md-6">
                 <div class="card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">📊 Asistente Excel</h4>
-                        <button class="btn btn-sm btn-outline-secondary" onclick="toggleManual('manual-excel')">📖 Manual</button>
+                        <h4 class="m-0">📊 Asistente y Fórmulas Excel</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-excel')">📖 Manual</button>
                     </div>
                     <div id="manual-excel" class="manual-box">
-                        <strong>Cómo usar:</strong> Solicita fórmulas avanzadas, macros o esquemas de bases de datos y adjunta tus archivos si requieres análisis.
+                        <strong>Instrucciones:</strong> Solicita fórmulas complejas, macros de VBA o tablas estructuradas. Sube tus planillas de datos para depuración y análisis directo.
                     </div>
                     <div class="mb-3">
-                        <textarea id="promptExcel" class="form-control" rows="2" placeholder="¿Qué deseas calcular u organizar?"></textarea>
+                        <textarea id="promptExcel" class="form-control" rows="2" placeholder="¿Qué deseas calcular, formular u organizar?"></textarea>
                     </div>
-                    <div class="mb-3">
-                        <input type="file" id="fileExcel" class="form-control form-control-sm" multiple>
+                    <div class="mb-2">
+                        <input type="file" id="fileExcel" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileExcel', 'fileNameExcel')" multiple>
+                        <span id="fileNameExcel" class="file-indicator"></span>
                     </div>
-                    <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Asistente Excel', 'promptExcel', 'fileExcel', 'resultExcel')">Ejecutar en Chat Excel</button>
+                    <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Asistente Excel', 'promptExcel', 'fileExcel', 'resultExcel')">Ejecutar Asistente Excel</button>
                     <div class="chat-box" id="resultExcel">Historial de Excel...</div>
                 </div>
             </div>
@@ -140,19 +140,20 @@
             <div class="col-md-6">
                 <div class="card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">📝 Redactor Word</h4>
-                        <button class="btn btn-sm btn-outline-secondary" onclick="toggleManual('manual-word')">📖 Manual</button>
+                        <h4 class="m-0">📝 Redactor Profesional Word</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-word')">📖 Manual</button>
                     </div>
                     <div id="manual-word" class="manual-box">
-                        <strong>Cómo usar:</strong> Pide redacción de contratos, cartas o ensayos formales especificando tono y estructura deseada.
+                        <strong>Instrucciones:</strong> Pide la redacción de contratos, cartas formales, ensayos o reportes especificando el tono y la estructura requerida.
                     </div>
                     <div class="mb-3">
-                        <textarea id="promptWord" class="form-control" rows="2" placeholder="Tema o estructura del documento..."></textarea>
+                        <textarea id="promptWord" class="form-control" rows="2" placeholder="Tema, estructura o lineamientos del documento..."></textarea>
                     </div>
-                    <div class="mb-3">
-                        <input type="file" id="fileWord" class="form-control form-control-sm" multiple>
+                    <div class="mb-2">
+                        <input type="file" id="fileWord" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileWord', 'fileNameWord')" multiple>
+                        <span id="fileNameWord" class="file-indicator"></span>
                     </div>
-                    <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Redactor Word', 'promptWord', 'fileWord', 'resultWord')">Generar en Chat Word</button>
+                    <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Redactor Word', 'promptWord', 'fileWord', 'resultWord')">Generar Documento Word</button>
                     <div class="chat-box" id="resultWord">Historial de Word...</div>
                 </div>
             </div>
@@ -161,17 +162,18 @@
             <div class="col-md-6">
                 <div class="card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">🌐 Traductor IA</h4>
-                        <button class="btn btn-sm btn-outline-secondary" onclick="toggleManual('manual-traductor')">📖 Manual</button>
+                        <h4 class="m-0">🌐 Traductor y Voces IA</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-traductor')">📖 Manual</button>
                     </div>
                     <div id="manual-traductor" class="manual-box">
-                        <strong>Cómo usar:</strong> Traduce textos, audios o fragmentos de video y genera síntesis de voz natural en múltiples idiomas.
+                        <strong>Instrucciones:</strong> Realiza traducciones precisas de textos, audios o fragmentos de video y obtén síntesis de voz natural en múltiples idiomas.
                     </div>
                     <div class="mb-3">
-                        <textarea id="promptTraductor" class="form-control" rows="2" placeholder="Instrucciones de traducción..."></textarea>
+                        <textarea id="promptTraductor" class="form-control" rows="2" placeholder="Instrucciones de traducción y síntesis..."></textarea>
                     </div>
-                    <div class="mb-3">
-                        <input type="file" id="fileTraductor" class="form-control form-control-sm" multiple>
+                    <div class="mb-2">
+                        <input type="file" id="fileTraductor" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileTraductor', 'fileNameTraductor')" multiple>
+                        <span id="fileNameTraductor" class="file-indicator"></span>
                     </div>
                     <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Traductor IA', 'promptTraductor', 'fileTraductor', 'resultTraductor')">Procesar Traducción</button>
                     <div class="chat-box" id="resultTraductor">Historial de Traductor...</div>
@@ -182,26 +184,30 @@
     </div>
 
     <script>
+        // Cargar historiales almacenados al iniciar la página
+        window.onload = function() {
+            const boxes = ['chatBoxResult', 'resultVideo', 'resultExcel', 'resultWord', 'resultTraductor'];
+            boxes.forEach(boxId => {
+                const saved = localStorage.getItem(boxId);
+                if (saved) {
+                    document.getElementById(boxId).innerHTML = saved;
+                }
+            });
+        };
+
         function toggleManual(id) {
             const box = document.getElementById(id);
             box.style.display = box.style.display === 'block' ? 'none' : 'block';
         }
 
-        function sincronizarClave() {
-            document.getElementById('hiddenProKey').value = document.getElementById('globalProKey').value;
-        }
-
-        function validarClavePro() {
-            const key = document.getElementById('globalProKey').value.trim();
-            const badge = document.getElementById('proBadge');
-            if (key === "PRO-150-ACTIVO" || key === "PROMO-99-3MESES") {
-                badge.className = "badge bg-success";
-                badge.innerText = "¡Membresía PRO Activa!";
-                alert("¡Clave PRO validada correctamente!");
+        function mostrarNombreArchivo(inputId, spanId) {
+            const input = document.getElementById(inputId);
+            const span = document.getElementById(spanId);
+            if (input.files.length > 0) {
+                let nombres = Array.from(input.files).map(f => f.name).join(', ');
+                span.innerText = `📎 Archivo(s) seleccionado(s): ${nombres}`;
             } else {
-                badge.className = "badge bg-danger";
-                badge.innerText = "Clave Inválida";
-                alert("La clave ingresada no es válida.");
+                span.innerText = '';
             }
         }
 
@@ -219,9 +225,9 @@
         }
 
         async function consultarChatIndependiente(toolName, inputId, fileId, resultId) {
-            const prompt = document.getElementById(inputId).value.trim();
+            const promptInput = document.getElementById(inputId);
+            const prompt = promptInput.value.trim();
             const fileInput = document.getElementById(fileId);
-            const proKey = document.getElementById('globalProKey').value.trim();
             const resultBox = document.getElementById(resultId);
 
             if (!prompt && fileInput.files.length === 0) {
@@ -229,29 +235,57 @@
                 return;
             }
 
-            resultBox.innerHTML += `<div><strong>Tú:</strong> ${prompt} ${fileInput.files.length > 0 ? '(<i>Archivo adjunto</i>)' : ''}</div>`;
-            resultBox.innerHTML += `<div><em>🔄 Procesando en ${toolName}...</em></div>`;
+            let archivosTexto = fileInput.files.length > 0 ? ` (<i>${fileInput.files.length} archivo(s) adjunto(s)</i>)` : '';
+            
+            resultBox.innerHTML += `<div class="mb-2"><strong>Tú:</strong> ${prompt}${archivosTexto}</div>`;
+            const loadingId = 'loading_' + Date.now();
+            resultBox.innerHTML += `<div id="${loadingId}" class="text-warning mb-2"><em>🔄 Procesando en ${toolName}...</em></div>`;
             resultBox.scrollTop = resultBox.scrollHeight;
+
+            // Limpiar campo de texto para la siguiente consulta
+            promptInput.value = '';
 
             try {
                 const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ toolName, prompt, proKey })
+                    body: JSON.stringify({ toolName, prompt, proKey: 'PRO-150-ACTIVO' })
                 });
 
                 const data = await response.json();
+                
+                // Remover mensaje de carga
+                document.getElementById(loadingId).remove();
+
                 if (response.ok) {
-                    resultBox.innerHTML += `<div class="text-info mt-2"><strong>${toolName}:</strong> ${data.response}</div>`;
-                    if (data.is_pro) {
-                        document.getElementById('proBadge').className = "badge bg-success";
-                        document.getElementById('proBadge').innerText = "¡Membresía PRO Activa!";
+                    const responseContainerId = 'resp_' + Date.now();
+                    resultBox.innerHTML += `<div class="text-info mb-3"><strong>${toolName}:</strong> <span id="${responseContainerId}"></span></div>`;
+                    
+                    // Efecto de máquina de escribir (Streaming visual)
+                    const respuestaTexto = data.response;
+                    let i = 0;
+                    const speed = 10; // Velocidad de tipeo en ms
+                    function typeWriter() {
+                        if (i < respuestaTexto.length) {
+                            document.getElementById(responseContainerId).innerHTML += respuestaTexto.charAt(i);
+                            i++;
+                            resultBox.scrollTop = resultBox.scrollHeight;
+                            setTimeout(typeWriter, speed);
+                        } else {
+                            // Guardar en LocalStorage al terminar la animación
+                            localStorage.setItem(resultId, resultBox.innerHTML);
+                        }
                     }
+                    typeWriter();
+
                 } else {
-                    resultBox.innerHTML += `<div class="text-danger mt-2"><strong>Error:</strong> ${data.error}</div>`;
+                    resultBox.innerHTML += `<div class="text-danger mb-2"><strong>Error:</strong> ${data.error}</div>`;
+                    localStorage.setItem(resultId, resultBox.innerHTML);
                 }
             } catch (err) {
-                resultBox.innerHTML += `<div class="text-danger mt-2"><strong>Error:</strong> No se pudo conectar con el servidor.</div>`;
+                document.getElementById(loadingId).remove();
+                resultBox.innerHTML += `<div class="text-danger mb-2"><strong>Error:</strong> No se pudo conectar con el servidor.</div>`;
+                localStorage.setItem(resultId, resultBox.innerHTML);
             }
             resultBox.scrollTop = resultBox.scrollHeight;
         }
