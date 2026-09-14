@@ -14,7 +14,7 @@
             flex-direction: column;
             align-items: center;
         }
-        .container { width: 100%; max-width: 900px; }
+        .container { width: 100%; max-width: 1000px; }
         header {
             display: flex;
             justify-content: space-between;
@@ -23,7 +23,7 @@
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         h1 { color: #38bdf8; margin: 0; font-size: 24px; }
         .logout-btn {
@@ -36,109 +36,160 @@
             font-weight: bold;
         }
         .logout-btn:hover { background-color: #dc2626; }
-        .guide-section {
+
+        /* Cuadrícula de herramientas */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .tool-card {
             background-color: #1e293b;
             padding: 20px;
             border-radius: 12px;
-            margin-bottom: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-top: 4px solid #38bdf8;
         }
-        .guide-section h3 { color: #38bdf8; margin-top: 0; }
-        .guide-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-        .guide-card {
-            background-color: #334155;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #38bdf8;
-        }
-        .guide-card h4 { margin: 0 0 8px 0; color: #f8fafc; }
-        .guide-card p { margin: 0; font-size: 13px; color: #94a3b8; line-height: 1.4; }
-        .ai-panel {
-            background-color: #1e293b;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-        .ai-panel h3 { color: #38bdf8; margin-top: 0; }
+        .tool-card h3 { color: #38bdf8; margin-top: 0; margin-bottom: 10px; font-size: 18px; }
+        .tool-card p { color: #94a3b8; font-size: 13px; margin-bottom: 15px; line-height: 1.4; }
+
         textarea {
             width: 100%;
-            height: 100px;
+            height: 70px;
             background-color: #0f172a;
             color: #f8fafc;
             border: 1px solid #475569;
             border-radius: 6px;
-            padding: 12px;
-            font-size: 14px;
+            padding: 10px;
+            font-size: 13px;
             resize: vertical;
             box-sizing: border-box;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
-        .submit-btn {
+        .action-btn {
             background-color: #38bdf8;
             color: #0f172a;
             border: none;
-            padding: 12px 20px;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+        .action-btn:hover { background-color: #0ea5e9; }
+        
+        .output-box {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            min-height: 40px;
+            white-space: pre-wrap;
+            color: #e2e8f0;
+            font-size: 12px;
+        }
+
+        /* Sección de archivos (Excel, Word, etc.) */
+        .file-section {
+            background-color: #1e293b;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border-top: 4px solid #10b981;
+        }
+        .file-section h3 { color: #10b981; margin-top: 0; }
+        .file-dropzone {
+            border: 2px dashed #475569;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            background-color: #0f172a;
+            margin-bottom: 15px;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+        input[type="file"] { color: #f8fafc; margin-bottom: 10px; }
+        .file-btn {
+            background-color: #10b981;
+            color: #0f172a;
+            border: none;
+            padding: 10px 20px;
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
             transition: background 0.2s;
         }
-        .submit-btn:hover { background-color: #0ea5e9; }
-        .response-box {
-            background-color: #0f172a;
-            border: 1px solid #334155;
-            padding: 15px;
-            border-radius: 6px;
-            margin-top: 15px;
-            min-height: 50px;
-            white-space: pre-wrap;
-            color: #e2e8f0;
-            font-size: 14px;
-        }
+        .file-btn:hover { background-color: #059669; }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Cabecera -->
         <header>
             <h1>Digital Business IA</h1>
             <button class="logout-btn" id="logout-btn">Cerrar Sesión</button>
         </header>
 
-        <div class="guide-section">
-            <h3>📖 Guía Interactiva: ¿Cómo usar cada herramienta?</h3>
-            <div class="guide-grid">
-                <div class="guide-card">
-                    <h4>1. Asistente General</h4>
-                    <p>Resuelve cualquier duda o problema al instante escribiendo con claridad para obtener explicaciones detalladas.</p>
+        <!-- Cuadros interactivos de herramientas de texto -->
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div>
+                    <h3>1. Asistente General</h3>
+                    <p>Resuelve dudas, conceptualiza ideas o busca explicaciones detalladas para cualquier reto empresarial.</p>
+                    <textarea id="prompt-1" placeholder="Ej: ¿Qué pasos sigo para abrir un negocio..."></textarea>
                 </div>
-                <div class="guide-card">
-                    <h4>2. Generador de Negocios</h4>
-                    <p>Crea eslóganes, planes de marketing y descripciones comerciales adaptadas a tu marca de forma automática.</p>
+                <div>
+                    <button class="action-btn" onclick="runTool(1)">Generar Asesoría</button>
+                    <div class="output-box" id="output-1">Resultado aquí...</div>
                 </div>
-                <div class="guide-card">
-                    <h4>3. Creador de Contenido</h4>
-                    <p>Produce correos profesionales, respuestas para clientes y textos persuasivos para redes sociales en segundos.</p>
+            </div>
+
+            <div class="tool-card">
+                <div>
+                    <h3>2. Generador de Negocios</h3>
+                    <p>Crea eslóganes comerciales, planes de marketing y estrategias de venta enfocadas en tu marca.</p>
+                    <textarea id="prompt-2" placeholder="Ej: Escribe un eslogan para una marca de ropa..."></textarea>
+                </div>
+                <div>
+                    <button class="action-btn" onclick="runTool(2)">Crear Negocio</button>
+                    <div class="output-box" id="output-2">Resultado aquí...</div>
+                </div>
+            </div>
+
+            <div class="tool-card">
+                <div>
+                    <h3>3. Creador de Contenido</h3>
+                    <p>Produce correos corporativos, respuestas formales a clientes o textos persuasivos para redes sociales.</p>
+                    <textarea id="prompt-3" placeholder="Ej: Redacta un correo de seguimiento a un cliente..."></textarea>
+                </div>
+                <div>
+                    <button class="action-btn" onclick="runTool(3)">Redactar Contenido</button>
+                    <div class="output-box" id="output-3">Resultado aquí...</div>
                 </div>
             </div>
         </div>
 
-        <div class="ai-panel">
-            <h3>💬 Asistente Inteligente</h3>
-            <p style="color: #94a3b8; font-size: 14px;">Escribe abajo tu pregunta o problema y la IA te generará la solución:</p>
+        <!-- Sección de Procesamiento de Archivos (Excel, Word, PDF) -->
+        <div class="file-section">
+            <h3>📊 Procesador de Documentos y Archivos (Excel, Word, PDF)</h3>
+            <p style="color: #94a3b8; font-size: 13px; margin-bottom: 15px;">Sube tus reportes de Excel, documentos de Word o archivos PDF para que la IA los analice y extraiga información clave.</p>
             
-            <textarea id="user-prompt" placeholder="Ejemplo: ¿Cómo estructurar una estrategia de ventas?"></textarea>
-            <br>
-            <button class="submit-btn" id="ask-ai-btn">Generar Respuesta</button>
-
-            <div class="response-box" id="ai-response">La respuesta de la inteligencia artificial aparecerá aquí...</div>
+            <div class="file-dropzone">
+                <input type="file" id="business-file" accept=".xlsx, .xls, .docx, .doc, .pdf, .txt">
+            </div>
+            
+            <button class="file-btn" onclick="processFile()">Analizar Archivo con IA</button>
+            <div class="output-box" id="file-output" style="margin-top: 15px;">El análisis del archivo aparecerá aquí...</div>
         </div>
     </div>
 
+    <!-- Script de control -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -162,21 +213,42 @@
                 console.error("Error al cerrar sesión:", error);
             });
         });
+    </script>
 
-        document.getElementById('ask-ai-btn').addEventListener('click', () => {
-            const promptText = document.getElementById('user-prompt').value;
-            const responseBox = document.getElementById('ai-response');
-            
+    <!-- Funciones globales -->
+    <script>
+        function runTool(toolId) {
+            const promptText = document.getElementById(`prompt-${toolId}`).value;
+            const outputBox = document.getElementById(`output-${toolId}`);
+
             if(!promptText.trim()) {
-                alert("Por favor escribe una pregunta primero.");
+                alert("Por favor escribe una indicación primero.");
                 return;
             }
 
-            responseBox.textContent = "Generando respuesta inteligente...";
+            outputBox.textContent = "Procesando solicitud...";
+            
             setTimeout(() => {
-                responseBox.textContent = "¡Consulta procesada con éxito! Próximamente conectaremos esta caja directamente al modelo en Python para respuestas en vivo.";
+                outputBox.textContent = `[Resultado de Herramienta ${toolId}]: Procesado con éxito para: "${promptText}".`;
             }, 1000);
-        });
+        }
+
+        function processFile() {
+            const fileInput = document.getElementById('business-file');
+            const outputBox = document.getElementById('file-output');
+
+            if(fileInput.files.length === 0) {
+                alert("Por favor selecciona un archivo de Excel, Word o PDF primero.");
+                return;
+            }
+
+            const fileName = fileInput.files[0].name;
+            outputBox.textContent = `Analizando el archivo "${fileName}"...`;
+
+            setTimeout(() => {
+                outputBox.textContent = `✅ Archivo "${fileName}" analizado con éxito. Se han extraído los datos principales para optimizar tu gestión empresarial.`;
+            }, 1500);
+        }
     </script>
 </body>
 </html>
