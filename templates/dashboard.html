@@ -1,323 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Panel Universal - Digital Business IA</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0d1117 0%, #171527 50%, #0d1117 100%);
-            color: #f8fafc;
-            margin: 0;
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Barra Lateral Izquierda (Historial Interactivo) */
-        .sidebar {
-            width: 260px;
-            background-color: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(12px);
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            box-sizing: border-box;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-        }
-        .sidebar-brand {
-            font-size: 18px;
-            font-weight: 700;
-            color: #38bdf8;
-            margin-bottom: 25px;
-            letter-spacing: 0.5px;
-        }
-        .sidebar-btn {
-            background-color: rgba(56, 189, 248, 0.1);
-            color: #38bdf8;
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: left;
-            margin-bottom: 20px;
-            transition: all 0.2s;
-            font-size: 13px;
-        }
-        .sidebar-btn:hover { background-color: rgba(56, 189, 248, 0.2); }
-        .sidebar-section-title {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #64748b;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-        .history-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            flex-grow: 1;
-        }
-        .history-item {
-            padding: 8px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            color: #94a3b8;
-            margin-bottom: 6px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            background-color: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .history-item:hover {
-            background-color: rgba(56, 189, 248, 0.1);
-            color: #38bdf8;
-        }
-        .history-item span {
-            display: block;
-            font-size: 10px;
-            color: #475569;
-        }
-
-        /* Contenido Principal a la Derecha */
-        .main-content {
-            margin-left: 260px;
-            flex-grow: 1;
-            padding: 30px;
-            box-sizing: border-box;
-            max-width: calc(100% - 260px);
-        }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: rgba(22, 27, 34, 0.85);
-            backdrop-filter: blur(12px);
-            padding: 18px 25px;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            margin-bottom: 30px;
-        }
-        h2 { color: #38bdf8; margin: 0; font-size: 20px; font-weight: 600; }
-        .logout-btn {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 12px;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-        }
-        .logout-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(239, 68, 68, 0.5); }
-
-        /* Cuadrícula de herramientas moderna */
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
-            gap: 22px;
-            margin-bottom: 25px;
-        }
-        .tool-card {
-            background-color: rgba(22, 27, 34, 0.75);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 22px;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            border-top: 4px solid #10b981;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .tool-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.15);
-        }
-        .tool-card h3 { color: #38bdf8; margin-top: 0; margin-bottom: 8px; font-size: 16px; }
-        .tool-card p { color: #94a3b8; font-size: 12px; margin-bottom: 10px; line-height: 1.4; }
-
-        textarea {
-            width: 100%;
-            height: 55px;
-            background-color: #0b0f15;
-            color: #f8fafc;
-            border: 1px solid #30363d;
-            border-radius: 8px;
-            padding: 8px;
-            font-size: 12px;
-            resize: vertical;
-            box-sizing: border-box;
-            margin-bottom: 8px;
-            transition: border-color 0.2s;
-        }
-        textarea:focus { outline: none; border-color: #38bdf8; }
-
-        .file-input-label { display: block; font-size: 11px; color: #38bdf8; margin-bottom: 4px; }
-        .universal-file-input {
-            font-size: 11px;
-            color: #94a3b8;
-            background-color: #0b0f15;
-            border: 1px dashed #30363d;
-            padding: 6px;
-            border-radius: 6px;
-            width: 100%;
-            box-sizing: border-box;
-            margin-bottom: 10px;
-        }
-        
-        .action-btn {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: #ffffff;
-            border: none;
-            padding: 9px 14px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
-            margin-bottom: 6px;
-            font-size: 12px;
-        }
-        .action-btn:hover {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
-            transform: translateY(-1px);
-        }
-
-        .export-btn {
-            background: rgba(56, 189, 248, 0.15);
-            color: #38bdf8;
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            padding: 5px 8px;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 11px;
-            display: inline-block;
-            transition: background 0.2s;
-            width: 100%;
-            text-align: center;
-            box-sizing: border-box;
-            margin-bottom: 6px;
-        }
-        .export-btn:hover { background: rgba(56, 189, 248, 0.3); }
-        
-        .output-box {
-            background-color: #0b0f15;
-            border: 1px solid #30363d;
-            padding: 8px;
-            border-radius: 6px;
-            min-height: 35px;
-            white-space: pre-wrap;
-            color: #e2e8f0;
-            font-size: 11px;
-        }
-
-        /* Animación de carga */
-        @keyframes pulseGlow {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; color: #38bdf8; }
-            100% { opacity: 0.6; }
-        .loading-pulse {
-            animation: pulseGlow 1.2s infinite ease-in-out;
-        }
-
-        /* Pestañas de ayuda */
-        .help-toggle-btn {
-            background: none;
-            border: none;
-            color: #38bdf8;
-            cursor: pointer;
-            font-size: 11px;
-            text-decoration: underline;
-            padding: 0;
-            margin-bottom: 8px;
-            display: inline-block;
-            text-align: left;
-        }
-        .help-toggle-btn:hover { color: #7dd3fc; }
-        .help-dropdown {
-            display: none;
-            background-color: #0b0f15;
-            border-left: 3px solid #38bdf8;
-            padding: 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            color: #94a3b8;
-            margin-bottom: 8px;
-            line-height: 1.4;
-            border: 1px solid #30363d;
-        }
-        .help-dropdown ul { padding-left: 15px; margin: 4px 0 0 0; }
-        .help-dropdown li { margin-bottom: 2px; }
-
-        /* Sección de Chat Libre */
-        .chat-section {
-            background-color: rgba(22, 27, 34, 0.75);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 22px;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-            border-top: 4px solid #8b5cf6;
-            margin-bottom: 30px;
-        }
-        .chat-section h3 { color: #a78bfa; margin-top: 0; font-size: 16px; }
-        .chat-box {
-            background-color: #0b0f15;
-            border: 1px solid #30363d;
-            padding: 15px;
-            border-radius: 10px;
-            height: 160px;
-            overflow-y: auto;
-            margin-bottom: 12px;
-            font-size: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .chat-msg { padding: 8px 12px; border-radius: 8px; max-width: 80%; line-height: 1.4; }
-        .chat-msg.user { background-color: rgba(56, 189, 248, 0.15); color: #38bdf8; align-self: flex-end; border: 1px solid rgba(56, 189, 248, 0.3); }
-        .chat-msg.ai { background-color: rgba(167, 139, 250, 0.15); color: #c4b5fd; align-self: flex-start; border: 1px solid rgba(167, 139, 250, 0.3); }
-        .chat-input-area { display: flex; gap: 10px; }
-        .chat-input-area textarea { margin-bottom: 0; height: 42px; }
-        .chat-send-btn { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; border: none; padding: 0 20px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px; }
-    </style>
-</head>
-<body>
-
-    <!-- Barra Lateral Izquierda (Historial Interactivo) -->
-    <div class="sidebar">
-        <div class="sidebar-brand">Digital Business IA</div>
-        <button class="sidebar-btn" onclick="clearAllOutputs()">+ Nueva Consulta</button>
-        
-        <div class="sidebar-section-title">Historial Reciente</div>
-        <ul class="history-list" id="history-list">
-            <li class="history-item" style="color: #64748b; background: transparent; border: none; cursor: default;">No hay solicitudes aún...</li>
-        </ul>
-    </div>
-
-    <!-- Contenido Principal -->
-    <div class="main-content">
-        <header>
-            <h2>Panel Universal Optimizado</h2>
-            <button class="logout-btn" id="logout-btn">Cerrar Sesión</button>
-        </header>
-
-        <!-- Cuadrícula de herramientas universales -->
+<!-- Cuadrícula de herramientas universales -->
         <div class="tools-grid">
             <!-- Herramienta 1 -->
             <div class="tool-card">
@@ -325,7 +6,14 @@
                     <h3>1. Asistente General</h3>
                     <p>Resuelve dudas, procesa archivos o analiza contenido multimedia.</p>
                     <button class="help-toggle-btn" onclick="toggleHelp(1)">¿Cómo usar?</button>
-                    <div class="help-dropdown" id="help-1"><ul><li>Escribe texto, sube documentos, audios o videos.</li></ul></div>
+                    <div class="help-dropdown" id="help-1">
+                        <strong>Paso a paso:</strong>
+                        <ul>
+                            <li>Escribe tu pregunta o duda en la casilla de abajo.</li>
+                            <li>Opcional: Sube un documento (PDF, Word, TXT) o audio para que la IA lo analice.</li>
+                            <li>Haz clic en "Procesar con IA" para obtener tu respuesta exacta.</li>
+                        </ul>
+                    </div>
                     <textarea id="prompt-1" placeholder="Escribe tu instrucción..."></textarea>
                     <label class="file-input-label">Adjuntar archivo:</label>
                     <input type="file" id="file-1" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
@@ -343,7 +31,14 @@
                     <h3>2. Generador de Negocios</h3>
                     <p>Crea estrategias comerciales a partir de notas, audios o reportes adjuntos.</p>
                     <button class="help-toggle-btn" onclick="toggleHelp(2)">¿Cómo usar?</button>
-                    <div class="help-dropdown" id="help-2"><ul><li>Combina texto e insumos para perfilar marcas.</li></ul></div>
+                    <div class="help-dropdown" id="help-2">
+                        <strong>Paso a paso:</strong>
+                        <ul>
+                            <li>Describe tu idea de negocio, producto o servicio en el cuadro de texto.</li>
+                            <li>Adjunta notas de voz o reportes previos si los tienes.</li>
+                            <li>Procesa para generar planes de marketing y estrategias comerciales listas.</li>
+                        </ul>
+                    </div>
                     <textarea id="prompt-2" placeholder="Escribe tu idea de negocio..."></textarea>
                     <label class="file-input-label">Adjuntar archivo:</label>
                     <input type="file" id="file-2" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
@@ -361,7 +56,14 @@
                     <h3>3. Creador de Contenido</h3>
                     <p>Genera textos, correos o redacta piezas basadas en tus archivos fuente.</p>
                     <button class="help-toggle-btn" onclick="toggleHelp(3)">¿Cómo usar?</button>
-                    <div class="help-dropdown" id="help-3"><ul><li>Sube audios o textos previos para convertirlos.</li></ul></div>
+                    <div class="help-dropdown" id="help-3">
+                        <strong>Paso a paso:</strong>
+                        <ul>
+                            <li>Indica qué tipo de texto necesitas (correos, publicaciones, artículos).</li>
+                            <li>Sube un archivo de referencia con la información clave.</li>
+                            <li>Obtén redacciones profesionales adaptadas a tu audiencia.</li>
+                        </ul>
+                    </div>
                     <textarea id="prompt-3" placeholder="Indica el contenido a redactar..."></textarea>
                     <label class="file-input-label">Adjuntar archivo:</label>
                     <input type="file" id="file-3" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
@@ -379,7 +81,14 @@
                     <h3>4. Generador de fotos con IA</h3>
                     <p>Diseña recursos visuales apoyándote en descripciones o referencias.</p>
                     <button class="help-toggle-btn" onclick="toggleHelp(4)">¿Cómo usar?</button>
-                    <div class="help-dropdown" id="help-4"><ul><li>Describe la imagen o adjunta referencias.</li></ul></div>
+                    <div class="help-dropdown" id="help-4">
+                        <strong>Paso a paso:</strong>
+                        <ul>
+                            <li>Describe detalladamente la imagen o concepto visual que buscas.</li>
+                            <li>Sube una imagen de referencia si deseas inspirarte en ella.</li>
+                            <li>Genera conceptos visuales precisos para tus proyectos.</li>
+                        </ul>
+                    </div>
                     <textarea id="prompt-4" placeholder="Describe la imagen deseada..."></textarea>
                     <label class="file-input-label">Adjuntar archivo de referencia:</label>
                     <input type="file" id="file-4" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
@@ -397,7 +106,14 @@
                     <h3>5. Creador de Tablas y Presupuestos</h3>
                     <p>Estructura datos financieros mediante comandos o archivos.</p>
                     <button class="help-toggle-btn" onclick="toggleHelp(5)">¿Cómo usar?</button>
-                    <div class="help-dropdown" id="help-5"><ul><li>Sube hojas de cálculo o datos para tabularlos.</li></ul></div>
+                    <div class="help-dropdown" id="help-5">
+                        <strong>Paso a paso:</strong>
+                        <ul>
+                            <li>Describe los datos, costos o requerimientos de tu tabla.</li>
+                            <li>Sube un documento o notas con números desordenados.</li>
+                            <li>La IA estructurará la información en formatos limpios y ordenados.</li>
+                        </ul>
+                    </div>
                     <textarea id="prompt-5" placeholder="Describe los datos de tu tabla..."></textarea>
                     <label class="file-input-label">Adjuntar archivo:</label>
                     <input type="file" id="file-5" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
@@ -415,7 +131,14 @@
                     <h3>6. Traductor de Texto y Audio IA</h3>
                     <p>Traduce y genera voz sintética en español a partir de audio o texto.</p>
                     <button class="help-toggle-btn" onclick="toggleHelp(6)">¿Cómo usar?</button>
-                    <div class="help-dropdown" id="help-6"><ul><li>Ingresa texto o sube audios en otros idiomas.</li></ul></div>
+                    <div class="help-dropdown" id="help-6">
+                        <strong>Paso a paso:</strong>
+                        <ul>
+                            <li>Escribe texto en cualquier idioma o adjunta un archivo de audio/video.</li>
+                            <li>Solicita la traducción o transcripción exacta que necesites.</li>
+                            <li>Obtén el resultado optimizado de inmediato.</li>
+                        </ul>
+                    </div>
                     <textarea id="prompt-6" placeholder="Texto a traducir..."></textarea>
                     <label class="file-input-label">Adjuntar audio/video:</label>
                     <input type="file" id="file-6" class="universal-file-input" accept=".mp3, .wav, .mp4, .mov">
@@ -427,162 +150,3 @@
                 </div>
             </div>
         </div>
-
-        <!-- Chat Libre Universal -->
-        <div class="chat-section">
-            <h3>💬 Chat Libre y Conversación Continua con IA</h3>
-            <p style="color: #94a3b8; font-size: 12px; margin-bottom: 12px;">Haz preguntas o debate libremente con el asistente.</p>
-            
-            <div class="chat-box" id="chat-container">
-                <div class="chat-msg ai">¡Hola! Soy tu asistente universal. ¿En qué te puedo ayudar hoy?</div>
-            </div>
-
-            <div class="chat-input-area">
-                <textarea id="chat-input" placeholder="Escribe tu mensaje..."></textarea>
-                <button class="chat-send-btn" onclick="sendChatMessage()">Enviar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Script Firebase y Lógica Optimizada -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyAgiappqV0mXtAT0iQSN0uuFhUOHYqfBRI",
-            authDomain: "digital-business-ia.firebaseapp.com",
-            projectId: "digital-business-ia",
-            storageBucket: "digital-business-ia.firebasestorage.app",
-            messagingSenderId: "221344612488",
-            appId: "1:221344612488:web:0f4dd98c920cd1739e5f3d"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            signOut(auth).then(() => {
-                window.location.href = "/";
-            }).catch((error) => console.error("Error al cerrar sesión:", error));
-        });
-    </script>
-
-    <!-- Funciones JavaScript Mejoradas y Optimizadas -->
-    <script>
-        function toggleHelp(id) {
-            const el = document.getElementById(`help-${id}`);
-            el.style.display = el.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function addToHistory(toolName, text, resultText) {
-            const historyList = document.getElementById('history-list');
-            if(historyList.children.length === 1 && historyList.children[0].style.color === 'rgb(100, 116, 139)') {
-                historyList.innerHTML = '';
-            }
-
-            const li = document.createElement('li');
-            li.className = 'history-item';
-            const shortText = text.length > 22 ? text.substring(0, 22) + '...' : text;
-            li.innerHTML = `<strong>${toolName}</strong><span>"${shortText}"</span>`;
-            
-            // Mejora 2: Historial interactivo que permite re-enfocar la consulta
-            li.onclick = () => {
-                alert(`Historial [${toolName}]:\nEntrada: "${text}"\nResultado almacenado: "${resultText.substring(0, 60)}..."`);
-            };
-
-            historyList.prepend(li);
-        }
-
-        function validateInput(promptText, fileInput) {
-            const hasText = promptText.trim().length > 0;
-            const hasFile = fileInput.files.length > 0;
-
-            if (!hasText && !hasFile) {
-                alert("Por favor escribe una instrucción o adjunta un archivo válido antes de procesar.");
-                return false;
-            }
-
-            // Mejora 3: Validación estricta de extensiones de archivos
-            if (hasFile) {
-                const file = fileInput.files[0];
-                const validExtensions = ['.txt', '.pdf', '.docx', '.xlsx', '.xls', '.mp3', '.wav', '.mp4', '.mov'];
-                const fileExt = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
-                
-                if (!validExtensions.includes(fileExt)) {
-                    alert(`El archivo "${file.name}" no tiene un formato compatible. Formatos permitidos: TXT, PDF, Word, Excel, MP3, WAV, MP4.`);
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        function runUniversalTool(toolId, toolName) {
-            const promptText = document.getElementById(`prompt-${toolId}`).value;
-            const fileInput = document.getElementById(`file-${toolId}`);
-            const outputBox = document.getElementById(`output-${toolId}`);
-
-            if (!validateInput(promptText, fileInput)) return;
-
-            const sourceInfo = promptText.trim() ? promptText : `Archivo: ${fileInput.files[0].name}`;
-            
-            // Mejora 1: Animación y feedback visual de carga en tiempo real
-            outputBox.className = "output-box loading-pulse";
-            outputBox.textContent = "⏳ Analizando datos y procesando con IA...";
-            
-            setTimeout(() => {
-                outputBox.className = "output-box";
-                const result = `✅ [${toolName}] procesado con éxito.\n- Entrada: "${sourceInfo}"\n- Resultado generado y optimizado para su aplicación ejecutiva.`;
-                outputBox.textContent = result;
-                addToHistory(toolName, sourceInfo, result);
-            }, 1200);
-        }
-
-        function exportDoc(toolId) {
-            const outputText = document.getElementById(`output-${toolId}`).textContent;
-            if(outputText.includes("Resultado aquí...") || outputText.includes("Tabla financiera aquí...")) {
-                alert("Primero procesa información en esta herramienta antes de exportar.");
-                return;
-            }
-            alert(`📥 Exportando resultado de la herramienta ${toolId}... ¡Descarga completada con éxito!`);
-        }
-
-        function sendChatMessage() {
-            const inputField = document.getElementById('chat-input');
-            const chatContainer = document.getElementById('chat-container');
-            const text = inputField.value.trim();
-
-            if(!text) return;
-
-            const userMsg = document.createElement('div');
-            userMsg.className = 'chat-msg user';
-            userMsg.textContent = text;
-            chatContainer.appendChild(userMsg);
-
-            inputField.value = '';
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-            addToHistory('Chat Libre', text, 'Conversación continua');
-
-            setTimeout(() => {
-                const aiMsg = document.createElement('div');
-                aiMsg.className = 'chat-msg ai';
-                aiMsg.textContent = `Procesando consulta: Analizando contexto en tiempo real para "${text}". ¿Deseas afinar algún parámetro de tu estrategia?`;
-                chatContainer.appendChild(aiMsg);
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }, 1000);
-        }
-
-        function clearAllOutputs() {
-            for(let i=1; i<=6; i++) {
-                if(document.getElementById(`prompt-${i}`)) document.getElementById(`prompt-${i}`).value = '';
-                if(document.getElementById(`file-${i}`)) document.getElementById(`file-${i}`).value = '';
-                if(document.getElementById(`output-${i}`)) {
-                    document.getElementById(`output-${i}`).className = "output-box";
-                    document.getElementById(`output-${i}`).textContent = 'Resultado aquí...';
-                }
-            }
-            document.getElementById('chat-container').innerHTML = '<div class="chat-msg ai">¡Hola! Soy tu asistente universal. ¿En qué te puedo ayudar hoy?</div>';
-        }
-    </script>
-</body>
-</html>
