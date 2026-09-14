@@ -5,98 +5,120 @@
     <title>Panel Principal - Digital Business IA</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #0f172a;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0d1117 0%, #171527 50%, #0d1117 100%);
             color: #f8fafc;
             margin: 0;
-            padding: 20px;
+            padding: 30px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
         .container { width: 100%; max-width: 1000px; }
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #1e293b;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            margin-bottom: 25px;
+            background-color: rgba(22, 27, 34, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 20px 25px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 30px;
         }
-        h1 { color: #38bdf8; margin: 0; font-size: 24px; }
+        h1 { color: #38bdf8; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: 0.5px; }
         .logout-btn {
-            background-color: #ef4444;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
+            padding: 9px 18px;
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
         }
-        .logout-btn:hover { background-color: #dc2626; }
+        .logout-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(239, 68, 68, 0.5); }
 
-        /* Cuadrícula de herramientas */
+        /* Cuadrícula de herramientas moderna */
         .tools-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+            gap: 22px;
             margin-bottom: 25px;
         }
         .tool-card {
-            background-color: #1e293b;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            background-color: rgba(22, 27, 34, 0.75);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 22px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            border-top: 4px solid #38bdf8;
+            border-top: 4px solid #10b981;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.15);
         }
         .tool-card h3 { color: #38bdf8; margin-top: 0; margin-bottom: 10px; font-size: 18px; }
         .tool-card p { color: #94a3b8; font-size: 13px; margin-bottom: 15px; line-height: 1.4; }
 
         textarea {
             width: 100%;
-            height: 70px;
-            background-color: #0f172a;
+            height: 75px;
+            background-color: #0b0f15;
             color: #f8fafc;
-            border: 1px solid #475569;
-            border-radius: 6px;
-            padding: 10px;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 12px;
             font-size: 13px;
             resize: vertical;
             box-sizing: border-box;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            transition: border-color 0.2s;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #38bdf8;
         }
         .action-btn {
-            background-color: #38bdf8;
-            color: #0f172a;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
             border: none;
-            padding: 10px 15px;
-            border-radius: 6px;
-            font-weight: bold;
+            padding: 11px 16px;
+            border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
             width: 100%;
-            transition: background 0.2s;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
             margin-bottom: 10px;
         }
-        .action-btn:hover { background-color: #0ea5e9; }
+        .action-btn:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+            transform: translateY(-1px);
+        }
         
         .output-box {
-            background-color: #0f172a;
-            border: 1px solid #334155;
-            padding: 10px;
-            border-radius: 6px;
+            background-color: #0b0f15;
+            border: 1px solid #30363d;
+            padding: 12px;
+            border-radius: 8px;
             margin-top: 10px;
-            min-height: 40px;
+            min-height: 45px;
             white-space: pre-wrap;
             color: #e2e8f0;
             font-size: 12px;
         }
 
-        /* Estilo para los botones y paneles desplegables de ayuda */
+        /* Pestañas de ayuda */
         .help-toggle-btn {
             background: none;
             border: none;
@@ -109,52 +131,61 @@
             display: inline-block;
             text-align: left;
         }
+        .help-toggle-btn:hover { color: #7dd3fc; }
         .help-dropdown {
             display: none;
-            background-color: #0f172a;
+            background-color: #0b0f15;
             border-left: 3px solid #38bdf8;
-            padding: 10px;
-            border-radius: 6px;
+            padding: 12px;
+            border-radius: 8px;
             font-size: 12px;
             color: #94a3b8;
             margin-bottom: 12px;
             line-height: 1.4;
+            border: 1px solid #30363d;
         }
-        .help-dropdown ul { padding-left: 15px; margin: 5px 0 0 0; }
-        .help-dropdown li { margin-bottom: 3px; }
+        .help-dropdown ul { padding-left: 15px; margin: 6px 0 0 0; }
+        .help-dropdown li { margin-bottom: 4px; }
 
         /* Sección de archivos */
         .file-section {
-            background-color: #1e293b;
+            background-color: rgba(22, 27, 34, 0.75);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            border-top: 4px solid #10b981;
-            margin-bottom: 25px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            border-top: 4px solid #38bdf8;
+            margin-bottom: 30px;
         }
-        .file-section h3 { color: #10b981; margin-top: 0; }
+        .file-section h3 { color: #38bdf8; margin-top: 0; }
         .file-dropzone {
-            border: 2px dashed #475569;
-            padding: 20px;
-            border-radius: 8px;
+            border: 2px dashed #30363d;
+            padding: 22px;
+            border-radius: 10px;
             text-align: center;
-            background-color: #0f172a;
+            background-color: #0b0f15;
             margin-bottom: 15px;
             color: #94a3b8;
             font-size: 13px;
         }
         input[type="file"] { color: #f8fafc; margin-bottom: 10px; }
         .file-btn {
-            background-color: #10b981;
-            color: #0f172a;
+            background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+            color: #ffffff;
             border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-weight: bold;
+            padding: 11px 22px;
+            border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
         }
-        .file-btn:hover { background-color: #059669; }
+        .file-btn:hover {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%);
+            box-shadow: 0 6px 16px rgba(56, 189, 248, 0.4);
+            transform: translateY(-1px);
+        }
     </style>
 </head>
 <body>
@@ -165,9 +196,9 @@
             <button class="logout-btn" id="logout-btn">Cerrar Sesión</button>
         </header>
 
-        <!-- Cuadrícula de herramientas de texto, fotos y videos -->
+        <!-- Cuadrícula de herramientas -->
         <div class="tools-grid">
-            <!-- Herramienta 1: Asistente General -->
+            <!-- Herramienta 1 -->
             <div class="tool-card">
                 <div>
                     <h3>1. Asistente General</h3>
@@ -191,7 +222,7 @@
                 </div>
             </div>
 
-            <!-- Herramienta 2: Generador de Negocios -->
+            <!-- Herramienta 2 -->
             <div class="tool-card">
                 <div>
                     <h3>2. Generador de Negocios</h3>
@@ -215,7 +246,7 @@
                 </div>
             </div>
 
-            <!-- Herramienta 3: Creador de Contenido -->
+            <!-- Herramienta 3 -->
             <div class="tool-card">
                 <div>
                     <h3>3. Creador de Contenido</h3>
@@ -239,17 +270,17 @@
                 </div>
             </div>
 
-            <!-- Herramienta 4: Generador de Imágenes / Fotos -->
+            <!-- Herramienta 4 -->
             <div class="tool-card">
                 <div>
-                    <h3>4. Generador de Fotos e Imágenes</h3>
+                    <h3>4. Generador de fotos con IA</h3>
                     <p>Crea conceptos visuales, logotipos, banners publicitarios y diseños fotorrealistas para tu marca.</p>
                     
                     <button class="help-toggle-btn" onclick="toggleHelp(4)">¿Cómo usar esta herramienta?</button>
                     <div class="help-dropdown" id="help-4">
                         <strong>¿Qué puedes hacer?</strong>
                         <ul>
-                            <li>Diseñar recursos visuales para tus campañas.</li>
+                            <li>Diseñar recursos visuales para campañas.</li>
                             <li>Crear prototipos de productos o ropa.</li>
                         </ul>
                         <em style="color: #38bdf8;">Ejemplo: "Un diseño moderno de camiseta deportiva en color negro"</em>
@@ -263,7 +294,7 @@
                 </div>
             </div>
 
-            <!-- Herramienta 5: Generador de Videos -->
+            <!-- Herramienta 5 -->
             <div class="tool-card">
                 <div>
                     <h3>5. Generador de Videos IA</h3>
@@ -288,7 +319,7 @@
             </div>
         </div>
 
-        <!-- Sección de Procesamiento de Archivos (Excel, Word, PDF) -->
+        <!-- Sección de Archivos -->
         <div class="file-section">
             <h3>📊 Procesador de Documentos y Archivos (Excel, Word, PDF)</h3>
             <p style="color: #94a3b8; font-size: 13px; margin-bottom: 15px;">Sube tus reportes de Excel, documentos de Word o archivos PDF para que la IA los analice y extraiga información clave.</p>
@@ -302,7 +333,7 @@
         </div>
     </div>
 
-    <!-- Script de control de Firebase -->
+    <!-- Script Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -328,7 +359,7 @@
         });
     </script>
 
-    <!-- Funciones globales de las herramientas y pestañas desplegables -->
+    <!-- Funciones -->
     <script>
         function toggleHelp(toolId) {
             const dropdown = document.getElementById(`help-${toolId}`);
