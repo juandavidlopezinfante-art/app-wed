@@ -3,98 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Imágenes IA</title>
+    <title>Digital Business IA - Panel Maestro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #0f172a;
-            color: #ffffff;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container {
-            background-color: #1e293b;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            width: 100%;
-            max-width: 600px;
-            text-align: center;
-        }
-        h2 {
-            margin-bottom: 20px;
-            color: #38bdf8;
-        }
-        input[type="text"], input[type="password"] {
-            width: 90%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #475569;
-            background-color: #0f172a;
-            color: #fff;
-            border-radius: 6px;
-            font-size: 16px;
-        }
-        button {
-            background-color: #0284c7;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        button:hover {
-            background-color: #0369a1;
-        }
-        #loading {
-            display: none;
-            margin-top: 15px;
-            color: #fbbf24;
-        }
-        .resultado {
-            margin-top: 25px;
-        }
-        .resultado img {
-            max-width: 100%;
-            border-radius: 8px;
-            margin-top: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
+        body { background-color: #0f172a; color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .navbar { background-color: #1e293b; border-bottom: 1px solid #334155; }
+        .card { background-color: #1e293b; border: 1px solid #334155; color: #f8fafc; }
+        .form-control, .form-select { background-color: #0f172a; border: 1px solid #475569; color: #fff; }
+        .form-control:focus, .form-select:focus { background-color: #0f172a; color: #fff; border-color: #38bdf8; box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.25); }
+        .btn-primary { background-color: #2563eb; border: none; }
+        .btn-primary:hover { background-color: #1d4ed8; }
+        .tool-section { display: none; }
+        .tool-section.active { display: block; }
+        .chat-box { background-color: #090d16; border: 1px solid #334155; height: 250px; overflow-y: auto; padding: 15px; border-radius: 6px; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Generador de Imágenes con IA</h2>
-    <form action="/generar" method="POST" onsubmit="mostrarCarga()">
-        <input type="text" name="prompt" placeholder="Ej. Un atardecer en una ciudad futurista..." required>
-        <br>
-        <input type="password" name="pro_key" placeholder="Clave PRO (Opcional)">
-        <br>
-        <button type="submit">Generar Imagen</button>
-    </form>
+    <!-- Barra de Navegación con accesos rápidos -->
+    <nav class="navbar navbar-expand-lg navbar-dark px-4">
+        <a class="navbar-brand fw-bold" href="#">Digital Business IA</a>
+        <div class="ms-auto d-flex gap-2">
+            <button class="btn btn-sm btn-outline-light" onclick="activarModoCelular()">📱 Versión Celular</button>
+            <button class="btn btn-sm btn-outline-warning" onclick="mostrarAyuda()">❓ Ayuda e Informar Problemas</button>
+            <span class="badge bg-info text-dark align-self-center" id="proBadge">Versión Estándar</span>
+        </div>
+    </nav>
 
-    <div id="loading">⏳ La inteligencia artificial está creando tu imagen, espera un momento...</div>
+    <div class="container my-4">
+        <!-- Selector de Herramientas -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <label for="toolSelector" class="form-label fw-bold">Selecciona una Herramienta o Módulo:</label>
+                <select id="toolSelector" class="form-select" onchange="cambiarHerramienta()">
+                    <option value="chat">💬 Chat Libre Inteligente</option>
+                    <option value="imagen">🎨 Generador de Imágenes con IA</option>
+                    <option value="video">🎬 Generador de Videos de Alta Resolución</option>
+                    <option value="excel">📊 Generador y Asistente de Excel</option>
+                    <option value="word">📝 Generador y Redactor de Word</option>
+                    <option value="traductor">🌐 Traductor de Videos, Audios y Textos (Voces IA)</option>
+                </select>
+            </div>
+        </div>
 
-    {% if imagen_url %}
-    <div class="resultado">
-        <h3>¡Imagen creada con éxito!</h3>
-        <img src="{{ url_for('static', filename=imagen_url) }}" alt="Imagen generada por IA">
+        <!-- Clave PRO Global -->
+        <div class="card p-3 mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <input type="password" id="globalProKey" class="form-control" placeholder="Ingresa tu Clave PRO (Opcional)">
+                </div>
+                <div class="col-md-4 mt-2 mt-md-0">
+                    <button class="btn btn-outline-info w-100" onclick="validarClavePro()">Validar Membresía</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 1. Módulo: Chat Libre -->
+        <div id="section-chat" class="tool-section active">
+            <div class="card p-4">
+                <h3 class="mb-3">Chat Libre con IA</h3>
+                <div class="mb-3">
+                    <label class="form-label">Escribe tu consulta o mensaje:</label>
+                    <textarea id="promptChat" class="form-control" rows="2" placeholder="Conversa libremente con el asistente..."></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Adjuntar referencia (Archivos, audios, fotos, textos):</label>
+                    <input type="file" id="fileChat" class="form-control" multiple>
+                </div>
+                <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Chat Libre', 'promptChat', 'fileChat', 'chatBoxResult')">Enviar al Chat Libre</button>
+                <div class="chat-box" id="chatBoxResult">Historial del chat independiente...</div>
+            </div>
+        </div>
+
+        <!-- 2. Módulo: Generador de Imágenes -->
+        <div id="section-imagen" class="tool-section">
+            <div class="card p-4">
+                <h3 class="mb-3">Generador de Imágenes con IA</h3>
+                <form action="/generar" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label">Describe la imagen que deseas crear:</label>
+                        <input type="text" name="prompt" class="form-control" placeholder="Ej. Un atardecer en una ciudad futurista..." required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Adjuntar foto o referencia visual base:</label>
+                        <input type="file" name="referencia_imagen" class="form-control">
+                    </div>
+                    <input type="hidden" name="pro_key" id="hiddenProKey">
+                    <button type="submit" class="btn btn-primary w-100" onclick="sincronizarClave()">Generar Imagen en su Chat</button>
+                </form>
+                {% if imagen_url %}
+                <div class="text-center mt-4">
+                    <h5 class="text-success">¡Imagen generada con éxito!</h5>
+                    <img src="{{ url_for('static', filename=imagen_url) }}" class="img-fluid rounded shadow mt-2" style="max-height: 400px;" alt="Imagen IA">
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 3. Módulo: Generador de Videos -->
+        <div id="section-video" class="tool-section">
+            <div class="card p-4">
+                <h3 class="mb-3">Generador de Videos de Alta Resolución</h3>
+                <div class="mb-3">
+                    <label class="form-label">Describe la secuencia o escena para tu video HD:</label>
+                    <textarea id="promptVideo" class="form-control" rows="2" placeholder="Toma cinematográfica 4K..."></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Adjuntar referencias (Guion, imágenes o audios):</label>
+                    <input type="file" id="fileVideo" class="form-control" multiple>
+                </div>
+                <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Generador de Videos HD', 'promptVideo', 'fileVideo', 'resultVideo')">Procesar Video en su Chat</button>
+                <div class="chat-box" id="resultVideo" style="display:none;"></div>
+            </div>
+        </div>
+
+        <!-- 4. Módulo: Excel -->
+        <div id="section-excel" class="tool-section">
+            <div class="card p-4">
+                <h3 class="mb-3">Generador y Asistente de Excel</h3>
+                <div class="mb-3">
+                    <label class="form-label">¿Qué deseas calcular, formular u organizar en Excel?</label>
+                    <textarea id="promptExcel" class="form-control" rows="2" placeholder="Fórmulas, tablas dinámicas..."></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Adjuntar archivos de datos (CSV, Excel, textos):</label>
+                    <input type="file" id="fileExcel" class="form-control" multiple>
+                </div>
+                <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Asistente Excel', 'promptExcel', 'fileExcel', 'resultExcel')">Ejecutar en su Chat de Excel</button>
+                <div class="chat-box" id="resultExcel" style="display:none;"></div>
+            </div>
+        </div>
+
+        <!-- 5. Módulo: Word -->
+        <div id="section-word" class="tool-section">
+            <div class="card p-4">
+                <h3 class="mb-3">Generador y Redactor de Word</h3>
+                <div class="mb-3">
+                    <label class="form-label">Tema o estructura para tu documento:</label>
+                    <textarea id="promptWord" class="form-control" rows="2" placeholder="Contratos, cartas formales..."></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Adjuntar documentos base o notas:</label>
+                    <input type="file" id="fileWord" class="form-control" multiple>
+                </div>
+                <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Redactor Word', 'promptWord', 'fileWord', 'resultWord')">Generar en su Chat de Word</button>
+                <div class="chat-box" id="resultWord" style="display:none;"></div>
+            </div>
+        </div>
+
+        <!-- 6. Módulo: Traductor de Videos, Audios y Textos -->
+        <div id="section-traductor" class="tool-section">
+            <div class="card p-4">
+                <h3 class="mb-3">Traductor con Voces IA Naturales</h3>
+                <div class="mb-3">
+                    <label class="form-label">Instrucciones de traducción y síntesis de voz:</label>
+                    <textarea id="promptTraductor" class="form-control" rows="2" placeholder="Traducir y generar voz natural..."></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Adjuntar archivo de video, audio o texto:</label>
+                    <input type="file" id="fileTraductor" class="form-control" multiple>
+                </div>
+                <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Traductor IA', 'promptTraductor', 'fileTraductor', 'resultTraductor')">Procesar en su Chat de Traducción</button>
+                <div class="chat-box" id="resultTraductor" style="display:none;"></div>
+            </div>
+        </div>
     </div>
-    {% endif %}
-</div>
 
-<script>
-    function mostrarCarga() {
-        document.getElementById('loading').style.display = 'block';
-    }
-</script>
+    <script>
+        function cambiarHerramienta() {
+            const seleccion = document.getElementById('toolSelector').value;
+            document.querySelectorAll('.tool-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById('section-' + seleccion).classList.add('active');
+        }
 
+        function sincronizarClave() {
+            document.getElementById('hiddenProKey').value = document.getElementById('globalProKey').value;
+        }
+
+        function validarClavePro() {
+            const key = document.getElementById('globalProKey').value.trim();
+            const badge = document.getElementById('proBadge');
+            if (key === "PRO-150-ACTIVO" || key === "PROMO-99-3MESES") {
+                badge.className = "badge bg-success";
+                badge.innerText = "¡Membresía PRO Activa!";
+                alert("¡Clave PRO validada correctamente!");
+            } else {
+                badge.className = "badge bg-danger";
+                badge.innerText = "Clave Inválida";
+                alert("La clave ingresada no es válida.");
+            }
+        }
+
+        function activarModoCelular() {
+            const body = document.body;
+            if (body.style.maxWidth === '480px') {
+                body.style.maxWidth = '100%';
+                body.style.margin = '0';
+                alert("Modo escritorio restaurado.");
+            } else {
+                body.style.maxWidth = '480px';
+                body.style.margin = '0 auto';
+                alert("Modo celular activado. La interfaz se adaptará.");
+            }
+        }
+
+        function mostrarAyuda() {
+            alert("Ayuda y Soporte:\n- Si experimentas problemas, verifica tu conexión o el uso de tus claves API.\n- Puedes adjuntar archivos de cualquier formato sin alterar su integridad nativa.\n- Contacta a soporte técnico ante cualquier incidencia.");
+        }
+
+        async function consultarChatIndependiente(toolName, inputId, fileId, resultId) {
+            const prompt = document.getElementById(inputId).value.trim();
+            const fileInput = document.getElementById(fileId);
+            const proKey = document.getElementById('globalProKey').value.trim();
+            const resultBox = document.getElementById(resultId);
+
+            if (!prompt && fileInput.files.length === 0) {
+                alert("Por favor ingresa una instrucción o adjunta un archivo.");
+                return;
+            }
+
+            resultBox.style.display = 'block';
+            resultBox.innerHTML += `<div><strong>Tú:</strong> ${prompt} ${fileInput.files.length > 0 ? '(<i>Archivo adjunto</i>)' : ''}</div>`;
+            resultBox.innerHTML += `<div><em>🔄 Procesando en el chat independiente de ${toolName}...</em></div>`;
+            resultBox.scrollTop = resultBox.scrollHeight;
+
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ toolName, prompt, proKey })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    resultBox.innerHTML += `<div class="text-info mt-2"><strong>${toolName}:</strong> ${data.response}</div>`;
+                    if (data.is_pro) {
+                        document.getElementById('proBadge').className = "badge bg-success";
+                        document.getElementById('proBadge').innerText = "¡Membresía PRO Activa!";
+                    }
+                } else {
+                    resultBox.innerHTML += `<div class="text-danger mt-2"><strong>Error:</strong> ${data.error}</div>`;
+                }
+            } catch (err) {
+                resultBox.innerHTML += `<div class="text-danger mt-2"><strong>Error:</strong> No se pudo conectar con el servidor.</div>`;
+            }
+            resultBox.scrollTop = resultBox.scrollHeight;
+        }
+    </script>
 </body>
 </html>
