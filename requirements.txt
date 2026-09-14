@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 Flask
 gunicorn
 google-generativeai
+=======
+Flask
+gunicorn
+google-generativeai
+>>>>>>> 69fa937c977de58a091b51f6cd77f15fd5d6703d

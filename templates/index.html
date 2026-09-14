@@ -2,99 +2,99 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-<<<<<<< HEAD
-    <title>Generador de Imágenes con IA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Imágenes IA</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f7f6;
-            text-align: center;
-            padding: 40px;
+            background-color: #0f172a;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
         .container {
-            background: white;
+            background-color: #1e293b;
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            display: inline-block;
-            max-width: 600px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
             width: 100%;
+            max-width: 600px;
+            text-align: center;
         }
-        input[type="text"] {
-            width: 70%;
-            padding: 10px;
-            border: 1px solid #ccc;
+        h2 {
+            margin-bottom: 20px;
+            color: #38bdf8;
+        }
+        input[type="text"], input[type="password"] {
+            width: 90%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #475569;
+            background-color: #0f172a;
+            color: #fff;
             border-radius: 6px;
             font-size: 16px;
         }
         button {
-            padding: 10px 20px;
-            background-color: #4f46e5;
+            background-color: #0284c7;
             color: white;
             border: none;
-            border-radius: 6px;
+            padding: 12px 20px;
             font-size: 16px;
+            border-radius: 6px;
             cursor: pointer;
-            margin-left: 10px;
+            transition: background-color 0.2s;
         }
         button:hover {
-            background-color: #4338ca;
+            background-color: #0369a1;
         }
         #loading {
             display: none;
-            margin-top: 20px;
-            color: #555;
-            font-style: italic;
+            margin-top: 15px;
+            color: #fbbf24;
         }
         .resultado {
             margin-top: 25px;
         }
-        img {
+        .resultado img {
             max-width: 100%;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            margin-bottom: 15px;
-        }
-        .btn-descargar {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #10b981;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        .btn-descargar:hover {
-            background-color: #059669;
+            margin-top: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2>Generador de Imágenes con IA</h2>
-        <form action="/generar" method="POST" onsubmit="mostrarCarga()">
-            <input type="text" name="prompt" placeholder="Ej. Un astronauta paseando en bicicleta" required>
-            <button type="submit">Generar</button>
-        </form>
+<div class="container">
+    <h2>Generador de Imágenes con IA</h2>
+    <form action="/generar" method="POST" onsubmit="mostrarCarga()">
+        <input type="text" name="prompt" placeholder="Ej. Un atardecer en una ciudad futurista..." required>
+        <br>
+        <input type="password" name="pro_key" placeholder="Clave PRO (Opcional)">
+        <br>
+        <button type="submit">Generar Imagen</button>
+    </form>
 
-        <div id="loading">🎨 La inteligencia artificial está creando tu imagen, por favor espera unos segundos...</div>
+    <div id="loading">⏳ La inteligencia artificial está creando tu imagen, espera un momento...</div>
 
-        {% if imagen_url %}
-        <div class="resultado">
-            <h3>¡Imagen creada con éxito!</h3>
-            <img src="{{ url_for('static', filename=imagen_url) }}" alt="Imagen generada por IA"><br>
-            <a href="{{ url_for('static', filename=imagen_url) }}" class="btn-descargar" download>Descargar Imagen</a>
-        </div>
-        {% endif %}
+    {% if imagen_url %}
+    <div class="resultado">
+        <h3>¡Imagen creada con éxito!</h3>
+        <img src="{{ url_for('static', filename=imagen_url) }}" alt="Imagen generada por IA">
     </div>
+    {% endif %}
+</div>
 
-    <script>
-        function mostrarCarga() {
-            document.getElementById('loading').style.display = 'block';
-        }
-    </script>
+<script>
+    function mostrarCarga() {
+        document.getElementById('loading').style.display = 'block';
+    }
+</script>
 
 </body>
 </html>

@@ -17,7 +17,11 @@ def optimize_code_module(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
         source_code = f.read()
 
+<<<<<<< HEAD
     model = genai.GenerativeModel('gemini-3.6-flash')
+=======
+    model = genai.GenerativeModel('gemini-1.5-flash')
+>>>>>>> 69fa937c977de58a091b51f6cd77f15fd5d6703d
     
     prompt = (
         "Eres un arquitecto de software autónomo de nivel senior trabajando para 'Digital Business IA'. "
