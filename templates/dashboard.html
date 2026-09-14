@@ -1,152 +1,300 @@
-<!-- Cuadrícula de herramientas universales -->
-        <div class="tools-grid">
-            <!-- Herramienta 1 -->
-            <div class="tool-card">
-                <div>
-                    <h3>1. Asistente General</h3>
-                    <p>Resuelve dudas, procesa archivos o analiza contenido multimedia.</p>
-                    <button class="help-toggle-btn" onclick="toggleHelp(1)">¿Cómo usar?</button>
-                    <div class="help-dropdown" id="help-1">
-                        <strong>Paso a paso:</strong>
-                        <ul>
-                            <li>Escribe tu pregunta o duda en la casilla de abajo.</li>
-                            <li>Opcional: Sube un documento (PDF, Word, TXT) o audio para que la IA lo analice.</li>
-                            <li>Haz clic en "Procesar con IA" para obtener tu respuesta exacta.</li>
-                        </ul>
-                    </div>
-                    <textarea id="prompt-1" placeholder="Escribe tu instrucción..."></textarea>
-                    <label class="file-input-label">Adjuntar archivo:</label>
-                    <input type="file" id="file-1" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
-                </div>
-                <div>
-                    <button class="action-btn" onclick="runUniversalTool(1, 'Asistente General')">Procesar con IA</button>
-                    <button class="export-btn" onclick="exportDoc(1)">📥 Descargar Resultado</button>
-                    <div class="output-box" id="output-1">Resultado aquí...</div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Business IA - Dashboard Universal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Barra Lateral -->
+        <aside class="sidebar">
+            <h2 class="logo-title">Digital Business IA</h2>
+            <button class="new-query-btn" onclick="newQuery()">+ Nueva Consulta</button>
+            
+            <div class="history-section">
+                <h4>HISTORIAL RECIENTE</h4>
+                <div id="history-list" class="history-list">
+                    <p class="no-history">No hay solicitudes aún...</p>
                 </div>
             </div>
 
-            <!-- Herramienta 2 -->
-            <div class="tool-card">
-                <div>
-                    <h3>2. Generador de Negocios</h3>
-                    <p>Crea estrategias comerciales a partir de notas, audios o reportes adjuntos.</p>
-                    <button class="help-toggle-btn" onclick="toggleHelp(2)">¿Cómo usar?</button>
-                    <div class="help-dropdown" id="help-2">
-                        <strong>Paso a paso:</strong>
-                        <ul>
-                            <li>Describe tu idea de negocio, producto o servicio en el cuadro de texto.</li>
-                            <li>Adjunta notas de voz o reportes previos si los tienes.</li>
-                            <li>Procesa para generar planes de marketing y estrategias comerciales listas.</li>
-                        </ul>
+            <!-- Botón de Menú Flotante de Soporte / Opciones -->
+            <div class="sidebar-footer">
+                <button class="options-menu-btn" onclick="toggleOptionsMenu()">⚙️ Opciones & Soporte</button>
+            </div>
+        </aside>
+
+        <!-- Contenido Principal -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h1>Panel Universal Optimizado</h1>
+                <a href="/" class="logout-btn">Cerrar Sesión</a>
+            </header>
+
+            <!-- Cuadrícula de herramientas universales -->
+            <div class="tools-grid">
+                <!-- Herramienta 1 -->
+                <div class="tool-card">
+                    <div>
+                        <h3>1. Asistente General</h3>
+                        <p>Resuelve dudas, procesa archivos o analiza contenido multimedia.</p>
+                        <button class="help-toggle-btn" onclick="toggleHelp(1)">¿Cómo usar?</button>
+                        <div class="help-dropdown" id="help-1">
+                            <strong>Paso a paso:</strong>
+                            <ul>
+                                <li>Escribe tu pregunta o duda en la casilla de abajo.</li>
+                                <li>Opcional: Sube un documento (PDF, Word, TXT) o audio para que la IA lo analice.</li>
+                                <li>Haz clic en "Procesar con IA" para obtener tu respuesta exacta.</li>
+                            </ul>
+                        </div>
+                        <textarea id="prompt-1" placeholder="Escribe tu instrucción..."></textarea>
+                        <label class="file-input-label">Adjuntar archivo:</label>
+                        <input type="file" id="file-1" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
                     </div>
-                    <textarea id="prompt-2" placeholder="Escribe tu idea de negocio..."></textarea>
-                    <label class="file-input-label">Adjuntar archivo:</label>
-                    <input type="file" id="file-2" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
+                    <div>
+                        <button class="action-btn" onclick="runUniversalTool(1, 'Asistente General')">Procesar con IA</button>
+                        <button class="export-btn" onclick="exportDoc(1)">📥 Descargar Resultado</button>
+                        <div class="output-box" id="output-1">Resultado aquí...</div>
+                    </div>
                 </div>
-                <div>
-                    <button class="action-btn" onclick="runUniversalTool(2, 'Generador de Negocios')">Procesar con IA</button>
-                    <button class="export-btn" onclick="exportDoc(2)">📥 Descargar Resultado</button>
-                    <div class="output-box" id="output-2">Resultado aquí...</div>
+
+                <!-- Herramienta 2 -->
+                <div class="tool-card">
+                    <div>
+                        <h3>2. Generador de Negocios</h3>
+                        <p>Crea estrategias comerciales a partir de notas, audios o reportes adjuntos.</p>
+                        <button class="help-toggle-btn" onclick="toggleHelp(2)">¿Cómo usar?</button>
+                        <div class="help-dropdown" id="help-2">
+                            <strong>Paso a paso:</strong>
+                            <ul>
+                                <li>Describe tu idea de negocio, producto o servicio en el cuadro de texto.</li>
+                                <li>Adjunta notas de voz o reportes previos si los tienes.</li>
+                                <li>Procesa para generar planes de marketing y estrategias comerciales listas.</li>
+                            </ul>
+                        </div>
+                        <textarea id="prompt-2" placeholder="Escribe tu idea de negocio..."></textarea>
+                        <label class="file-input-label">Adjuntar archivo:</label>
+                        <input type="file" id="file-2" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
+                    </div>
+                    <div>
+                        <button class="action-btn" onclick="runUniversalTool(2, 'Generador de Negocios')">Procesar con IA</button>
+                        <button class="export-btn" onclick="exportDoc(2)">📥 Descargar Resultado</button>
+                        <div class="output-box" id="output-2">Resultado aquí...</div>
+                    </div>
+                </div>
+
+                <!-- Herramienta 3 -->
+                <div class="tool-card">
+                    <div>
+                        <h3>3. Creador de Contenido</h3>
+                        <p>Genera textos, correos o redacta piezas basadas en tus archivos fuente.</p>
+                        <button class="help-toggle-btn" onclick="toggleHelp(3)">¿Cómo usar?</button>
+                        <div class="help-dropdown" id="help-3">
+                            <strong>Paso a paso:</strong>
+                            <ul>
+                                <li>Indica qué tipo de texto necesitas (correos, publicaciones, artículos).</li>
+                                <li>Sube un archivo de referencia con la información clave.</li>
+                                <li>Obtén redacciones profesionales adaptadas a tu audiencia.</li>
+                            </ul>
+                        </div>
+                        <textarea id="prompt-3" placeholder="Indica el contenido a redactar..."></textarea>
+                        <label class="file-input-label">Adjuntar archivo:</label>
+                        <input type="file" id="file-3" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
+                    </div>
+                    <div>
+                        <button class="action-btn" onclick="runUniversalTool(3, 'Creador de Contenido')">Procesar con IA</button>
+                        <button class="export-btn" onclick="exportDoc(3)">📥 Descargar Resultado</button>
+                        <div class="output-box" id="output-3">Resultado aquí...</div>
+                    </div>
+                </div>
+
+                <!-- Herramienta 4 -->
+                <div class="tool-card">
+                    <div>
+                        <h3>4. Generador de fotos con IA</h3>
+                        <p>Diseña recursos visuales apoyándote en descripciones o referencias.</p>
+                        <button class="help-toggle-btn" onclick="toggleHelp(4)">¿Cómo usar?</button>
+                        <div class="help-dropdown" id="help-4">
+                            <strong>Paso a paso:</strong>
+                            <ul>
+                                <li>Describe detalladamente la imagen o concepto visual que buscas.</li>
+                                <li>Sube una imagen de referencia si deseas inspirarte en ella.</li>
+                                <li>Genera conceptos visuales precisos para tus proyectos.</li>
+                            </ul>
+                        </div>
+                        <textarea id="prompt-4" placeholder="Describe la imagen deseada..."></textarea>
+                        <label class="file-input-label">Adjuntar archivo de referencia:</label>
+                        <input type="file" id="file-4" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
+                    </div>
+                    <div>
+                        <button class="action-btn" onclick="runUniversalTool(4, 'Generador de Fotos')">Procesar con IA</button>
+                        <button class="export-btn" onclick="exportDoc(4)">📥 Descargar Imagen</button>
+                        <div class="output-box" id="output-4">Resultado visual aquí...</div>
+                    </div>
+                </div>
+
+                <!-- Herramienta 5 -->
+                <div class="tool-card">
+                    <div>
+                        <h3>5. Creador de Tablas y Presupuestos</h3>
+                        <p>Estructura datos financieros mediante comandos o archivos.</p>
+                        <button class="help-toggle-btn" onclick="toggleHelp(5)">¿Cómo usar?</button>
+                        <div class="help-dropdown" id="help-5">
+                            <strong>Paso a paso:</strong>
+                            <ul>
+                                <li>Describe los datos, costos o requerimientos de tu tabla.</li>
+                                <li>Sube un documento o notas con números desordenados.</li>
+                                <li>La IA estructurará la información en formatos limpios y ordenados.</li>
+                            </ul>
+                        </div>
+                        <textarea id="prompt-5" placeholder="Describe los datos de tu tabla..."></textarea>
+                        <label class="file-input-label">Adjuntar archivo:</label>
+                        <input type="file" id="file-5" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
+                    </div>
+                    <div>
+                        <button class="action-btn" onclick="runUniversalTool(5, 'Tablas Financieras')">Procesar con IA</button>
+                        <button class="export-btn" onclick="exportDoc(5)">📥 Descargar .XLSX</button>
+                        <div class="output-box" id="output-5">Tabla financiera aquí...</div>
+                    </div>
+                </div>
+
+                <!-- Herramienta 6 -->
+                <div class="tool-card">
+                    <div>
+                        <h3>6. Traductor de Texto y Audio IA</h3>
+                        <p>Traduce y genera voz sintética en español a partir de audio o texto.</p>
+                        <button class="help-toggle-btn" onclick="toggleHelp(6)">¿Cómo usar?</button>
+                        <div class="help-dropdown" id="help-6">
+                            <strong>Paso a paso:</strong>
+                            <ul>
+                                <li>Escribe texto en cualquier idioma o adjunta un archivo de audio/video.</li>
+                                <li>Solicita la traducción o transcripción exacta que necesites.</li>
+                                <li>Obtén el resultado optimizado de inmediato.</li>
+                            </ul>
+                        </div>
+                        <textarea id="prompt-6" placeholder="Texto a traducir..."></textarea>
+                        <label class="file-input-label">Adjuntar audio/video:</label>
+                        <input type="file" id="file-6" class="universal-file-input" accept=".mp3, .wav, .mp4, .mov">
+                    </div>
+                    <div>
+                        <button class="action-btn" onclick="runUniversalTool(6, 'Traductor Multimedia')">Procesar con IA</button>
+                        <button class="export-btn" onclick="exportDoc(6)">📥 Descargar Audio</button>
+                        <div class="output-box" id="output-6">Traducción y audio aquí...</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Herramienta 3 -->
-            <div class="tool-card">
-                <div>
-                    <h3>3. Creador de Contenido</h3>
-                    <p>Genera textos, correos o redacta piezas basadas en tus archivos fuente.</p>
-                    <button class="help-toggle-btn" onclick="toggleHelp(3)">¿Cómo usar?</button>
-                    <div class="help-dropdown" id="help-3">
-                        <strong>Paso a paso:</strong>
-                        <ul>
-                            <li>Indica qué tipo de texto necesitas (correos, publicaciones, artículos).</li>
-                            <li>Sube un archivo de referencia con la información clave.</li>
-                            <li>Obtén redacciones profesionales adaptadas a tu audiencia.</li>
-                        </ul>
-                    </div>
-                    <textarea id="prompt-3" placeholder="Indica el contenido a redactar..."></textarea>
-                    <label class="file-input-label">Adjuntar archivo:</label>
-                    <input type="file" id="file-3" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
+            <!-- Sección de Chat Libre -->
+            <section class="chat-section">
+                <h3>💬 Chat Libre y Conversación Continua con IA</h3>
+                <p>Haz preguntas o debate libremente con el asistente.</p>
+                <div class="chat-box" id="chat-output">
+                    ¡Hola! Soy tu asistente universal. ¿En qué te puedo ayudar hoy?
                 </div>
-                <div>
-                    <button class="action-btn" onclick="runUniversalTool(3, 'Creador de Contenido')">Procesar con IA</button>
-                    <button class="export-btn" onclick="exportDoc(3)">📥 Descargar Resultado</button>
-                    <div class="output-box" id="output-3">Resultado aquí...</div>
+                <div class="chat-input-area">
+                    <textarea id="chat-input" placeholder="Escribe tu mensaje..."></textarea>
+                    <button class="action-btn" onclick="sendChatMessage()">Enviar</button>
                 </div>
-            </div>
+            </section>
+        </main>
+    </div>
 
-            <!-- Herramienta 4 -->
-            <div class="tool-card">
-                <div>
-                    <h3>4. Generador de fotos con IA</h3>
-                    <p>Diseña recursos visuales apoyándote en descripciones o referencias.</p>
-                    <button class="help-toggle-btn" onclick="toggleHelp(4)">¿Cómo usar?</button>
-                    <div class="help-dropdown" id="help-4">
-                        <strong>Paso a paso:</strong>
-                        <ul>
-                            <li>Describe detalladamente la imagen o concepto visual que buscas.</li>
-                            <li>Sube una imagen de referencia si deseas inspirarte en ella.</li>
-                            <li>Genera conceptos visuales precisos para tus proyectos.</li>
-                        </ul>
-                    </div>
-                    <textarea id="prompt-4" placeholder="Describe la imagen deseada..."></textarea>
-                    <label class="file-input-label">Adjuntar archivo de referencia:</label>
-                    <input type="file" id="file-4" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
-                </div>
-                <div>
-                    <button class="action-btn" onclick="runUniversalTool(4, 'Generador de Fotos')">Procesar con IA</button>
-                    <button class="export-btn" onclick="exportDoc(4)">📥 Descargar Imagen</button>
-                    <div class="output-box" id="output-4">Resultado visual aquí...</div>
-                </div>
-            </div>
-
-            <!-- Herramienta 5 -->
-            <div class="tool-card">
-                <div>
-                    <h3>5. Creador de Tablas y Presupuestos</h3>
-                    <p>Estructura datos financieros mediante comandos o archivos.</p>
-                    <button class="help-toggle-btn" onclick="toggleHelp(5)">¿Cómo usar?</button>
-                    <div class="help-dropdown" id="help-5">
-                        <strong>Paso a paso:</strong>
-                        <ul>
-                            <li>Describe los datos, costos o requerimientos de tu tabla.</li>
-                            <li>Sube un documento o notas con números desordenados.</li>
-                            <li>La IA estructurará la información en formatos limpios y ordenados.</li>
-                        </ul>
-                    </div>
-                    <textarea id="prompt-5" placeholder="Describe los datos de tu tabla..."></textarea>
-                    <label class="file-input-label">Adjuntar archivo:</label>
-                    <input type="file" id="file-5" class="universal-file-input" accept=".txt, .pdf, .docx, .xlsx, .mp3, .wav, .mp4, .mov">
-                </div>
-                <div>
-                    <button class="action-btn" onclick="runUniversalTool(5, 'Tablas Financieras')">Procesar con IA</button>
-                    <button class="export-btn" onclick="exportDoc(5)">📥 Descargar .XLSX</button>
-                    <div class="output-box" id="output-5">Tabla financiera aquí...</div>
-                </div>
-            </div>
-
-            <!-- Herramienta 6 -->
-            <div class="tool-card">
-                <div>
-                    <h3>6. Traductor de Texto y Audio IA</h3>
-                    <p>Traduce y genera voz sintética en español a partir de audio o texto.</p>
-                    <button class="help-toggle-btn" onclick="toggleHelp(6)">¿Cómo usar?</button>
-                    <div class="help-dropdown" id="help-6">
-                        <strong>Paso a paso:</strong>
-                        <ul>
-                            <li>Escribe texto en cualquier idioma o adjunta un archivo de audio/video.</li>
-                            <li>Solicita la traducción o transcripción exacta que necesites.</li>
-                            <li>Obtén el resultado optimizado de inmediato.</li>
-                        </ul>
-                    </div>
-                    <textarea id="prompt-6" placeholder="Texto a traducir..."></textarea>
-                    <label class="file-input-label">Adjuntar audio/video:</label>
-                    <input type="file" id="file-6" class="universal-file-input" accept=".mp3, .wav, .mp4, .mov">
-                </div>
-                <div>
-                    <button class="action-btn" onclick="runUniversalTool(6, 'Traductor Multimedia')">Procesar con IA</button>
-                    <button class="export-btn" onclick="exportDoc(6)">📥 Descargar Audio</button>
-                    <div class="output-box" id="output-6">Traducción y audio aquí...</div>
-                </div>
-            </div>
+    <!-- Menú Flotante Estilo App / Soporte Técnico -->
+    <div id="options-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h3>Centro de Soporte & Opciones</h3>
+            <p>Selecciona una opción:</p>
+            <button class="modal-option-btn" onclick="openSupportModal('help')">❓ Ayuda General</button>
+            <button class="modal-option-btn" onclick="openSupportModal('report')">⚠️ Informar un problema</button>
+            <button class="modal-close-btn" onclick="toggleOptionsMenu()">Cerrar</button>
         </div>
+    </div>
+
+    <!-- Modal de Soporte Inteligente -->
+    <div id="support-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h3 id="support-title">Soporte Técnico IA</h3>
+            <textarea id="support-user-input" placeholder="Describe tu problema o duda técnica aquí..."></textarea>
+            <button class="action-btn" onclick="submitSupportTicket()">Enviar a Soporte</button>
+            <div class="output-box" id="support-response" style="margin-top: 10px;">Respuesta del asistente...</div>
+            <button class="modal-close-btn" onclick="closeSupportModal()" style="margin-top: 10px;">Cerrar</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleHelp(id) {
+            const dropdown = document.getElementById('help-' + id);
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function toggleOptionsMenu() {
+            const modal = document.getElementById('options-modal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        let currentSupportType = 'help';
+        function openSupportModal(type) {
+            currentSupportType = type;
+            document.getElementById('options-modal').style.display = 'none';
+            document.getElementById('support-modal').style.display = 'flex';
+            document.getElementById('support-title').innerText = type === 'report' ? '⚠️ Informar un Problema Técnico' : '❓ Ayuda y Soporte';
+        }
+
+        function closeSupportModal() {
+            document.getElementById('support-modal').style.display = 'none';
+        }
+
+        async function runUniversalTool(id, toolName) {
+            const prompt = document.getElementById('prompt-' + id).value;
+            const outputBox = document.getElementById('output-' + id);
+            if (!prompt) {
+                outputBox.innerText = "⚠️ Por favor ingresa una instrucción.";
+                return;
+            }
+            outputBox.innerText = "Procesando con IA...";
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ toolName, prompt })
+                });
+                const data = await response.json();
+                outputBox.innerText = data.response || data.error;
+            } catch (error) {
+                outputBox.innerText = "❌ Error de conexión con el servidor.";
+            }
+        }
+
+        async function submitSupportTicket() {
+            const text = document.getElementById('support-user-input').value;
+            const responseBox = document.getElementById('support-response');
+            if (!text) {
+                responseBox.innerText = "Escribe una descripción.";
+                return;
+            }
+            responseBox.innerText = "Analizando solicitud...";
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ toolName: 'Soporte Técnico IA', prompt: `Tipo: ${currentSupportType}. Mensaje: ${text}` })
+                });
+                const data = await response.json();
+                responseBox.innerText = data.response;
+            } catch(e) {
+                responseBox.innerText = "Error al enviar reporte.";
+            }
+        }
+
+        function newQuery() {
+            location.reload();
+        }
+
+        function exportDoc(id) {
+            alert("Descargando resultado de la herramienta " + id);
+        }
+    </script>
+</body>
+</html>
