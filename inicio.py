@@ -15,6 +15,7 @@ logging.basicConfig(
 logger = logging.getLogger("DigitalBusinessIA")
 
 app = Flask(__name__)
+
 # Configuración de Variables de Entorno y Claves API
 HF_API_TOKEN = os.environ.get("HF_API_TOKEN")
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
@@ -22,6 +23,10 @@ HF_API_URL = os.environ.get(
     "HF_API_URL",
     "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
 )
+
+# Configuración de Claves de Membresía PRO y Promoción
+PRO_SECRET_KEY = os.environ.get("PRO_SECRET_KEY", "PRO-150-ACTIVO")
+PROMO_3_MESES_KEY = os.environ.get("PROMO_3_MESES_KEY", "PROMO-99-3MESES")
 
 STATIC_DIR = os.path.join(app.root_path, 'static')
 os.makedirs(STATIC_DIR, exist_ok=True)
@@ -31,7 +36,7 @@ http_session = requests.Session()
 if HF_API_TOKEN:
     http_session.headers.update({"Authorization": f"Bearer {HF_API_TOKEN}"})
 
-# Configuración Global de Gemini (Se instancia una sola vez en el arranque)
+# Configuración Global de Gemini
 gemini_model = None
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
@@ -68,8 +73,13 @@ def generar_image() -> Union[str, Tuple[Response, int]]:
         return jsonify({"error": "⚠️ Token de API no disponible en el entorno"}), 500
 
     prompt = request.form.get('prompt', '').strip()
+    user_key = request.form.get('pro_key', '').strip()
+    
     if not prompt:
         return jsonify({"error": "⚠️ Por favor ingresa una instrucción para la imagen"}), 400
+
+    # Validación de membresía PRO (Regular o Promoción 3 meses)
+    es_pro = (user_key == PRO_SECRET_KEY or user_key == PROMO_3_MESES_KEY)
 
     try:
         payload = {"inputs": prompt}
@@ -82,7 +92,7 @@ def generar_image() -> Union[str, Tuple[Response, int]]:
             with open(ruta_imagen, 'wb') as f:
                 f.write(response.content)
 
-            return render_template('index.html', imagen_url=nombre_archivo)
+            return render_template('index.html', imagen_url=nombre_archivo, pro_activo=es_pro)
         else:
             logger.error(f"Error HF API ({response.status_code}): {response.text}")
             return jsonify({
@@ -107,13 +117,17 @@ def api_generate() -> Tuple[Response, int]:
         data = request.get_json(silent=True) or {}
         tool_name = data.get('toolName', 'Asistente General').strip()
         prompt = data.get('prompt', '').strip()
+        user_key = data.get('proKey', '').strip()
 
         if not prompt:
             return jsonify({"error": "⚠️ Por favor ingresa una instrucción"}), 400
 
+        # Verificamos si cuenta con membresía PRO regular ($150) o la promo ($99)
+        es_pro = (user_key == PRO_SECRET_KEY or user_key == PROMO_3_MESES_KEY)
+
         full_context_prompt = f"Módulo activo: {tool_name}\nSolicitud: {prompt}"
 
-        # Reintentos automáticos para auto-corrección ante fallos temporales o saturación
+        # Reintentos automáticos para auto-corrección ante fallos temporales
         max_intentos = 3
         intentos = 0
         response = None
@@ -129,7 +143,7 @@ def api_generate() -> Tuple[Response, int]:
                 if intentos >= max_intentos:
                     raise api_err
 
-        return jsonify({"response": response.text}), 200
+        return jsonify({"response": response.text, "is_pro": es_pro}), 200
 
     except Exception as e:
         logger.exception("Error en /api/generate:")
