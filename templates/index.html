@@ -24,9 +24,7 @@
         }
         h2 { margin-bottom: 10px; color: #38bdf8; }
         p { color: #94a3b8; font-size: 14px; margin-bottom: 30px; }
-        .btn-google {
-            background-color: #ffffff;
-            color: #1e293b;
+        .btn {
             border: none;
             width: 100%;
             padding: 12px;
@@ -37,9 +35,14 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
+            margin-bottom: 12px;
             transition: background 0.2s;
         }
+        .btn-google { background-color: #ffffff; color: #1e293b; }
         .btn-google:hover { background-color: #f1f5f9; }
+        
+        .btn-anon { background-color: #334155; color: #f8fafc; }
+        .btn-anon:hover { background-color: #475569; }
     </style>
 </head>
 <body>
@@ -47,16 +50,15 @@
         <h2>Digital Business IA</h2>
         <p>Inicia sesión con tu cuenta para acceder a la suite</p>
         
-        <!-- Botón de Acceso con Google -->
-        <button id="google-login-btn" class="btn-google">
-            Continuar con Google
-        </button>
+        <!-- Botones de Acceso -->
+        <button id="google-login-btn" class="btn btn-google">Continuar con Google</button>
+        <button id="anon-login-btn" class="btn btn-anon">Entrar de forma anónima</button>
     </div>
 
     <!-- Script de autenticación mediante Firebase CDN -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCy058MvYn1E2QjLS09uUlvMetf2UMP2JE",
@@ -72,14 +74,18 @@
         const auth = getAuth(app);
         const googleProvider = new GoogleAuthProvider();
 
+        // Lógica de Google
         document.getElementById('google-login-btn').addEventListener('click', () => {
             signInWithPopup(auth, googleProvider)
-            .then((result) => {
-                window.location.href = "/dashboard";
-            })
-            .catch((error) => {
-                console.error("Error en el inicio de sesión:", error);
-            });
+            .then(() => { window.location.href = "/dashboard"; })
+            .catch((error) => { console.error("Error en Google:", error); });
+        });
+
+        // Lógica de Acceso Anónimo
+        document.getElementById('anon-login-btn').addEventListener('click', () => {
+            signInAnonymously(auth)
+            .then(() => { window.location.href = "/dashboard"; })
+            .catch((error) => { console.error("Error en Anónimo:", error); });
         });
     </script>
 </body>
