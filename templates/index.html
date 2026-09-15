@@ -15,6 +15,42 @@
         .btn-primary { background-color: #2563eb; border: none; font-weight: 600; border-radius: 6px; }
         .btn-primary:hover { background-color: #1d4ed8; }
         
+        /* ESTILO DE HISTORIAS PRO SUPERIOR (NUEVO) */
+        .stories-container {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 10px 5px 20px 5px;
+            margin-bottom: 20px;
+            scrollbar-width: thin;
+            scrollbar-color: #38bdf8 #1e293b;
+        }
+        .story-card {
+            min-width: 140px;
+            height: 170px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 2px solid #38bdf8;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(56, 189, 248, 0.15);
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .story-card:hover {
+            transform: translateY(-5px);
+            border-color: #60a5fa;
+            box-shadow: 0 6px 15px rgba(56, 189, 248, 0.3);
+        }
+        .story-title { font-size: 0.75rem; font-weight: bold; color: #93c5fd; }
+        .story-desc { font-size: 0.65rem; color: #cbd5e1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+        .story-btn { font-size: 0.65rem; padding: 2px 8px; background: #2563eb; border: none; border-radius: 4px; color: white; width: 100%; }
+
         /* DISEÑO DE LAS CAJAS DE RESPUESTA */
         .chat-box { 
             background: rgba(15, 23, 42, 0.85); 
@@ -123,7 +159,9 @@
                 <input type="text" id="inputBuscador" class="form-control form-control-sm" placeholder="Escribe para buscar..." onkeyup="buscarEnChats()">
             </div>
             <button class="btn btn-outline-success w-100 mb-2 text-start" onclick="abrirSoporteIA()">🤖 Ayuda Técnica con IA</button>
-            <button class="btn btn-outline-warning w-100 mb-2 text-start" onclick="compartirArchivoRapido()">🔗 Compartir / Exportar Archivos</button>
+            <!-- NUEVO BOTÓN DE BUZÓN DE SUGERENCIAS -->
+            <button class="btn btn-outline-warning w-100 mb-2 text-start" onclick="abrirBuzonSugerencias()">💡 Buzón de Sugerencias y Mejoras</button>
+            <button class="btn btn-outline-light w-100 mb-2 text-start" onclick="compartirArchivoRapido()">🔗 Compartir / Exportar Archivos</button>
             <button class="btn btn-outline-danger w-100 mb-2 text-start" onclick="informarProblema()">⚠️ Informar un Problema</button>
             <button class="btn btn-outline-secondary w-100 mb-2 text-start" onclick="borrarTodoHistorial()">🗑️ Borrar Todo el Historial</button>
         </div>
@@ -143,6 +181,14 @@
 
     <div class="container my-4">
         
+        <!-- NUEVA BARRA DE HISTORIAS PRO SUPERIOR -->
+        <div class="mb-3">
+            <span class="text-info fw-bold small text-uppercase">🌟 Historias Pro & Tendencias de Hoy</span>
+            <div class="stories-container" id="storiesBar">
+                <!-- Se cargan dinámicamente -->
+            </div>
+        </div>
+
         <!-- Banner Informativo de Acceso Libre -->
         <div class="banner-libre shadow-sm">
             🔥 <strong>Módulo de Tendencias Virales Activado:</strong> Prompts diarios actualizados para reventar el algoritmo de TikTok e Instagram.
@@ -523,8 +569,30 @@
 
     <!-- SCRIPT DE CONTROL Y FUNCIONALIDADES DE LA SIDEBAR Y TENDENCIAS -->
     <script>
+        // Array de Historias Pro dinámicas superiores (NUEVO)
+        const historiasDiarias = [
+            { titulo: "🚀 Crecimiento Express", desc: "Estrategia para duplicar seguidores en Reels usando ganchos de alto impacto.", targetId: "promptGuiones", prompt: "Crea una estrategia express de retención para duplicar seguidores en Reels." },
+            { titulo: "💸 Oferta Irresistible", desc: "Redacta un anuncio con estructura PAS para campañas de conversión directa.", targetId: "promptCopys", prompt: "Redacta un anuncio de ventas con fórmula PAS para producto digital." },
+            { titulo: "🎨 Marca Personal 3D", desc: "Genera el prompt visual perfecto para mockups y branding corporativo.", targetId: "promptImagenInput", prompt: "Mockup 3D hiperrealista de marca personal ejecutiva minimalista." },
+            { titulo: "📊 Flujo de Caja Pro", desc: "Estructura un modelo financiero de proyecciones para un nuevo negocio.", targetId: "promptExcel", prompt: "Estructura un modelo financiero básico de ingresos y gastos en Excel." }
+        ];
+
         // Cargar historiales almacenados al iniciar y mostrar su barra de herramientas si ya hay contenido guardado
         window.onload = function() {
+            // Renderizar Historias Pro arriba (NUEVO)
+            const storiesBar = document.getElementById('storiesBar');
+            if (storiesBar) {
+                historiasDiarias.forEach(story => {
+                    storiesBar.innerHTML += `
+                        <div class="story-card" onclick="usarHistoria('${story.targetId}', \`${story.prompt}\`)">
+                            <div class="story-title">${story.titulo}</div>
+                            <div class="story-desc">${story.desc}</div>
+                            <button class="story-btn">✨ Probar</button>
+                        </div>
+                    `;
+                });
+            }
+
             const boxes = ['resultTendencias', 'resultGuiones', 'resultCopys', 'resultB2B', 'chatBoxResult', 'resultImagen', 'resultVideo', 'resultExcel', 'resultWord', 'resultTraductor'];
             boxes.forEach(boxId => {
                 const saved = localStorage.getItem(boxId);
@@ -535,6 +603,48 @@
                 }
             });
         };
+
+        // Función para inyectar prompt de historia (NUEVO)
+        function usarHistoria(targetId, promptText) {
+            const el = document.getElementById(targetId);
+            if (el) {
+                el.value = promptText;
+                window.scrollTo({ top: el.offsetTop - 120, behavior: 'smooth' });
+                el.focus();
+            }
+        }
+
+        // Función del Buzón de Sugerencias (NUEVO)
+        async function abrirBuzonSugerencias() {
+            cerrarSidebar();
+            const sugerencia = prompt("💡 Escribe tu sugerencia, comentario o idea de mejora para la app:");
+            if (!sugerencia) return;
+
+            const chatBox = document.getElementById("chatBoxResult");
+            if (chatBox && chatBox.innerHTML.includes('Historial de')) chatBox.innerHTML = '';
+            chatBox.innerHTML += `<div class="mb-2"><strong>Buzón (Tú):</strong> ${sugerencia}</div>`;
+            
+            const toolsBar = document.getElementById('tools-chatBoxResult');
+            if (toolsBar) toolsBar.style.display = 'flex';
+
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ toolName: 'Sugerencias App', prompt: sugerencia, proKey: 'PRO-150-ACTIVO' })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    chatBox.innerHTML += `<div class="text-info mb-3"><strong>Asistente de Mejoras:</strong> ${data.response}</div>`;
+                } else {
+                    chatBox.innerHTML += `<div class="text-danger mb-2"><strong>Error:</strong> ${data.error}</div>`;
+                }
+                localStorage.setItem('chatBoxResult', chatBox.innerHTML);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } catch (err) {
+                alert("No se pudo enviar la sugerencia al servidor.");
+            }
+        }
 
         function configurarModulo(boxId) {
             alert("⚙️ Ajustes del módulo: Historial activo, almacenamiento local persistente habilitado.");
@@ -719,7 +829,6 @@
                 return;
             }
 
-            // Mostrar la barra de herramientas al votar/generar respuesta
             if (toolsBar) toolsBar.style.display = 'flex';
 
             if (resultBox.innerHTML.includes('Historial de')) {
