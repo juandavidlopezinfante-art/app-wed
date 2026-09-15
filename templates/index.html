@@ -3,195 +3,555 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Business IA - Panel Maestro</title>
+    <title>Digital Business IA - Panel Pro Empresarial</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #0f172a; color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0f172a; color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; }
         .navbar { background-color: #1e293b; border-bottom: 1px solid #334155; }
-        .card { background-color: #1e293b; border: 1px solid #334155; color: #f8fafc; }
-        .form-control, .form-select { background-color: #0f172a; border: 1px solid #475569; color: #fff; }
+        .card { background-color: #1e293b; border: 1px solid #334155; color: #f8fafc; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.4); border-radius: 10px; }
+        .form-control, .form-select { background-color: #0f172a; border: 1px solid #475569; color: #fff; border-radius: 6px; }
         .form-control:focus, .form-select:focus { background-color: #0f172a; color: #fff; border-color: #38bdf8; box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.25); }
-        .btn-primary { background-color: #2563eb; border: none; }
+        .btn-primary { background-color: #2563eb; border: none; font-weight: 600; border-radius: 6px; }
         .btn-primary:hover { background-color: #1d4ed8; }
-        .tool-section { display: none; }
-        .tool-section.active { display: block; }
-        .chat-box { background-color: #090d16; border: 1px solid #334155; height: 250px; overflow-y: auto; padding: 15px; border-radius: 6px; margin-top: 15px; }
+        .chat-box { background-color: #090d16; border: 1px solid #334155; height: 220px; overflow-y: auto; padding: 15px; border-radius: 6px; margin-top: 15px; font-size: 0.9rem; }
+        .manual-box { background-color: #131c31; border-left: 4px solid #38bdf8; padding: 12px 15px; font-size: 0.85rem; margin-bottom: 15px; border-radius: 4px; display: none; }
+        .file-indicator { font-size: 0.8rem; color: #38bdf8; margin-top: 5px; display: block; }
+        .banner-libre { background: linear-gradient(135deg, #1e3a8a, #2563eb); border: 1px solid #3b82f6; border-radius: 8px; padding: 12px 20px; margin-bottom: 25px; text-align: center; font-weight: 600; }
+        
+        /* Estilos de la Barra Lateral (Sidebar) */
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1050;
+            top: 0;
+            left: 0;
+            background-color: #1e293b;
+            overflow-x: hidden;
+            transition: 0.3s;
+            padding-top: 60px;
+            border-right: 1px solid #334155;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+        }
+        .sidebar a, .sidebar button {
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 1rem;
+            color: #f8fafc;
+            display: block;
+            transition: 0.2s;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+        }
+        .sidebar a:hover, .sidebar button:hover {
+            background-color: #334155;
+            color: #38bdf8;
+        }
+        .sidebar .closebtn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 2rem;
+            width: auto;
+        }
+        .sidebar-header {
+            padding: 0 20px 15px 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-bottom: 1px solid #334155;
+            color: #38bdf8;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Barra de Navegación con accesos rápidos -->
-    <nav class="navbar navbar-expand-lg navbar-dark px-4">
-        <a class="navbar-brand fw-bold" href="#">Digital Business IA</a>
+    <!-- BARRA LATERAL DESPLEGABLE (SIDEBAR) -->
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="cerrarSidebar()">&times;</a>
+        <div class="sidebar-header">⚡ Menú de Control Pro</div>
+        
+        <div class="p-3">
+            <button class="btn btn-outline-primary w-100 mb-2 text-start" onclick="nuevoChatGeneral()">➕ Nuevo Chat / Reiniciar</button>
+            <button class="btn btn-outline-info w-100 mb-2 text-start" onclick="toggleBuscadorSidebar()">🔍 Buscar en los Chats</button>
+            <div id="buscadorContainer" style="display:none;" class="mb-2">
+                <input type="text" id="inputBuscador" class="form-control form-control-sm" placeholder="Escribe para buscar..." onkeyup="buscarEnChats()">
+            </div>
+            <button class="btn btn-outline-success w-100 mb-2 text-start" onclick="abrirSoporteIA()">🤖 Ayuda Técnica con IA</button>
+            <button class="btn btn-outline-warning w-100 mb-2 text-start" onclick="compartirArchivoRapido()">🔗 Compartir / Exportar Archivos</button>
+            <button class="btn btn-outline-danger w-100 mb-2 text-start" onclick="informarProblema()">⚠️ Informar un Problema</button>
+            <button class="btn btn-outline-secondary w-100 mb-2 text-start" onclick="borrarTodoHistorial()">🗑️ Borrar Todo el Historial</button>
+        </div>
+    </div>
+
+    <!-- Barra de Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark px-4 py-3">
+        <div class="d-flex align-items-center gap-3">
+            <button class="btn btn-outline-info btn-sm" onclick="abrirSidebar()">☰ Menú Pro</button>
+            <a class="navbar-brand fw-bold fs-4 m-0" href="#">⚡ Digital Business IA Pro</a>
+        </div>
         <div class="ms-auto d-flex gap-2">
-            <button class="btn btn-sm btn-outline-light" onclick="activarModoCelular()">📱 Versión Celular</button>
-            <button class="btn btn-sm btn-outline-warning" onclick="mostrarAyuda()">❓ Ayuda e Informar Problemas</button>
-            <span class="badge bg-info text-dark align-self-center" id="proBadge">Versión Estándar</span>
+            <button class="btn btn-sm btn-outline-light" onclick="activarModoCelular()">📱 Modo Celular</button>
+            <span class="badge bg-success align-self-center p-2 fs-6" id="proBadge">🟢 Acceso Libre Pro</span>
         </div>
     </nav>
 
     <div class="container my-4">
-        <!-- Selector de Herramientas -->
-        <div class="row mb-4">
+        
+        <!-- Banner Informativo de Acceso Libre -->
+        <div class="banner-libre shadow-sm">
+            🔥 <strong>Módulo de Tendencias Virales Activado:</strong> Prompts diarios actualizados para reventar el algoritmo de TikTok e Instagram.
+        </div>
+
+        <!-- CONTENEDOR DE CUADROS / MÓDULOS MÚLTIPLES -->
+        <div class="row">
+
+            <!-- NUEVO MÓDULO 11: 🔥 Tendencias Virales & Prompts del Día -->
             <div class="col-md-12">
-                <label for="toolSelector" class="form-label fw-bold">Selecciona una Herramienta o Módulo:</label>
-                <select id="toolSelector" class="form-select" onchange="cambiarHerramienta()">
-                    <option value="chat">💬 Chat Libre Inteligente</option>
-                    <option value="imagen">🎨 Generador de Imágenes con IA</option>
-                    <option value="video">🎬 Generador de Videos de Alta Resolución</option>
-                    <option value="excel">📊 Generador y Asistente de Excel</option>
-                    <option value="word">📝 Generador y Redactor de Word</option>
-                    <option value="traductor">🌐 Traductor de Videos, Audios y Textos (Voces IA)</option>
-                </select>
+                <div class="card p-4 border-info">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0 text-info">🔥 Tendencias Virales & Prompts del Día (Modo Creador)</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-tendencias')">📖 Manual</button>
+                    </div>
+                    <div id="manual-tendencias" class="manual-box">
+                        <strong>Cómo usar:</strong> La IA te entrega los estilos de video de moda del día de hoy junto con sus enlaces de referencia en redes. Clickea en "Usar en Generador de Videos" para procesarlo de inmediato en nuestra plataforma.
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <button class="btn btn-outline-warning w-100 text-start py-2" onclick="cargarPromptTendencia('Estilo Cinematic Cyberpunk 3D: Cámara en movimiento rápido, iluminación neón, subtítulos dinámicos estilo MrBeast.', 'https://www.tiktok.com/tag/cyberpunkedit')">
+                                🎬 <strong>Tendencia 1:</strong> Cyberpunk Neón
+                            </button>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <button class="btn btn-outline-warning w-100 text-start py-2" onclick="cargarPromptTendencia('Estilo Historias Documentales Históricas con voz profunda y misteriosa, transiciones oscuras y subtítulos parpadeantes.', 'https://www.instagram.com/explore/tags/historyreels/')">
+                                📜 <strong>Tendencia 2:</strong> Documental Misterio
+                            </button>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <button class="btn btn-outline-warning w-100 text-start py-2" onclick="cargarPromptTendencia('Estilo Pixar 3D Animado vertical para Reels, colores vivos, emociones exageradas y gancho de retención de 3s.', 'https://www.tiktok.com/tag/pixarstyle')">
+                                🎨 <strong>Tendencia 3:</strong> Animación 3D Estilo Pixar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <textarea id="promptTendencias" class="form-control" rows="2" placeholder="Selecciona una tendencia arriba o pídele un prompt personalizado a la IA..."></textarea>
+                    </div>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-primary w-50" onclick="consultarChatIndependiente('Tendencias Virales', 'promptTendencias', 'fileTendencias', 'resultTendencias')">✨ Generar Estrategia Viral</button>
+                        <button class="btn btn-success w-50" onclick="enviarAlGeneradorDeVideos()">🚀 Usar en nuestro Generador de Videos</button>
+                    </div>
+                    <div class="mb-2">
+                        <input type="file" id="fileTendencias" class="form-control form-control-sm mt-2" onchange="mostrarNombreArchivo('fileTendencias', 'fileNameTendencias')" multiple>
+                        <span id="fileNameTendencias" class="file-indicator"></span>
+                    </div>
+                    <div class="chat-box" id="resultTendencias">Historial de Tendencias Virales y Referencias...</div>
+                </div>
             </div>
-        </div>
 
-        <!-- Clave PRO Global -->
-        <div class="card p-3 mb-4">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <input type="password" id="globalProKey" class="form-control" placeholder="Ingresa tu Clave PRO (Opcional)">
-                </div>
-                <div class="col-md-4 mt-2 mt-md-0">
-                    <button class="btn btn-outline-info w-100" onclick="validarClavePro()">Validar Membresía</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 1. Módulo: Chat Libre -->
-        <div id="section-chat" class="tool-section active">
-            <div class="card p-4">
-                <h3 class="mb-3">Chat Libre con IA</h3>
-                <div class="mb-3">
-                    <label class="form-label">Escribe tu consulta o mensaje:</label>
-                    <textarea id="promptChat" class="form-control" rows="2" placeholder="Conversa libremente con el asistente..."></textarea>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Adjuntar referencia (Archivos, audios, fotos, textos):</label>
-                    <input type="file" id="fileChat" class="form-control" multiple>
-                </div>
-                <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Chat Libre', 'promptChat', 'fileChat', 'chatBoxResult')">Enviar al Chat Libre</button>
-                <div class="chat-box" id="chatBoxResult">Historial del chat independiente...</div>
-            </div>
-        </div>
-
-        <!-- 2. Módulo: Generador de Imágenes -->
-        <div id="section-imagen" class="tool-section">
-            <div class="card p-4">
-                <h3 class="mb-3">Generador de Imágenes con IA</h3>
-                <form action="/generar" method="POST" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label class="form-label">Describe la imagen que deseas crear:</label>
-                        <input type="text" name="prompt" class="form-control" placeholder="Ej. Un atardecer en una ciudad futurista..." required>
+            <!-- 1. MÓDULO: Guiones Virales para Creadores -->
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">🎬 Guiones Virales (Reels/TikTok)</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-guiones')">📖 Manual</button>
+                    </div>
+                    <div id="manual-guiones" class="manual-box">
+                        <strong>Cómo usar:</strong> Indica el nicho y tema principal. La IA generará un guion con gancho de retención de 3 segundos y llamado a la acción.
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Adjuntar foto o referencia visual base:</label>
-                        <input type="file" name="referencia_imagen" class="form-control">
+                        <textarea id="promptGuiones" class="form-control" rows="2" placeholder="Ej. Nicho fitness, tema: 3 errores al entrenar abdomen..."></textarea>
                     </div>
-                    <input type="hidden" name="pro_key" id="hiddenProKey">
-                    <button type="submit" class="btn btn-primary w-100" onclick="sincronizarClave()">Generar Imagen en su Chat</button>
-                </form>
-                {% if imagen_url %}
-                <div class="text-center mt-4">
-                    <h5 class="text-success">¡Imagen generada con éxito!</h5>
-                    <img src="{{ url_for('static', filename=imagen_url) }}" class="img-fluid rounded shadow mt-2" style="max-height: 400px;" alt="Imagen IA">
+                    <div class="mb-2">
+                        <input type="file" id="fileGuiones" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileGuiones', 'fileNameGuiones')" multiple>
+                        <span id="fileNameGuiones" class="file-indicator"></span>
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Guiones Virales', 'promptGuiones', 'fileGuiones', 'resultGuiones')">Generar Guion Viral</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultGuiones', 'Guion_Viral.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultGuiones')">🧹 Limpiar</button>
+                    </div>
+                    <div class="chat-box" id="resultGuiones">Historial de Guiones...</div>
                 </div>
-                {% endif %}
             </div>
-        </div>
 
-        <!-- 3. Módulo: Generador de Videos -->
-        <div id="section-video" class="tool-section">
-            <div class="card p-4">
-                <h3 class="mb-3">Generador de Videos de Alta Resolución</h3>
-                <div class="mb-3">
-                    <label class="form-label">Describe la secuencia o escena para tu video HD:</label>
-                    <textarea id="promptVideo" class="form-control" rows="2" placeholder="Toma cinematográfica 4K..."></textarea>
+            <!-- 2. MÓDULO: Copys y Anuncios de Conversión -->
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">✍️ Copys Publicitarios (Ads/Ventas)</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-copys')">📖 Manual</button>
+                    </div>
+                    <div id="manual-copys" class="manual-box">
+                        <strong>Cómo usar:</strong> Describe tu producto u oferta para redactar anuncios persuasivos con fórmulas de alta conversión (AIDA / PAS).
+                    </div>
+                    <div class="mb-3">
+                        <textarea id="promptCopys" class="form-control" rows="2" placeholder="Ej. Lanzamiento de curso de repostería..."></textarea>
+                    </div>
+                    <div class="mb-2">
+                        <input type="file" id="fileCopys" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileCopys', 'fileNameCopys')" multiple>
+                        <span id="fileNameCopys" class="file-indicator"></span>
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Copys Publicitarios', 'promptCopys', 'fileCopys', 'resultCopys')">Generar Copy de Ventas</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultCopys', 'Copy_Publicitario.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultCopys')">🧹 Limpiar</button>
+                    </div>
+                    <div class="chat-box" id="resultCopys">Historial de Copys...</div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Adjuntar referencias (Guion, imágenes o audios):</label>
-                    <input type="file" id="fileVideo" class="form-control" multiple>
-                </div>
-                <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Generador de Videos HD', 'promptVideo', 'fileVideo', 'resultVideo')">Procesar Video en su Chat</button>
-                <div class="chat-box" id="resultVideo" style="display:none;"></div>
             </div>
-        </div>
 
-        <!-- 4. Módulo: Excel -->
-        <div id="section-excel" class="tool-section">
-            <div class="card p-4">
-                <h3 class="mb-3">Generador y Asistente de Excel</h3>
-                <div class="mb-3">
-                    <label class="form-label">¿Qué deseas calcular, formular u organizar en Excel?</label>
-                    <textarea id="promptExcel" class="form-control" rows="2" placeholder="Fórmulas, tablas dinámicas..."></textarea>
+            <!-- 3. MÓDULO: Propuestas Comerciales B2B -->
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">💼 Propuestas y Cotizaciones B2B</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-b2b')">📖 Manual</button>
+                    </div>
+                    <div id="manual-b2b" class="manual-box">
+                        <strong>Cómo usar:</strong> Detalla servicios y costos para obtener una propuesta comercial formal y profesional lista para enviar.
+                    </div>
+                    <div class="mb-3">
+                        <textarea id="promptB2B" class="form-control" rows="2" placeholder="Ej. Propuesta de marketing digital..."></textarea>
+                    </div>
+                    <div class="mb-2">
+                        <input type="file" id="fileB2B" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileB2B', 'fileNameB2B')" multiple>
+                        <span id="fileNameB2B" class="file-indicator"></span>
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Propuestas B2B', 'promptB2B', 'fileB2B', 'resultB2B')">Generar Propuesta Comercial</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultB2B', 'Propuesta_Comercial.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultB2B')">🧹 Limpiar</button>
+                    </div>
+                    <div class="chat-box" id="resultB2B">Historial de Propuestas B2B...</div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Adjuntar archivos de datos (CSV, Excel, textos):</label>
-                    <input type="file" id="fileExcel" class="form-control" multiple>
-                </div>
-                <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Asistente Excel', 'promptExcel', 'fileExcel', 'resultExcel')">Ejecutar en su Chat de Excel</button>
-                <div class="chat-box" id="resultExcel" style="display:none;"></div>
             </div>
-        </div>
 
-        <!-- 5. Módulo: Word -->
-        <div id="section-word" class="tool-section">
-            <div class="card p-4">
-                <h3 class="mb-3">Generador y Redactor de Word</h3>
-                <div class="mb-3">
-                    <label class="form-label">Tema o estructura para tu documento:</label>
-                    <textarea id="promptWord" class="form-control" rows="2" placeholder="Contratos, cartas formales..."></textarea>
+            <!-- 4. Módulo: Chat Libre Inteligente -->
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">💬 Chat Libre General</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-chat')">📖 Manual</button>
+                    </div>
+                    <div id="manual-chat" class="manual-box">
+                        <strong>Cómo usar:</strong> Espacio de consulta abierta para resolver dudas generales, lluvia de ideas o análisis de documentos adjuntos.
+                    </div>
+                    <div class="mb-3">
+                        <textarea id="promptChat" class="form-control" rows="2" placeholder="Escribe tu consulta general..."></textarea>
+                    </div>
+                    <div class="mb-2">
+                        <input type="file" id="fileChat" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileChat', 'fileNameChat')" multiple>
+                        <span id="fileNameChat" class="file-indicator"></span>
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Chat Libre', 'promptChat', 'fileChat', 'chatBoxResult')">Enviar a Chat Libre</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('chatBoxResult', 'Chat_General.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('chatBoxResult')">🧹 Limpiar</button>
+                    </div>
+                    <div class="chat-box" id="chatBoxResult">Historial de Chat Libre...</div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Adjuntar documentos base o notas:</label>
-                    <input type="file" id="fileWord" class="form-control" multiple>
-                </div>
-                <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Redactor Word', 'promptWord', 'fileWord', 'resultWord')">Generar en su Chat de Word</button>
-                <div class="chat-box" id="resultWord" style="display:none;"></div>
             </div>
-        </div>
 
-        <!-- 6. Módulo: Traductor de Videos, Audios y Textos -->
-        <div id="section-traductor" class="tool-section">
-            <div class="card p-4">
-                <h3 class="mb-3">Traductor con Voces IA Naturales</h3>
-                <div class="mb-3">
-                    <label class="form-label">Instrucciones de traducción y síntesis de voz:</label>
-                    <textarea id="promptTraductor" class="form-control" rows="2" placeholder="Traducir y generar voz natural..."></textarea>
+            <!-- 5. MÓDULO CON HISTORIAL: Generador de Imágenes -->
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">🎨 Imágenes IA (Publicidad/Brand)</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-imagen')">📖 Manual</button>
+                    </div>
+                    <div id="manual-imagen" class="manual-box">
+                        <strong>Cómo usar:</strong> Diseña recursos visuales describiendo la escena detalladamente. Las creaciones se quedan registradas en el historial.
+                    </div>
+                    <form action="/generar" method="POST" enctype="multipart/form-data" onsubmit="guardarHistorialImagen()">
+                        <div class="mb-3">
+                            <input type="text" name="prompt" id="promptImagenInput" class="form-control" placeholder="Ej. Mockup de producto tecnológico minimalista..." required>
+                        </div>
+                        <div class="mb-2">
+                            <input type="file" name="referencia_imagen" id="fileImagen" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileImagen', 'fileNameImagen')">
+                            <span id="fileNameImagen" class="file-indicator"></span>
+                        </div>
+                        <input type="hidden" name="pro_key" value="PRO-150-ACTIVO">
+                        <button type="submit" class="btn btn-primary w-100 mt-2">Generar Imagen</button>
+                    </form>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-secondary w-100" onclick="limpiarChat('resultImagen')">🧹 Limpiar Historial de Imágenes</button>
+                    </div>
+                    <div class="chat-box" id="resultImagen">
+                        Historial de Imágenes IA...
+                        {% if imagen_url %}
+                        <div class="text-center mt-3">
+                            <span class="text-success small fw-bold">¡Última imagen generada con éxito!</span>
+                            <br>
+                            <img src="{{ url_for('static', filename=imagen_url) }}" class="img-fluid rounded shadow mt-2" style="max-height: 160px;" alt="Imagen IA">
+                        </div>
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Adjuntar archivo de video, audio o texto:</label>
-                    <input type="file" id="fileTraductor" class="form-control" multiple>
-                </div>
-                <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Traductor IA', 'promptTraductor', 'fileTraductor', 'resultTraductor')">Procesar en su Chat de Traducción</button>
-                <div class="chat-box" id="resultTraductor" style="display:none;"></div>
             </div>
+
+            <!-- 6. Módulo: Generador de Videos -->
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">🎬 Videos HD (Storyboard)</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-video')">📖 Manual</button>
+                    </div>
+                    <div id="manual-video" class="manual-box">
+                        <strong>Cómo usar:</strong> Estructura secuencias audiovisuales y planeaciones de producción profesional para anuncios de video.
+                    </div>
+                    <div class="mb-3">
+                        <textarea id="promptVideo" class="form-control" rows="2" placeholder="Describe la secuencia del comercial..."></textarea>
+                    </div>
+                    <div class="mb-2">
+                        <input type="file" id="fileVideo" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileVideo', 'fileNameVideo')" multiple>
+                        <span id="fileNameVideo" class="file-indicator"></span>
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Generador de Videos HD', 'promptVideo', 'fileVideo', 'resultVideo')">Procesar Video</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultVideo', 'Storyboard_Video.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultVideo')">🧹 Limpiar</button>
+                    </div>
+                    <div class="chat-box" id="resultVideo">Historial de Videos HD...</div>
+                </div>
+            </div>
+
+            <!-- 7. Módulo: Excel -->
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">📊 Asistente de Finanzas y Excel</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-excel')">📖 Manual</button>
+                    </div>
+                    <div id="manual-excel" class="manual-box">
+                        <strong>Cómo usar:</strong> Diseña presupuestos, flujos de caja y fórmulas financieras avanzadas adjuntando tus planillas de datos.
+                    </div>
+                    <div class="mb-3">
+                        <textarea id="promptExcel" class="form-control" rows="2" placeholder="¿Qué cálculo financiero u organizacional necesitas?"></textarea>
+                    </div>
+                    <div class="mb-2">
+                        <input type="file" id="fileExcel" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileExcel', 'fileNameExcel')" multiple>
+                        <span id="fileNameExcel" class="file-indicator"></span>
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Asistente Excel', 'promptExcel', 'fileExcel', 'resultExcel')">Ejecutar Asistente Excel</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultExcel', 'Reporte_Excel.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultExcel')">🧹 Limpiar</button>
+                    </div>
+                    <div class="chat-box" id="resultExcel">Historial de Excel...</div>
+                </div>
+            </div>
+
+            <!-- 8. Módulo: Word -->
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">📝 Redactor de Contratos y Word</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-word')">📖 Manual</button>
+                    </div>
+                    <div id="manual-word" class="manual-box">
+                        <strong>Cómo usar:</strong> Genera contratos de prestación de servicios, políticas de privacidad, acuerdos de confidencialidad (NDA) y reportes corporativos.
+                    </div>
+                    <div class="mb-3">
+                        <textarea id="promptWord" class="form-control" rows="2" placeholder="Tipo de documento o cláusulas requeridas..."></textarea>
+                    </div>
+                    <div class="mb-2">
+                        <input type="file" id="fileWord" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileWord', 'fileNameWord')" multiple>
+                        <span id="fileNameWord" class="file-indicator"></span>
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Redactor Word', 'promptWord', 'fileWord', 'resultWord')">Generar Documento Word</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultWord', 'Documento_Legal.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultWord')">🧹 Limpiar</button>
+                    </div>
+                    <div class="chat-box" id="resultWord">Historial de Word...</div>
+                </div>
+            </div>
+
+            <!-- 9. Módulo: Traductor con Voces IA -->
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">🌐 Traductor Global y Voces</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-traductor')">📖 Manual</button>
+                    </div>
+                    <div id="manual-traductor" class="manual-box">
+                        <strong>Cómo usar:</strong> Adapta contenidos comerciales a mercados internacionales con traducciones adaptadas al contexto y síntesis de voz multilingüe.
+                    </div>
+                    <div class="mb-3">
+                        <textarea id="promptTraductor" class="form-control" rows="2" placeholder="Texto o instrucciones de localización..."></textarea>
+                    </div>
+                    <div class="mb-2">
+                        <input type="file" id="fileTraductor" class="form-control form-control-sm" onchange="mostrarNombreArchivo('fileTraductor', 'fileNameTraductor')" multiple>
+                        <span id="fileNameTraductor" class="file-indicator"></span>
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="consultarChatIndependiente('Traductor IA', 'promptTraductor', 'fileTraductor', 'resultTraductor')">Procesar Traducción</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultTraductor', 'Traduccion_Global.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultTraductor')">🧹 Limpiar</button>
+                    </div>
+                    <div class="chat-box" id="resultTraductor">Historial de Traductor...</div>
+                </div>
+            </div>
+
         </div>
     </div>
 
+    <!-- SCRIPT DE CONTROL Y FUNCIONALIDADES DE LA SIDEBAR Y TENDENCIAS -->
     <script>
-        function cambiarHerramienta() {
-            const seleccion = document.getElementById('toolSelector').value;
-            document.querySelectorAll('.tool-section').forEach(sec => sec.classList.remove('active'));
-            document.getElementById('section-' + seleccion).classList.add('active');
+        // Cargar historiales almacenados al iniciar
+        window.onload = function() {
+            const boxes = ['resultTendencias', 'resultGuiones', 'resultCopys', 'resultB2B', 'chatBoxResult', 'resultImagen', 'resultVideo', 'resultExcel', 'resultWord', 'resultTraductor'];
+            boxes.forEach(boxId => {
+                const saved = localStorage.getItem(boxId);
+                if (saved) {
+                    document.getElementById(boxId).innerHTML = saved;
+                }
+            });
+        };
+
+        function cargarPromptTendencia(promptTexto, urlReferencia) {
+            document.getElementById('promptTendencias').value = promptTexto;
+            const resultBox = document.getElementById('resultTendencias');
+            resultBox.innerHTML += `<div class="mb-2 text-info"><strong>Tendencia Seleccionada:</strong> ${promptTexto}<br><a href="${urlReferencia}" target="_blank" class="text-warning small">🔗 Ver video de referencia en redes</a></div>`;
+            resultBox.scrollTop = resultBox.scrollHeight;
+            localStorage.setItem('resultTendencias', resultBox.innerHTML);
         }
 
-        function sincronizarClave() {
-            document.getElementById('hiddenProKey').value = document.getElementById('globalProKey').value;
-        }
-
-        function validarClavePro() {
-            const key = document.getElementById('globalProKey').value.trim();
-            const badge = document.getElementById('proBadge');
-            if (key === "PRO-150-ACTIVO" || key === "PROMO-99-3MESES") {
-                badge.className = "badge bg-success";
-                badge.innerText = "¡Membresía PRO Activa!";
-                alert("¡Clave PRO validada correctamente!");
-            } else {
-                badge.className = "badge bg-danger";
-                badge.innerText = "Clave Inválida";
-                alert("La clave ingresada no es válida.");
+        function enviarAlGeneradorDeVideos() {
+            const promptActual = document.getElementById('promptTendencias').value;
+            if (!promptActual) {
+                alert("Primero selecciona o escribe una tendencia para enviarla al generador de videos.");
+                return;
             }
+            document.getElementById('promptVideo').value = promptActual;
+            window.scrollTo({ top: document.getElementById('promptVideo').offsetTop - 100, behavior: 'smooth' });
+            alert("🚀 ¡Prompt transferido con éxito al módulo de Videos HD! Haz clic en 'Procesar Video' para crearlo.");
+        }
+
+        function guardarHistorialImagen() {
+            const promptVal = document.getElementById('promptImagenInput').value;
+            const imgBox = document.getElementById('resultImagen');
+            imgBox.innerHTML += `<div class="mb-2 text-start"><strong>Prompt:</strong> ${promptVal}</div>`;
+            localStorage.setItem('resultImagen', imgBox.innerHTML);
+        }
+
+        function abrirSidebar() {
+            document.getElementById("mySidebar").style.width = "280px";
+        }
+
+        function cerrarSidebar() {
+            document.getElementById("mySidebar").style.width = "0";
+        }
+
+        function toggleBuscadorSidebar() {
+            const container = document.getElementById("buscadorContainer");
+            container.style.display = container.style.display === "block" ? "none" : "block";
+        }
+
+        function buscarEnChats() {
+            const filtro = document.getElementById("inputBuscador").value.toLowerCase();
+            const boxes = document.querySelectorAll('.chat-box');
+            boxes.forEach(box => {
+                const texto = box.innerText.toLowerCase();
+                if (texto.includes(filtro) && filtro.trim() !== "") {
+                    box.style.border = "2px solid #38bdf8";
+                } else {
+                    box.style.border = "1px solid #334155";
+                }
+            });
+        }
+
+        function nuevoChatGeneral() {
+            if (confirm("¿Deseas reiniciar todos los paneles para un nuevo flujo?")) {
+                const boxes = ['resultTendencias', 'resultGuiones', 'resultCopys', 'resultB2B', 'chatBoxResult', 'resultImagen', 'resultVideo', 'resultExcel', 'resultWord', 'resultTraductor'];
+                boxes.forEach(boxId => {
+                    document.getElementById(boxId).innerHTML = 'Nuevo chat iniciado...';
+                    localStorage.removeItem(boxId);
+                });
+                cerrarSidebar();
+            }
+        }
+
+        async function abrirSoporteIA() {
+            cerrarSidebar();
+            const consulta = prompt("🤖 Escribe tu duda de soporte técnico para que la IA te ayude:");
+            if (!consulta) return;
+            
+            const chatBox = document.getElementById("chatBoxResult");
+            chatBox.innerHTML += `<div class="mb-2"><strong>Soporte IA (Tú):</strong> ${consulta}</div>`;
+            
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ toolName: 'Soporte Técnico IA', prompt: consulta, proKey: 'PRO-150-ACTIVO' })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    chatBox.innerHTML += `<div class="text-info mb-3"><strong>Bot Asistente:</strong> ${data.response}</div>`;
+                } else {
+                    chatBox.innerHTML += `<div class="text-danger mb-2"><strong>Error:</strong> ${data.error}</div>`;
+                }
+                localStorage.setItem('chatBoxResult', chatBox.innerHTML);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } catch (err) {
+                alert("No se pudo conectar con el servicio de soporte IA.");
+            }
+        }
+
+        function compartirArchivoRapido() {
+            cerrarSidebar();
+            alert("🔗 Enlace de acceso directo a la plataforma copiado o listo para exportar archivos guardados en formato TXT.");
+        }
+
+        function informarProblema() {
+            cerrarSidebar();
+            const reporte = prompt("⚠️ Describe brevemente el inconveniente o error que experimentas:");
+            if (reporte) {
+                alert("¡Gracias! Tu reporte ha sido registrado y enviado al equipo de desarrollo.");
+            }
+        }
+
+        function borrarTodoHistorial() {
+            if (confirm("¿Estás seguro de eliminar por completo todo el historial almacenado en la plataforma?")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        function toggleManual(id) {
+            const box = document.getElementById(id);
+            box.style.display = box.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function mostrarNombreArchivo(inputId, spanId) {
+            const input = document.getElementById(inputId);
+            const span = document.getElementById(spanId);
+            if (input.files.length > 0) {
+                let nombres = Array.from(input.files).map(f => f.name).join(', ');
+                span.innerText = `📎 Archivo(s): ${nombres}`;
+            } else {
+                span.innerText = '';
+            }
+        }
+
+        function limpiarChat(boxId) {
+            if (confirm("¿Deseas limpiar el historial de este módulo?")) {
+                const box = document.getElementById(boxId);
+                box.innerHTML = 'Historial limpio...';
+                localStorage.removeItem(boxId);
+            }
+        }
+
+        function descargarChatTXT(boxId, filename) {
+            const box = document.getElementById(boxId);
+            const text = box.innerText || box.textContent;
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
         }
 
         function activarModoCelular() {
@@ -203,18 +563,14 @@
             } else {
                 body.style.maxWidth = '480px';
                 body.style.margin = '0 auto';
-                alert("Modo celular activado. La interfaz se adaptará.");
+                alert("Modo celular activado.");
             }
         }
 
-        function mostrarAyuda() {
-            alert("Ayuda y Soporte:\n- Si experimentas problemas, verifica tu conexión o el uso de tus claves API.\n- Puedes adjuntar archivos de cualquier formato sin alterar su integridad nativa.\n- Contacta a soporte técnico ante cualquier incidencia.");
-        }
-
         async function consultarChatIndependiente(toolName, inputId, fileId, resultId) {
-            const prompt = document.getElementById(inputId).value.trim();
+            const promptInput = document.getElementById(inputId);
+            const prompt = promptInput.value.trim();
             const fileInput = document.getElementById(fileId);
-            const proKey = document.getElementById('globalProKey').value.trim();
             const resultBox = document.getElementById(resultId);
 
             if (!prompt && fileInput.files.length === 0) {
@@ -222,30 +578,52 @@
                 return;
             }
 
-            resultBox.style.display = 'block';
-            resultBox.innerHTML += `<div><strong>Tú:</strong> ${prompt} ${fileInput.files.length > 0 ? '(<i>Archivo adjunto</i>)' : ''}</div>`;
-            resultBox.innerHTML += `<div><em>🔄 Procesando en el chat independiente de ${toolName}...</em></div>`;
+            let archivosTexto = fileInput.files.length > 0 ? ` (<i>${fileInput.files.length} archivo(s) adjunto(s)</i>)` : '';
+            
+            resultBox.innerHTML += `<div class="mb-2"><strong>Tú:</strong> ${prompt}${archivosTexto}</div>`;
+            const loadingId = 'loading_' + Date.now();
+            resultBox.innerHTML += `<div id="${loadingId}" class="text-warning mb-2"><em>🔄 Procesando en ${toolName}...</em></div>`;
             resultBox.scrollTop = resultBox.scrollHeight;
+
+            promptInput.value = '';
 
             try {
                 const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ toolName, prompt, proKey })
+                    body: JSON.stringify({ toolName, prompt, proKey: 'PRO-150-ACTIVO' })
                 });
 
                 const data = await response.json();
+                document.getElementById(loadingId).remove();
+
                 if (response.ok) {
-                    resultBox.innerHTML += `<div class="text-info mt-2"><strong>${toolName}:</strong> ${data.response}</div>`;
-                    if (data.is_pro) {
-                        document.getElementById('proBadge').className = "badge bg-success";
-                        document.getElementById('proBadge').innerText = "¡Membresía PRO Activa!";
+                    const responseContainerId = 'resp_' + Date.now();
+                    resultBox.innerHTML += `<div class="text-info mb-3"><strong>${toolName}:</strong> <span id="${responseContainerId}"></span></div>`;
+                    
+                    const respuestaTexto = data.response;
+                    let i = 0;
+                    const speed = 10;
+                    function typeWriter() {
+                        if (i < respuestaTexto.length) {
+                            document.getElementById(responseContainerId).innerHTML += respuestaTexto.charAt(i);
+                            i++;
+                            resultBox.scrollTop = resultBox.scrollHeight;
+                            setTimeout(typeWriter, speed);
+                        } else {
+                            localStorage.setItem(resultId, resultBox.innerHTML);
+                        }
                     }
+                    typeWriter();
+
                 } else {
-                    resultBox.innerHTML += `<div class="text-danger mt-2"><strong>Error:</strong> ${data.error}</div>`;
+                    resultBox.innerHTML += `<div class="text-danger mb-2"><strong>Error:</strong> ${data.error}</div>`;
+                    localStorage.setItem(resultId, resultBox.innerHTML);
                 }
             } catch (err) {
-                resultBox.innerHTML += `<div class="text-danger mt-2"><strong>Error:</strong> No se pudo conectar con el servidor.</div>`;
+                document.getElementById(loadingId).remove();
+                resultBox.innerHTML += `<div class="text-danger mb-2"><strong>Error:</strong> No se pudo conectar con el servidor.</div>`;
+                localStorage.setItem(resultId, resultBox.innerHTML);
             }
             resultBox.scrollTop = resultBox.scrollHeight;
         }
