@@ -23,8 +23,8 @@ HF_API_URL = os.environ.get(
     "HF_API_URL",
     "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell"
 )
+PRO_SECRET_KEY = os.environ.get("PRO_SECRET_KEY", "PRO-150-ACTIVO")
 PROMO_3_MESES_KEY = os.environ.get("PROMO_3_MESES_KEY", "PROMO-99-3MESES")
-
 STATIC_DIR = os.path.join(app.root_path, 'static')
 os.makedirs(STATIC_DIR, exist_ok=True)
 
