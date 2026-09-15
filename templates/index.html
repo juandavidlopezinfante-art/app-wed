@@ -886,7 +886,7 @@
         }
     </script>
 <style>
-    /* Estilo de Historias Pro & Dinámicas 24/7 */
+    /* Estilo de Historias Pro & Dinámicas 24/7 con Animación en Movimiento */
     #storiesBar {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -920,8 +920,8 @@
     }
 
     @keyframes flotarSuave {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-6px); }
+        0%, 100% { transform: translateY(0px) scale(1); }
+        50% { transform: translateY(-8px) scale(1.01); }
     }
 
     .story-card-visual:hover {
