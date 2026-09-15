@@ -887,3 +887,72 @@
     </script>
 </body>
 </html>
+<script>
+    // Módulo de Historias Pro rotativas (Cambian automáticamente cada 24 horas)
+    const rotacionHistorias = [
+        {
+            titulo: "🎨 Estilo Pixar 3D (Imágenes)",
+            desc: "Genera personajes tiernos estilo animación cinematográfica para enganchar audiencia.",
+            targetId: "promptImagenInput",
+            prompt: "Mockup 3D hiperrealista estilo animación Pixar de tierno personaje sonriendo en la habitación, iluminación cálida de estudio.",
+            badge: "🔥 Tendencia Visual"
+        },
+        {
+            titulo: "🎬 Guiones Virales (Reels/TikTok)",
+            desc: "Estrategia de retención con gancho de 3 segundos para reventar el algoritmo.",
+            targetId: "promptGuiones",
+            prompt: "Crea un guion viral de 30 segundos con gancho agresivo de retención sobre los 3 mayores errores en la gestión del tiempo personal."
+        },
+        {
+            titulo: "💸 Copys PAS (Anuncios de Ventas)",
+            desc: "Redacta textos persuasivos utilizando la fórmula Problema-Agitación-Solución.",
+            targetId: "promptCopys",
+            prompt: "Escribe un copy publicitario de conversión aplicando la fórmula PAS para un curso avanzado de marketing digital."
+        },
+        {
+            titulo: "📊 Flujo Financiero Pro (Excel)",
+            desc: "Estructura proyecciones de ingresos y gastos limpios para negocios.",
+            targetId: "promptExcel",
+            prompt: "Diseña un modelo de flujo de caja mensual con fórmulas de rentabilidad y punto de equilibrio para una cafetería local."
+        },
+        {
+            titulo: "📝 Contratos y NDA (Word)",
+            desc: "Redacta cláusulas legales corporativas y de confidencialidad profesionales.",
+            targetId: "promptWord",
+            prompt: "Redacta un acuerdo de confidencialidad (NDA) comercial bilateral estructurado con cláusulas de protección de propiedad intelectual."
+        }
+    ];
+
+    window.addEventListener('DOMContentLoaded', (event) => {
+        const storiesBar = document.getElementById('storiesBar');
+        if (storiesBar) {
+            storiesBar.innerHTML = ''; 
+            
+            // Rotación inteligente por día del año
+            const diaDelAnio = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+            
+            rotacionHistorias.forEach((story, index) => {
+                const item = rotacionHistorias[(index + diaDelAnio) % rotacionHistorias.length];
+                
+                storiesBar.innerHTML += `
+                    <div class="story-card shadow" onclick="usarHistoria('${item.targetId}', \`${item.prompt}\`)">
+                        <div class="story-title">⚡ ${item.titulo}</div>
+                        <div class="story-desc">${item.desc}</div>
+                        <button class="story-btn mt-2">✨ Probar Idea Hoy</button>
+                    </div>
+                `;
+            });
+        }
+    });
+
+    function usarHistoria(targetId, promptText) {
+        const el = document.getElementById(targetId);
+        if (el) {
+            el.value = promptText;
+            window.scrollTo({ top: el.offsetTop - 150, behavior: 'smooth' });
+            el.focus();
+            el.style.borderColor = '#38bdf8';
+            setTimeout(() => { el.style.borderColor = '#475569'; }, 1500);
+        }
+    }
+</script>
