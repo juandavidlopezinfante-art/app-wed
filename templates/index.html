@@ -885,60 +885,149 @@
             resultBox.scrollTop = resultBox.scrollHeight;
         }
     </script>
-</body>
-</html>
+<style>
+    /* Estilo de Historias Pro & Dinámicas 24/7 */
+    #storiesBar {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+    .story-card-visual {
+        position: relative;
+        height: 230px;
+        border-radius: 16px;
+        overflow: hidden;
+        cursor: pointer;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 14px;
+        background-size: cover;
+        background-position: center;
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        animation: flotarSuave 6s ease-in-out infinite;
+    }
+    
+    /* Efecto de movimiento sutil flotante independiente por tarjeta */
+    .story-card-visual:nth-child(even) {
+        animation-delay: 2s;
+    }
+    .story-card-visual:nth-child(3n) {
+        animation-delay: 4s;
+    }
+
+    @keyframes flotarSuave {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-6px); }
+    }
+
+    .story-card-visual:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 15px 30px rgba(56, 189, 248, 0.5);
+        border-color: #38bdf8;
+        animation-play-state: paused;
+    }
+    .story-card-visual::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(15,23,42,0.92) 15%, rgba(15,23,42,0.3) 65%, transparent 100%);
+        z-index: 1;
+    }
+    .story-content-overlay {
+        position: relative;
+        z-index: 2;
+    }
+    .story-badge {
+        font-size: 0.65rem;
+        background: rgba(56, 189, 248, 0.95);
+        color: #0f172a;
+        padding: 3px 8px;
+        border-radius: 6px;
+        font-weight: 800;
+        display: inline-block;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .story-title-visual {
+        color: #ffffff;
+        font-size: 0.95rem;
+        font-weight: bold;
+        line-height: 1.2;
+        margin-bottom: 4px;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    }
+    .story-action-text {
+        color: #38bdf8;
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+</style>
+
 <script>
-    // Módulo de Historias Pro rotativas (Cambian automáticamente cada 24 horas)
-    const rotacionHistorias = [
+    // Base completa con TODAS las herramientas de la plataforma para publicidad cruzada 24/7
+    const catalogoPublicitarioTotal = [
         {
-            titulo: "🎨 Estilo Pixar 3D (Imágenes)",
-            desc: "Genera personajes tiernos estilo animación cinematográfica para enganchar audiencia.",
+            titulo: "🎨 Generador de Imágenes IA",
+            badge: "Multimedia Pro",
+            imagen: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?w=500&auto=format&fit=crop&q=60",
             targetId: "promptImagenInput",
-            prompt: "Mockup 3D hiperrealista estilo animación Pixar de tierno personaje sonriendo en la habitación, iluminación cálida de estudio.",
-            badge: "🔥 Tendencia Visual"
+            prompt: "Mockup hiperrealista 3D de alta gama para campaña publicitaria digital con iluminación de estudio."
         },
         {
-            titulo: "🎬 Guiones Virales (Reels/TikTok)",
-            desc: "Estrategia de retención con gancho de 3 segundos para reventar el algoritmo.",
+            titulo: "🎬 Videos y Animación IA",
+            badge: "Tendencia 24/7",
+            imagen: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=500&auto=format&fit=crop&q=60",
             targetId: "promptGuiones",
-            prompt: "Crea un guion viral de 30 segundos con gancho agresivo de retención sobre los 3 mayores errores en la gestión del tiempo personal."
+            prompt: "Crea una estructura de video cinemático vertical con gancho altamente viral para redes sociales."
         },
         {
-            titulo: "💸 Copys PAS (Anuncios de Ventas)",
-            desc: "Redacta textos persuasivos utilizando la fórmula Problema-Agitación-Solución.",
-            targetId: "promptCopys",
-            prompt: "Escribe un copy publicitario de conversión aplicando la fórmula PAS para un curso avanzado de marketing digital."
+            titulo: "🌍 Traductor Global & Voces",
+            badge: "Multiidioma",
+            imagen: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=500&auto=format&fit=crop&q=60",
+            targetId: "promptTraductor",
+            prompt: "Traduce y adapta este contenido comercial al mercado internacional manteniendo el tono persuasivo."
         },
         {
-            titulo: "📊 Flujo Financiero Pro (Excel)",
-            desc: "Estructura proyecciones de ingresos y gastos limpios para negocios.",
+            titulo: "📊 Control Financiero & Excel",
+            badge: "Negocios",
+            imagen: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=500&auto=format&fit=crop&q=60",
             targetId: "promptExcel",
-            prompt: "Diseña un modelo de flujo de caja mensual con fórmulas de rentabilidad y punto de equilibrio para una cafetería local."
+            prompt: "Estructura un modelo financiero optimizado de flujo de caja y proyección de ventas."
         },
         {
-            titulo: "📝 Contratos y NDA (Word)",
-            desc: "Redacta cláusulas legales corporativas y de confidencialidad profesionales.",
-            targetId: "promptWord",
-            prompt: "Redacta un acuerdo de confidencialidad (NDA) comercial bilateral estructurado con cláusulas de protección de propiedad intelectual."
+            titulo: "⚡ Oferta Irresistible PAS",
+            badge: "Conversión Pro",
+            imagen: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&auto=format&fit=crop&q=60",
+            targetId: "promptCopys",
+            prompt: "Redacta un anuncio publicitario de alto impacto aplicando la fórmula PAS para campañas de conversión."
+        },
+        {
+            titulo: "🚀 Marca Personal 3D",
+            badge: "Branding",
+            imagen: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=500&auto=format&fit=crop&q=60",
+            targetId: "promptBranding",
+            prompt: "Genera la estrategia visual y el prompt maestro para mockups de branding corporativo."
         }
     ];
 
-    window.addEventListener('DOMContentLoaded', (event) => {
+    window.addEventListener('DOMContentLoaded', () => {
         const storiesBar = document.getElementById('storiesBar');
         if (storiesBar) {
             storiesBar.innerHTML = ''; 
-            
-            // Rotación inteligente por día del año
-            const diaDelAnio = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
-            
-            rotacionHistorias.forEach((story, index) => {
-                const item = rotacionHistorias[(index + diaDelAnio) % rotacionHistorias.length];
-                
+            // Llena de forma automática y dinámica TODAS las casillas disponibles
+            catalogoPublicitarioTotal.forEach((item) => {
                 storiesBar.innerHTML += `
-                    <div class="story-card shadow" onclick="usarHistoria('${item.targetId}', \`${item.prompt}\`)">
-                        <div class="story-title">⚡ ${item.titulo}</div>
-                        <div class="story-desc">${item.desc}</div>
-                        <button class="story-btn mt-2">✨ Probar Idea Hoy</button>
+                    <div class="story-card-visual" style="background-image: url('${item.imagen}');" onclick="usarHistoria('${item.targetId}', \`${item.prompt}\`)">
+                        <div class="story-content-overlay">
+                            <span class="story-badge">${item.badge}</span>
+                            <div class="story-title-visual">${item.titulo}</div>
+                            <div class="story-action-text">⚡ Probar herramienta &rarr;</div>
+                        </div>
                     </div>
                 `;
             });
@@ -946,7 +1035,7 @@
     });
 
     function usarHistoria(targetId, promptText) {
-        const el = document.getElementById(targetId);
+        const el = document.getElementById(targetId) || document.querySelector('textarea, input');
         if (el) {
             el.value = promptText;
             window.scrollTo({ top: el.offsetTop - 150, behavior: 'smooth' });
@@ -956,3 +1045,5 @@
         }
     }
 </script>
+  </body>
+</html>
