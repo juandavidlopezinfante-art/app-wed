@@ -19,7 +19,7 @@ app = Flask(__name__)
 # Configuración de Variables de Entorno y Claves API
 HF_API_TOKEN = os.environ.get("HF_API_TOKEN")
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-   HF_API_URL = "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell"
+HF_API_URL = "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell"
 PRO_SECRET_KEY = os.environ.get("PRO_SECRET_KEY", "PRO-150-ACTIVO")
 PROMO_3_MESES_KEY = os.environ.get("PROMO_3_MESES_KEY", "PROMO-99-3MESES")
 STATIC_DIR = os.path.join(app.root_path, 'static')
@@ -42,7 +42,7 @@ if GEMINI_API_KEY:
         "basándote exclusivamente en las instrucciones y datos proporcionados."
     )
     gemini_model = genai.GenerativeModel(
-        model_name='gemini-1.5-flash',
+        model_name='gemini-3.8-flash',
         generation_config=generation_config,
         system_instruction=system_instruction
     )
