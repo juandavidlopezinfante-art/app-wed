@@ -21,11 +21,8 @@ HF_API_TOKEN = os.environ.get("HF_API_TOKEN")
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 HF_API_URL = os.environ.get(
     "HF_API_URL",
-    "https://router.huggingface.co/hf-inference/models/stabilityai/stable-diffusion-xl-base-1.0"
+    "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell"
 )
-
-# Configuración de Claves de Membresía PRO y Promoción
-PRO_SECRET_KEY = os.environ.get("PRO_SECRET_KEY", "PRO-150-ACTIVO")
 PROMO_3_MESES_KEY = os.environ.get("PROMO_3_MESES_KEY", "PROMO-99-3MESES")
 
 STATIC_DIR = os.path.join(app.root_path, 'static')
