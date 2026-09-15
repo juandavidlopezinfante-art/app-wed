@@ -42,7 +42,7 @@ if GEMINI_API_KEY:
         "basándote exclusivamente en las instrucciones y datos proporcionados."
     )
     gemini_model = genai.GenerativeModel(
-        model_name='gemini-1.5-flash',
+        model_name='gemini-3.8-flash',
         generation_config=generation_config,
         system_instruction=system_instruction
     )
