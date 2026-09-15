@@ -36,7 +36,9 @@ def index():
 @app.route('/generar', methods=['POST'])
 def api_generate():
     try:
-        data = request.get_json() or request.form
+        # Aceptar tanto JSON como datos de formulario de forma segura
+        data = request.get_json(silent=True) or request.form or request.values
+       
         prompt = data.get('prompt', '').strip()
         
         if not prompt:
@@ -60,4 +62,4 @@ def api_generate():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port
