@@ -1,10 +1,11 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Business IA - Panel Pro Empresarial</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { background-color: #0f172a; color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; }
         .navbar { background-color: #1e293b; border-bottom: 1px solid #334155; }
@@ -13,7 +14,48 @@
         .form-control:focus, .form-select:focus { background-color: #0f172a; color: #fff; border-color: #38bdf8; box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.25); }
         .btn-primary { background-color: #2563eb; border: none; font-weight: 600; border-radius: 6px; }
         .btn-primary:hover { background-color: #1d4ed8; }
-        .chat-box { background-color: #090d16; border: 1px solid #334155; height: 220px; overflow-y: auto; padding: 15px; border-radius: 6px; margin-top: 15px; font-size: 0.9rem; }
+        
+        /* DISEÑO DE LAS CAJAS DE RESPUESTA */
+        .chat-box { 
+            background: rgba(15, 23, 42, 0.85); 
+            border: 1px solid rgba(56, 189, 248, 0.25); 
+            height: 220px; 
+            overflow-y: auto; 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin-top: 10px; 
+            font-size: 0.9rem; 
+            backdrop-filter: blur(10px);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        /* BARRA DE HERRAMIENTAS DINÁMICA QUE APARECE CON LAS RESPUESTAS */
+        .response-tools-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #131c31;
+            padding: 6px 12px;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            border: 1px solid #334155;
+            border-bottom: none;
+            margin-top: 15px;
+            font-size: 0.8rem;
+            color: #38bdf8;
+        }
+        .response-tools-bar .tools-btns button {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 2px 5px;
+            transition: 0.2s;
+        }
+        .response-tools-bar .tools-btns button:hover {
+            color: #38bdf8;
+        }
+
         .manual-box { background-color: #131c31; border-left: 4px solid #38bdf8; padding: 12px 15px; font-size: 0.85rem; margin-bottom: 15px; border-radius: 4px; display: none; }
         .file-indicator { font-size: 0.8rem; color: #38bdf8; margin-top: 5px; display: block; }
         .banner-libre { background: linear-gradient(135deg, #1e3a8a, #2563eb); border: 1px solid #3b82f6; border-radius: 8px; padding: 12px 20px; margin-bottom: 25px; text-align: center; font-weight: 600; }
@@ -145,6 +187,14 @@
                         <input type="file" id="fileTendencias" class="form-control form-control-sm mt-2" onchange="mostrarNombreArchivo('fileTendencias', 'fileNameTendencias')" multiple>
                         <span id="fileNameTendencias" class="file-indicator"></span>
                     </div>
+                    
+                    <div id="tools-resultTendencias" style="display:none;" class="response-tools-bar">
+                        <span><i class="fas fa-history me-1"></i> Historial y Respuesta Activa</span>
+                        <div class="tools-btns">
+                            <button onclick="configurarModulo('resultTendencias')" title="Ajustes"><i class="fas fa-sliders-h"></i></button>
+                            <button onclick="limpiarChat('resultTendencias')" title="Limpiar"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </div>
                     <div class="chat-box" id="resultTendencias">Historial de Tendencias Virales y Referencias...</div>
                 </div>
             </div>
@@ -170,6 +220,14 @@
                     <div class="d-flex gap-2 mt-2">
                         <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultGuiones', 'Guion_Viral.txt')">📥 Descargar TXT</button>
                         <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultGuiones')">🧹 Limpiar</button>
+                    </div>
+                    
+                    <div id="tools-resultGuiones" style="display:none;" class="response-tools-bar">
+                        <span><i class="fas fa-history me-1"></i> Historial y Respuesta Activa</span>
+                        <div class="tools-btns">
+                            <button onclick="configurarModulo('resultGuiones')" title="Ajustes"><i class="fas fa-sliders-h"></i></button>
+                            <button onclick="limpiarChat('resultGuiones')" title="Limpiar"><i class="fas fa-trash-alt"></i></button>
+                        </div>
                     </div>
                     <div class="chat-box" id="resultGuiones">Historial de Guiones...</div>
                 </div>
@@ -197,6 +255,14 @@
                         <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultCopys', 'Copy_Publicitario.txt')">📥 Descargar TXT</button>
                         <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultCopys')">🧹 Limpiar</button>
                     </div>
+                    
+                    <div id="tools-resultCopys" style="display:none;" class="response-tools-bar">
+                        <span><i class="fas fa-history me-1"></i> Historial y Respuesta Activa</span>
+                        <div class="tools-btns">
+                            <button onclick="configurarModulo('resultCopys')" title="Ajustes"><i class="fas fa-sliders-h"></i></button>
+                            <button onclick="limpiarChat('resultCopys')" title="Limpiar"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </div>
                     <div class="chat-box" id="resultCopys">Historial de Copys...</div>
                 </div>
             </div>
@@ -223,6 +289,14 @@
                         <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultB2B', 'Propuesta_Comercial.txt')">📥 Descargar TXT</button>
                         <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultB2B')">🧹 Limpiar</button>
                     </div>
+                    
+                    <div id="tools-resultB2B" style="display:none;" class="response-tools-bar">
+                        <span><i class="fas fa-history me-1"></i> Historial y Respuesta Activa</span>
+                        <div class="tools-btns">
+                            <button onclick="configurarModulo('resultB2B')" title="Ajustes"><i class="fas fa-sliders-h"></i></button>
+                            <button onclick="limpiarChat('resultB2B')" title="Limpiar"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </div>
                     <div class="chat-box" id="resultB2B">Historial de Propuestas B2B...</div>
                 </div>
             </div>
@@ -248,6 +322,14 @@
                     <div class="d-flex gap-2 mt-2">
                         <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('chatBoxResult', 'Chat_General.txt')">📥 Descargar TXT</button>
                         <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('chatBoxResult')">🧹 Limpiar</button>
+                    </div>
+                    
+                    <div id="tools-chatBoxResult" style="display:none;" class="response-tools-bar">
+                        <span><i class="fas fa-history me-1"></i> Historial y Respuesta Activa</span>
+                        <div class="tools-btns">
+                            <button onclick="configurarModulo('chatBoxResult')" title="Ajustes"><i class="fas fa-sliders-h"></i></button>
+                            <button onclick="limpiarChat('chatBoxResult')" title="Limpiar"><i class="fas fa-trash-alt"></i></button>
+                        </div>
                     </div>
                     <div class="chat-box" id="chatBoxResult">Historial de Chat Libre...</div>
                 </div>
@@ -276,6 +358,14 @@
                     </form>
                     <div class="d-flex gap-2 mt-2">
                         <button class="btn btn-sm btn-outline-secondary w-100" onclick="limpiarChat('resultImagen')">🧹 Limpiar Historial de Imágenes</button>
+                    </div>
+                    
+                    <div id="tools-resultImagen" style="display:none;" class="response-tools-bar">
+                        <span><i class="fas fa-history me-1"></i> Historial y Respuesta Activa</span>
+                        <div class="tools-btns">
+                            <button onclick="configurarModulo('resultImagen')" title="Ajustes"><i class="fas fa-sliders-h"></i></button>
+                            <button onclick="limpiarChat('resultImagen')" title="Limpiar"><i class="fas fa-trash-alt"></i></button>
+                        </div>
                     </div>
                     <div class="chat-box" id="resultImagen">
                         Historial de Imágenes IA...
@@ -312,6 +402,14 @@
                         <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultVideo', 'Storyboard_Video.txt')">📥 Descargar TXT</button>
                         <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultVideo')">🧹 Limpiar</button>
                     </div>
+                    
+                    <div id="tools-resultVideo" style="display:none;" class="response-tools-bar">
+                        <span><i class="fas fa-history me-1"></i> Historial y Respuesta Activa</span>
+                        <div class="tools-btns">
+                            <button onclick="configurarModulo('resultVideo')" title="Ajustes"><i class="fas fa-sliders-h"></i></button>
+                            <button onclick="limpiarChat('resultVideo')" title="Limpiar"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </div>
                     <div class="chat-box" id="resultVideo">Historial de Videos HD...</div>
                 </div>
             </div>
@@ -337,6 +435,14 @@
                     <div class="d-flex gap-2 mt-2">
                         <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultExcel', 'Reporte_Excel.txt')">📥 Descargar TXT</button>
                         <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultExcel')">🧹 Limpiar</button>
+                    </div>
+                    
+                    <div id="tools-resultExcel" style="display:none;" class="response-tools-bar">
+                        <span><i class="fas fa-history me-1"></i> Historial y Respuesta Activa</span>
+                        <div class="tools-btns">
+                            <button onclick="configurarModulo('resultExcel')" title="Ajustes"><i class="fas fa-sliders-h"></i></button>
+                            <button onclick="limpiarChat('resultExcel')" title="Limpiar"><i class="fas fa-trash-alt"></i></button>
+                        </div>
                     </div>
                     <div class="chat-box" id="resultExcel">Historial de Excel...</div>
                 </div>
@@ -364,6 +470,14 @@
                         <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultWord', 'Documento_Legal.txt')">📥 Descargar TXT</button>
                         <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultWord')">🧹 Limpiar</button>
                     </div>
+                    
+                    <div id="tools-resultWord" style="display:none;" class="response-tools-bar">
+                        <span><i class="fas fa-history me-1"></i> Historial y Respuesta Activa</span>
+                        <div class="tools-btns">
+                            <button onclick="configurarModulo('resultWord')" title="Ajustes"><i class="fas fa-sliders-h"></i></button>
+                            <button onclick="limpiarChat('resultWord')" title="Limpiar"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </div>
                     <div class="chat-box" id="resultWord">Historial de Word...</div>
                 </div>
             </div>
@@ -390,6 +504,14 @@
                         <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultTraductor', 'Traduccion_Global.txt')">📥 Descargar TXT</button>
                         <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultTraductor')">🧹 Limpiar</button>
                     </div>
+                    
+                    <div id="tools-resultTraductor" style="display:none;" class="response-tools-bar">
+                        <span><i class="fas fa-history me-1"></i> Historial y Respuesta Activa</span>
+                        <div class="tools-btns">
+                            <button onclick="configurarModulo('resultTraductor')" title="Ajustes"><i class="fas fa-sliders-h"></i></button>
+                            <button onclick="limpiarChat('resultTraductor')" title="Limpiar"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </div>
                     <div class="chat-box" id="resultTraductor">Historial de Traductor...</div>
                 </div>
             </div>
@@ -399,22 +521,30 @@
 
     <!-- SCRIPT DE CONTROL Y FUNCIONALIDADES DE LA SIDEBAR Y TENDENCIAS -->
     <script>
-        // Cargar historiales almacenados al iniciar
+        // Cargar historiales almacenados al iniciar y mostrar su barra de herramientas si ya hay contenido guardado
         window.onload = function() {
             const boxes = ['resultTendencias', 'resultGuiones', 'resultCopys', 'resultB2B', 'chatBoxResult', 'resultImagen', 'resultVideo', 'resultExcel', 'resultWord', 'resultTraductor'];
             boxes.forEach(boxId => {
                 const saved = localStorage.getItem(boxId);
-                if (saved) {
+                if (saved && saved !== 'Historial limpio...' && !saved.includes('Historial de')) {
                     document.getElementById(boxId).innerHTML = saved;
+                    const toolsBar = document.getElementById('tools-' + boxId);
+                    if (toolsBar) toolsBar.style.display = 'flex';
                 }
             });
         };
 
+        function configurarModulo(boxId) {
+            alert("⚙️ Ajustes del módulo: Historial activo, almacenamiento local persistente habilitado.");
+        }
+
         function cargarPromptTendencia(promptTexto, urlReferencia) {
             document.getElementById('promptTendencias').value = promptTexto;
             const resultBox = document.getElementById('resultTendencias');
+            if (resultBox.innerHTML.includes('Historial de')) resultBox.innerHTML = '';
             resultBox.innerHTML += `<div class="mb-2 text-info"><strong>Tendencia Seleccionada:</strong> ${promptTexto}<br><a href="${urlReferencia}" target="_blank" class="text-warning small">🔗 Ver video de referencia en redes</a></div>`;
             resultBox.scrollTop = resultBox.scrollHeight;
+            document.getElementById('tools-resultTendencias').style.display = 'flex';
             localStorage.setItem('resultTendencias', resultBox.innerHTML);
         }
 
@@ -432,7 +562,9 @@
         function guardarHistorialImagen() {
             const promptVal = document.getElementById('promptImagenInput').value;
             const imgBox = document.getElementById('resultImagen');
+            if (imgBox.innerHTML.includes('Historial de')) imgBox.innerHTML = '';
             imgBox.innerHTML += `<div class="mb-2 text-start"><strong>Prompt:</strong> ${promptVal}</div>`;
+            document.getElementById('tools-resultImagen').style.display = 'flex';
             localStorage.setItem('resultImagen', imgBox.innerHTML);
         }
 
@@ -457,7 +589,7 @@
                 if (texto.includes(filtro) && filtro.trim() !== "") {
                     box.style.border = "2px solid #38bdf8";
                 } else {
-                    box.style.border = "1px solid #334155";
+                    box.style.border = "1px solid rgba(56, 189, 248, 0.25)";
                 }
             });
         }
@@ -467,6 +599,8 @@
                 const boxes = ['resultTendencias', 'resultGuiones', 'resultCopys', 'resultB2B', 'chatBoxResult', 'resultImagen', 'resultVideo', 'resultExcel', 'resultWord', 'resultTraductor'];
                 boxes.forEach(boxId => {
                     document.getElementById(boxId).innerHTML = 'Nuevo chat iniciado...';
+                    const tools = document.getElementById('tools-' + boxId);
+                    if (tools) tools.style.display = 'none';
                     localStorage.removeItem(boxId);
                 });
                 cerrarSidebar();
@@ -479,7 +613,9 @@
             if (!consulta) return;
             
             const chatBox = document.getElementById("chatBoxResult");
+            if (chatBox.innerHTML.includes('Historial de')) chatBox.innerHTML = '';
             chatBox.innerHTML += `<div class="mb-2"><strong>Soporte IA (Tú):</strong> ${consulta}</div>`;
+            document.getElementById('tools-chatBoxResult').style.display = 'flex';
             
             try {
                 const response = await fetch('/api/generate', {
@@ -540,6 +676,8 @@
             if (confirm("¿Deseas limpiar el historial de este módulo?")) {
                 const box = document.getElementById(boxId);
                 box.innerHTML = 'Historial limpio...';
+                const tools = document.getElementById('tools-'; + boxId); // handled clean
+                document.getElementById('tools-' + boxId).style.display = 'none';
                 localStorage.removeItem(boxId);
             }
         }
@@ -572,10 +710,18 @@
             const prompt = promptInput.value.trim();
             const fileInput = document.getElementById(fileId);
             const resultBox = document.getElementById(resultId);
+            const toolsBar = document.getElementById('tools-' + resultId);
 
             if (!prompt && fileInput.files.length === 0) {
                 alert("Por favor ingresa una instrucción o adjunta un archivo.");
                 return;
+            }
+
+            // Mostrar la barra de herramientas al votar/generar respuesta
+            if (toolsBar) toolsBar.style.display = 'flex';
+
+            if (resultBox.innerHTML.includes('Historial de')) {
+                resultBox.innerHTML = '';
             }
 
             let archivosTexto = fileInput.files.length > 0 ? ` (<i>${fileInput.files.length} archivo(s) adjunto(s)</i>)` : '';
