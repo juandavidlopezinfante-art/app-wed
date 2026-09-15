@@ -36,7 +36,9 @@ def index():
 @app.route('/generar', methods=['POST'])
 def api_generate():
     try:
-        data = request.get_json() or request.form
+        # Aceptar tanto JSON como datos de formulario de forma segura
+        data = request.get_json(silent=True) or request.form or request.values
+       
         prompt = data.get('prompt', '').strip()
         
         if not prompt:
