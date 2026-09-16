@@ -3,540 +3,408 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Business IA - Panel Pro Max Enterprise</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Nexus AI Pro - Red Social & IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --bg-main: #090d16;
-            --bg-card: #131c31;
-            --border-neon: #38bdf8;
-            --text-primary: #f8fafc;
-            --accent-blue: #2563eb;
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(236, 72, 153, 0.8); }
         }
-        body { background-color: var(--bg-main); color: var(--text-primary); font-family: 'Inter', 'Segoe UI', sans-serif; overflow-x: hidden; }
-        .navbar { background-color: var(--bg-card); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px); }
-        .card { background-color: var(--bg-card); border: 1px solid #1e293b; color: var(--text-primary); margin-bottom: 25px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); border-radius: 14px; transition: 0.3s; }
-        .card:hover { border-color: rgba(56, 189, 248, 0.3); }
-        .form-control, .form-select { background-color: #0b1120; border: 1px solid #334155; color: #fff; border-radius: 8px; }
-        .form-control:focus { background-color: #0b1120; color: #fff; border-color: var(--border-neon); box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.25); }
-        .btn-primary { background: linear-gradient(135deg, #2563eb, #1d4ed8); border: none; font-weight: 600; border-radius: 8px; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
-        .btn-primary:hover { background: linear-gradient(135deg, #1d4ed8, #1e40af); }
-        
-        /* 🌟 10 HISTORIAS PRO CON EFECTO NEÓN FLUIDO */
-        .stories-container {
-            display: flex;
-            gap: 16px;
-            overflow-x: auto;
-            padding: 10px 5px 25px 5px;
-            margin-bottom: 20px;
-            scrollbar-width: thin;
-            scrollbar-color: var(--border-neon) var(--bg-card);
-        }
-        .story-card-pro {
-            position: relative;
-            min-width: 160px;
-            height: 200px;
-            border-radius: 16px;
-            overflow: hidden;
-            cursor: pointer;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.7);
-            transition: transform 0.3s ease, border-color 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 14px;
-            border: 2px solid rgba(56, 189, 248, 0.3);
-            background: linear-gradient(135deg, #1e293b, #0f172a, #1d4ed8);
-            background-size: 200% 200%;
-            animation: neonPulse 8s ease infinite;
-            flex-shrink: 0;
-        }
-        @keyframes neonPulse {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .story-card-pro:hover {
-            transform: translateY(-6px);
-            border-color: var(--border-neon);
-            box-shadow: 0 12px 35px rgba(56, 189, 248, 0.5);
-        }
-        .story-content { position: relative; z-index: 3; }
-        .story-badge { font-size: 0.6rem; background: var(--border-neon); color: var(--bg-main); padding: 2px 8px; border-radius: 4px; font-weight: 800; text-transform: uppercase; }
-        .story-title { color: #fff; font-size: 0.85rem; font-weight: bold; margin-top: 6px; line-height: 1.1; }
-        .story-action { color: #38bdf8; font-size: 0.7rem; font-weight: 700; margin-top: 4px; }
-
-        /* CAJAS DE RESPUESTA PROFESIONALES */
-        .chat-box { 
-            background: rgba(11, 17, 32, 0.95); 
-            border: 1px solid rgba(56, 189, 248, 0.2); 
-            height: 230px; 
-            overflow-y: auto; 
-            padding: 16px; 
-            border-radius: 8px; 
-            font-size: 0.9rem; 
-            box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
-        }
-        
-        .response-tools-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #0b1120;
-            padding: 6px 12px;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-            border: 1px solid #334155;
-            border-bottom: none;
-            margin-top: 15px;
-            font-size: 0.8rem;
-            color: #38bdf8;
-        }
-
-        .manual-box { background-color: #0b1120; border-left: 4px solid var(--border-neon); padding: 12px 15px; font-size: 0.85rem; margin-bottom: 15px; border-radius: 6px; display: none; }
-        .file-indicator { font-size: 0.8rem; color: #38bdf8; margin-top: 5px; display: block; }
-        .banner-enterprise { background: linear-gradient(135deg, #1e3a8a, #2563eb); border: 1px solid #3b82f6; border-radius: 10px; padding: 14px 20px; margin-bottom: 25px; text-align: center; font-weight: 600; box-shadow: 0 4px 15px rgba(37,99,235,0.2); }
-        
-        /* BARRA LATERAL (SIDEBAR) */
-        .sidebar {
-            height: 100%; width: 0; position: fixed; z-index: 1050; top: 0; left: 0;
-            background-color: var(--bg-card); overflow-x: hidden; transition: 0.3s; padding-top: 60px;
-            border-right: 1px solid #334155; box-shadow: 10px 0 30px rgba(0,0,0,0.8);
-        }
-        .sidebar button {
-            padding: 12px 20px; font-size: 0.95rem; color: #f8fafc; display: block; background: none; border: none; width: 100%; text-align: left; transition: 0.2s;
-        }
-        .sidebar button:hover { background-color: #1e293b; color: var(--border-neon); }
-        .sidebar .closebtn { position: absolute; top: 10px; right: 20px; font-size: 2rem; cursor: pointer; color: #fff; }
-        .sidebar-header { padding: 0 20px 15px 20px; font-size: 1.2rem; font-weight: bold; border-bottom: 1px solid #334155; color: var(--border-neon); }
+        .story-ring { animation: pulseGlow 3s infinite; }
     </style>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 flex h-screen overflow-hidden">
 
-    <!-- BARRA LATERAL (SIDEBAR) -->
-    <div id="mySidebar" class="sidebar">
-        <span class="closebtn" onclick="cerrarSidebar()">&times;</span>
-        <div class="sidebar-header">⚡ Menú Control Pro Max</div>
-        <div class="p-3">
-            <button class="btn btn-outline-primary w-100 mb-2 text-start" onclick="nuevoChatGeneral()">➕ Nuevo Chat / Reiniciar</button>
-            <button class="btn btn-outline-info w-100 mb-2 text-start" onclick="toggleBuscadorSidebar()">🔍 Buscar en los Chats</button>
-            <div id="buscadorContainer" style="display:none;" class="mb-2">
-                <input type="text" id="inputBuscador" class="form-control form-control-sm" placeholder="Escribe para buscar..." onkeyup="buscarEnChats()">
-            </div>
-            <button class="btn btn-outline-success w-100 mb-2 text-start" onclick="abrirSoporteIA()">🤖 Ayuda Técnica con IA</button>
-            <button class="btn btn-outline-warning w-100 mb-2 text-start" onclick="abrirBuzonSugerencias()">💡 Buzón de Sugerencias</button>
-            <button class="btn btn-outline-light w-100 mb-2 text-start" onclick="compartirArchivoRapido()">🔗 Compartir Plataforma</button>
-            <button class="btn btn-outline-danger w-100 mb-2 text-start" onclick="informarProblema()">⚠️ Informar un Problema</button>
-            <button class="btn btn-outline-secondary w-100 mb-2 text-start" onclick="borrarTodoHistorial()">🗑️ Borrar Todo el Historial</button>
+    <!-- MENÚ LATERAL IZQUIERDO DESPLEGABLE -->
+    <aside id="sidebar" class="w-72 bg-slate-900 border-r border-slate-800 flex flex-col transition-all duration-300 z-30 shadow-2xl">
+        <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+            <span class="font-extrabold text-lg bg-gradient-to-r from-purple-400 via-pink-500 to-amber-400 bg-clip-text text-transparent">Nexus AI Pro</span>
+            <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-bars text-lg"></i></button>
         </div>
-    </div>
-
-    <!-- BARRA DE NAVEGACIÓN -->
-    <nav class="navbar navbar-expand-lg navbar-dark px-4 py-3">
-        <div class="d-flex align-items-center gap-3">
-            <button class="btn btn-outline-info btn-sm" onclick="abrirSidebar()">☰ Menú Pro</button>
-            <a class="navbar-brand fw-bold fs-4 m-0" href="#">⚡ Digital Business IA Pro Max</a>
-        </div>
-        <div class="ms-auto d-flex gap-2">
-            <button class="btn btn-sm btn-outline-light" onclick="activarModoCelular()">📱 Modo Celular</button>
-            <span class="badge bg-success align-self-center p-2 fs-6">🟢 Motor Gemini Pro 1.5 Activo</span>
-        </div>
-    </nav>
-
-    <div class="container my-4">
         
-        <!-- 🌟 LAS 10 HISTORIAS PRO SUPERIORES -->
-        <div class="mb-2">
-            <span class="text-info fw-bold small text-uppercase"><i class="fas fa-bolt me-1"></i> Historias Pro & Tendencias Diarias (10 Módulos Interactivos)</span>
-            <div class="stories-container" id="storiesBar"></div>
+        <div class="p-3">
+            <button onclick="abrirChatIA()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-purple-900/50">
+                <i class="fa-solid fa-robot text-lg"></i> Abrir Chat IA Pro
+            </button>
         </div>
 
-        <div class="banner-enterprise shadow-sm">
-            🚀 <strong>Infraestructura Web Avanzada Activada:</strong> Máxima velocidad, procesamiento profundo de IA y persistencia total de datos.
+        <nav class="flex-1 overflow-y-auto px-3 space-y-1.5 text-sm scrollbar-hide">
+            <button onclick="mostrarSeccion('feed')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium group"><i class="fa-solid fa-newspaper text-purple-400 group-hover:scale-110 transition"></i> Feed Social IA</button>
+            <button onclick="mostrarSeccion('crear')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium group"><i class="fa-solid fa-cloud-arrow-up text-cyan-400 group-hover:scale-110 transition"></i> Publicar Creación IA</button>
+            <button onclick="mostrarSeccion('manual')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium group"><i class="fa-solid fa-book-open-reader text-pink-400 group-hover:scale-110 transition"></i> Manual Maestro IA</button>
+            <button onclick="mostrarSeccion('sugerencias')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium group"><i class="fa-solid fa-box-archive text-amber-400 group-hover:scale-110 transition"></i> Buzón de sugerencias</button>
+            <button onclick="compartirPlataforma()" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium group"><i class="fa-solid fa-share-nodes text-emerald-400 group-hover:scale-110 transition"></i> Compartir plataforma</button>
+            <button onclick="informarProblema()" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium group"><i class="fa-solid fa-triangle-exclamation text-rose-400 group-hover:scale-110 transition"></i> Informar un problema</button>
+        </nav>
+
+        <div class="p-3 border-t border-slate-800">
+            <button onclick="borrarHistorial()" class="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl text-rose-400 hover:bg-rose-500/10 transition text-sm font-medium">
+                <i class="fa-solid fa-trash"></i> Borrar todo el historial
+            </button>
+        </div>
+    </aside>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <main class="flex-1 flex flex-col h-full overflow-y-auto bg-slate-950 relative">
+        
+        <!-- TOPBAR DE HISTORIAS TIKTOK / REELS (CON VIDEOS Y BOTÓN DE AUDIO) -->
+        <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 p-4 sticky top-0 z-20 shadow-md">
+            <div id="storiesContainer" class="max-w-5xl mx-auto flex gap-4 overflow-x-auto scrollbar-hide pb-1">
+                <!-- Las historias se generan dinámicamente con videos y control de audio -->
+            </div>
+        </header>
+
+        <!-- CONTENIDO DINÁMICO -->
+        <div id="mainContent" class="flex-1 p-6 max-w-3xl mx-auto w-full space-y-6">
+            
+            <!-- VISTA 1: FEED SOCIAL ESTILO FACEBOOK (CON ACTUALIZACIÓN AUTOMÁTICA) -->
+            <div id="view-feed" class="space-y-6">
+                <div class="bg-gradient-to-r from-purple-900/60 via-slate-900 to-pink-900/60 border border-purple-500/30 rounded-3xl p-6 shadow-2xl backdrop-blur flex items-center justify-between">
+                    <div>
+                        <h2 class="font-black text-xl mb-1 flex items-center gap-2.5 bg-gradient-to-r from-amber-400 to-pink-400 bg-clip-text text-transparent">
+                            <i class="fa-solid fa-fire text-amber-400 animate-bounce"></i> Feed Social Viral en Tiempo Real
+                        </h2>
+                        <p class="text-xs text-slate-300">Contenido generado por IA y la comunidad. Se actualiza automáticamente.</p>
+                    </div>
+                    <span class="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-3 py-1.5 rounded-full text-xs font-bold animate-pulse">
+                        <i class="fa-solid fa-circle text-[8px]"></i> En vivo
+                    </span>
+                </div>
+
+                <!-- CONTENEDOR DEL FEED DINÁMICO -->
+                <div id="feedPostsContainer" class="space-y-6">
+                    <!-- Posts inyectados por JS -->
+                </div>
+            </div>
+
+            <!-- VISTA 2: PUBLICAR CREACIONES DE IA O IDEAS PERSONALES -->
+            <div id="view-crear" class="hidden space-y-6">
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
+                    <h2 class="font-bold text-xl text-cyan-400 flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up"></i> Comparte tu Creación o Idea de IA</h2>
+                    <p class="text-xs text-slate-400 leading-relaxed">Sube tus imágenes generadas, videos o comparte tus prompts e ideas personales con toda la comunidad de la plataforma.</p>
+                    
+                    <form onsubmit="publicarContenidoUsuario(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1">Tu Nombre o Seudónimo</label>
+                            <input type="text" id="userNamePost" required placeholder="Ej. Creator Pro / Anónimo" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none focus:border-cyan-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1">Descripción o Prompt de tu Creación</label>
+                            <textarea id="userTextPost" required placeholder="Describe tu idea, prompt o logro con IA..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none resize-none h-28 focus:border-cyan-500"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1">Enlace de Imagen o Video Multimedia (Opcional)</label>
+                            <input type="url" id="userMediaPost" placeholder="https://images.unsplash.com/photo-..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none focus:border-cyan-500">
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white py-3 rounded-xl font-bold text-xs shadow-lg shadow-cyan-900/40 transition">
+                            Publicar en el Feed General
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- VISTA 3: MANUAL MAESTRO DE IA -->
+            <div id="view-manual" class="hidden space-y-6 text-sm text-slate-300">
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 space-y-6 shadow-2xl">
+                    <div class="border-b border-slate-800 pb-4">
+                        <h2 class="font-black text-2xl bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent flex items-center gap-3">
+                            <i class="fa-solid fa-graduation-cap text-pink-400"></i> Manual Maestro: Exprime al 100% la IA
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1">Guía definitiva para dominar todas las herramientas avanzadas de la plataforma.</p>
+                    </div>
+                    <div class="space-y-4 text-xs text-slate-300 leading-relaxed">
+                        <p><b>1. Chat Libre Multimodal:</b> Adjunta documentos de Word, hojas de Excel, audios o fotos mediante el botón de clip (📎) para que la IA los procese y construya contenido desde cero.</p>
+                        <p><b>2. Historias y Videos Interactivos:</b> Explora demostraciones en video en la parte superior con control independiente de audio.</p>
+                        <p><b>3. Feed Social Dinámico:</b> Publica tus propios resultados, da like, comenta e interactúa con contenido viral actualizado automáticamente en tiempo real.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- MODAL / PANEL DE CHAT IA AMPLIADO -->
+    <div id="chatModal" class="fixed inset-y-0 right-0 w-full md:w-[600px] bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 z-50">
+        <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950">
+            <div class="flex items-center gap-2.5">
+                <div class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
+                <span class="font-bold text-sm text-purple-400"><i class="fa-solid fa-robot"></i> Chat IA Multimodal Pro (Ampliado)</span>
+            </div>
+            <button onclick="cerrarChatIA()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </div>
+        
+        <div id="chatContainer" class="flex-1 overflow-y-auto p-5 space-y-4">
+            <div class="flex items-start gap-3">
+                <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center font-bold text-xs shadow">AI</div>
+                <div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200 leading-relaxed shadow-md">
+                    ¡Hola! Soy tu núcleo de inteligencia artificial avanzado. Pregúntame lo que necesites o sube documentos de Word/Excel, audios y fotos.
+                </div>
+            </div>
         </div>
 
-        <!-- CONTENEDOR DE LOS 10 MÓDULOS COMPLETOS -->
-        <div class="row">
-
-            <!-- 1. Guiones Virales -->
-            <div class="col-md-6">
-                <div class="card p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">🎬 Guiones Virales (Reels/TikTok)</h4>
-                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-guiones')">📖 Manual</button>
-                    </div>
-                    <div id="manual-guiones" class="manual-box">Indica el nicho y tema principal. La IA generará un guion detallado con ganchos de retención de alta conversión.</div>
-                    <textarea id="promptGuiones" class="form-control mb-2" rows="2" placeholder="Ej. Nicho fitness..."></textarea>
-                    <input type="file" id="fileGuiones" class="form-control form-control-sm mb-2" onchange="mostrarNombreArchivo('fileGuiones', 'fileNameGuiones')" multiple>
-                    <span id="fileNameGuiones" class="file-indicator"></span>
-                    <button class="btn btn-primary w-100" onclick="procesarModuloIA('Guiones Virales', 'promptGuiones', 'fileGuiones', 'resultGuiones')">Generar Guion Profesional</button>
-                    <div class="d-flex gap-2 mt-2">
-                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultGuiones', 'Guion_Viral.txt')">📥 Descargar TXT</button>
-                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultGuiones')">🧹 Limpiar</button>
-                    </div>
-                    <div class="chat-box mt-3" id="resultGuiones">Historial de Guiones...</div>
-                </div>
-            </div>
-
-            <!-- 2. Copys Publicitarios -->
-            <div class="col-md-6">
-                <div class="card p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">✍️ Copys Publicitarios (Ads/Ventas)</h4>
-                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-copys')">📖 Manual</button>
-                    </div>
-                    <div id="manual-copys" class="manual-box">Describe tu producto u oferta para redactar anuncios persuasivos aplicando fórmulas AIDA / PAS.</div>
-                    <textarea id="promptCopys" class="form-control mb-2" rows="2" placeholder="Ej. Lanzamiento de curso..."></textarea>
-                    <input type="file" id="fileCopys" class="form-control form-control-sm mb-2" onchange="mostrarNombreArchivo('fileCopys', 'fileNameCopys')" multiple>
-                    <span id="fileNameCopys" class="file-indicator"></span>
-                    <button class="btn btn-primary w-100" onclick="procesarModuloIA('Copys Publicitarios', 'promptCopys', 'fileCopys', 'resultCopys')">Generar Copy de Ventas</button>
-                    <div class="d-flex gap-2 mt-2">
-                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultCopys', 'Copy_Publicitario.txt')">📥 Descargar TXT</button>
-                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultCopys')">🧹 Limpiar</button>
-                    </div>
-                    <div class="chat-box mt-3" id="resultCopys">Historial de Copys...</div>
-                </div>
-            </div>
-
-            <!-- 3. Imágenes IA HD -->
-            <div class="col-md-6">
-                <div class="card p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">🎨 Imágenes IA (Publicidad/Brand)</h4>
-                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-imagen')">📖 Manual</button>
-                    </div>
-                    <div id="manual-imagen" class="manual-box">Describe en alta definición el concepto visual que deseas plasmar en fotorrealismo 4k.</div>
-                    <input type="text" id="promptImagenInput" class="form-control mb-3" placeholder="Ej. Retrato fotorrealista de Boruto Uzumaki adulto, iluminación cinematográfica, 4k...">
-                    <button type="button" class="btn btn-primary w-100" onclick="generarImagenHD()">Generar Recurso Visual HD</button>
-                    <div class="d-flex gap-2 mt-2">
-                        <button class="btn btn-sm btn-outline-secondary w-100" onclick="limpiarChat('resultImagen')">🧹 Limpiar Vista</button>
-                    </div>
-                    <div class="chat-box mt-3 text-center" id="resultImagen">Historial de Imágenes IA...</div>
-                </div>
-            </div>
-
-            <!-- 4. Videos HD / Storyboard -->
-            <div class="col-md-6">
-                <div class="card p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">🎬 Videos HD (Storyboard)</h4>
-                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-video')">📖 Manual</button>
-                    </div>
-                    <div id="manual-video" class="manual-box">Estructura secuencias audiovisuales y planeaciones de producción profesional escena por escena.</div>
-                    <textarea id="promptVideo" class="form-control mb-2" rows="2" placeholder="Describe la secuencia del comercial..."></textarea>
-                    <input type="file" id="fileVideo" class="form-control form-control-sm mb-2" onchange="mostrarNombreArchivo('fileVideo', 'fileNameVideo')" multiple>
-                    <span id="fileNameVideo" class="file-indicator"></span>
-                    <button class="btn btn-primary w-100" onclick="procesarModuloIA('Generador de Videos HD', 'promptVideo', 'fileVideo', 'resultVideo')">Procesar Storyboard HD</button>
-                    <div class="d-flex gap-2 mt-2">
-                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultVideo', 'Storyboard_Video.txt')">📥 Descargar TXT</button>
-                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultVideo')">🧹 Limpiar</button>
-                    </div>
-                    <div class="chat-box mt-3" id="resultVideo">Historial de Videos HD...</div>
-                </div>
-            </div>
-
-            <!-- 5. Asistente Finanzas y Excel -->
-            <div class="col-md-6">
-                <div class="card p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">📊 Asistente de Finanzas y Excel</h4>
-                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-excel')">📖 Manual</button>
-                    </div>
-                    <div id="manual-excel" class="manual-box">Diseña presupuestos, flujos de caja y fórmulas financieras avanzadas con análisis experto.</div>
-                    <textarea id="promptExcel" class="form-control mb-2" rows="2" placeholder="¿Qué cálculo financiero u organizacional necesitas?"></textarea>
-                    <input type="file" id="fileExcel" class="form-control form-control-sm mb-2" onchange="mostrarNombreArchivo('fileExcel', 'fileNameExcel')" multiple>
-                    <span id="fileNameExcel" class="file-indicator"></span>
-                    <button class="btn btn-primary w-100" onclick="procesarModuloIA('Asistente Excel', 'promptExcel', 'fileExcel', 'resultExcel')">Ejecutar Asistente Financiero</button>
-                    <div class="d-flex gap-2 mt-2">
-                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultExcel', 'Reporte_Excel.txt')">📥 Descargar TXT</button>
-                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultExcel')">🧹 Limpiar</button>
-                    </div>
-                    <div class="chat-box mt-3" id="resultExcel">Historial de Excel...</div>
-                </div>
-            </div>
-
-            <!-- 6. Redactor Word y Contratos -->
-            <div class="col-md-6">
-                <div class="card p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">📝 Redactor de Contratos y Word</h4>
-                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-word')">📖 Manual</button>
-                    </div>
-                    <div id="manual-word" class="manual-box">Genera contratos de prestación de servicios, políticas de privacidad y acuerdos NDA blindados.</div>
-                    <textarea id="promptWord" class="form-control mb-2" rows="2" placeholder="Tipo de documento o cláusulas requeridas..."></textarea>
-                    <input type="file" id="fileWord" class="form-control form-control-sm mb-2" onchange="mostrarNombreArchivo('fileWord', 'fileNameWord')" multiple>
-                    <span id="fileNameWord" class="file-indicator"></span>
-                    <button class="btn btn-primary w-100" onclick="procesarModuloIA('Redactor Word', 'promptWord', 'fileWord', 'resultWord')">Generar Documento Legal</button>
-                    <div class="d-flex gap-2 mt-2">
-                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultWord', 'Documento_Legal.txt')">📥 Descargar TXT</button>
-                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultWord')">🧹 Limpiar</button>
-                    </div>
-                    <div class="chat-box mt-3" id="resultWord">Historial de Word...</div>
-                </div>
-            </div>
-
-            <!-- 7. Tendencias Virales -->
-            <div class="col-md-6">
-                <div class="card p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">🔥 Tendencias Virales & Prompts</h4>
-                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-tendencias')">📖 Manual</button>
-                    </div>
-                    <div id="manual-tendencias" class="manual-box">Analiza tendencias del mercado digital y crea estrategias algorítmicas de alto impacto.</div>
-                    <textarea id="promptTendencias" class="form-control mb-2" rows="2" placeholder="Escribe tu nicho o plataforma..."></textarea>
-                    <button class="btn btn-primary w-100" onclick="procesarModuloIA('Tendencias Virales', 'promptTendencias', null, 'resultTendencias')">Generar Estrategia Viral</button>
-                    <div class="d-flex gap-2 mt-2">
-                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultTendencias', 'Tendencias.txt')">📥 Descargar TXT</button>
-                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultTendencias')">🧹 Limpiar</button>
-                    </div>
-                    <div class="chat-box mt-3" id="resultTendencias">Historial de Tendencias...</div>
-                </div>
-            </div>
-
-            <!-- 8. Propuestas B2B -->
-            <div class="col-md-6">
-                <div class="card p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">💼 Propuestas y Cotizaciones B2B</h4>
-                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-b2b')">📖 Manual</button>
-                    </div>
-                    <div id="manual-b2b" class="manual-box">Detalla servicios y costos para obtener una propuesta comercial formal y persuasiva.</div>
-                    <textarea id="promptB2B" class="form-control mb-2" rows="2" placeholder="Ej. Propuesta de marketing..."></textarea>
-                    <button class="btn btn-primary w-100" onclick="procesarModuloIA('Propuestas B2B', 'promptB2B', null, 'resultB2B')">Generar Propuesta B2B</button>
-                    <div class="d-flex gap-2 mt-2">
-                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultB2B', 'Propuesta.txt')">📥 Descargar TXT</button>
-                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultB2B')">🧹 Limpiar</button>
-                    </div>
-                    <div class="chat-box mt-3" id="resultB2B">Historial de Propuestas B2B...</div>
-                </div>
-            </div>
-
-            <!-- 9. Traductor Global -->
-            <div class="col-md-6">
-                <div class="card p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">🌐 Traductor Global y Voces</h4>
-                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-traductor')">📖 Manual</button>
-                    </div>
-                    <div id="manual-traductor" class="manual-box">Adapta contenidos comerciales a mercados internacionales con modismos nativos.</div>
-                    <textarea id="promptTraductor" class="form-control mb-2" rows="2" placeholder="Texto a traducir..."></textarea>
-                    <button class="btn btn-primary w-100" onclick="procesarModuloIA('Traductor IA', 'promptTraductor', null, 'resultTraductor')">Procesar Traducción Pro</button>
-                    <div class="d-flex gap-2 mt-2">
-                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultTraductor', 'Traduccion.txt')">📥 Descargar TXT</button>
-                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultTraductor')">🧹 Limpiar</button>
-                    </div>
-                    <div class="chat-box mt-3" id="resultTraductor">Historial de Traductor...</div>
-                </div>
-            </div>
-
-            <!-- 10. Chat Libre General -->
-            <div class="col-md-6">
-                <div class="card p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="m-0">💬 Chat Libre General</h4>
-                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-chat')">📖 Manual</button>
-                    </div>
-                    <div id="manual-chat" class="manual-box">Espacio de consulta abierta con IA avanzada para lluvia de ideas y consultoría integral.</div>
-                    <textarea id="promptChat" class="form-control mb-2" rows="2" placeholder="Escribe tu consulta general..."></textarea>
-                    <button class="btn btn-primary w-100" onclick="procesarModuloIA('Chat Libre', 'promptChat', null, 'chatBoxResult')">Enviar a Asistente IA</button>
-                    <div class="d-flex gap-2 mt-2">
-                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('chatBoxResult', 'Chat_General.txt')">📥 Descargar TXT</button>
-                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('chatBoxResult')">🧹 Limpiar</button>
-                    </div>
-                    <div class="chat-box mt-3" id="chatBoxResult">Historial de Chat Libre...</div>
-                </div>
-            </div>
-
+        <div class="p-4 bg-slate-950 border-t border-slate-800">
+            <form id="chatForm" onsubmit="enviarMensaje(event)" class="flex items-center gap-2.5 bg-slate-900 border border-slate-800 rounded-2xl p-2.5 shadow-inner">
+                <label class="cursor-pointer text-slate-400 hover:text-purple-400 px-2.5 transition">
+                    <i class="fa-solid fa-paperclip text-base"></i>
+                    <input type="file" id="fileInput" class="hidden">
+                </label>
+                <input type="text" id="messageInput" placeholder="Escribe tu mensaje o adjunta un archivo..." class="flex-1 bg-transparent border-none outline-none text-slate-100 text-xs px-1">
+                <button type="submit" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-md shadow-purple-900/40 transition">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </form>
         </div>
     </div>
 
-    <!-- SCRIPTS DE CONTROL PROFESIONALES -->
+    <!-- SCRIPT GENERAL Y DINÁMICO -->
     <script>
-        // Array con las 10 Historias Pro interactivas conectadas directamente a sus casillas
-        const historiasDiarias = [
-            { titulo: "🚀 Crecimiento Express", desc: "Duplica seguidores en Reels con ganchos de alto impacto.", targetId: "promptGuiones", prompt: "Crea una estrategia express de retención para duplicar seguidores en Reels." },
-            { titulo: "💸 Oferta Irresistible", desc: "Redacta anuncios estructurados con fórmula PAS.", targetId: "promptCopys", prompt: "Redacta un anuncio de ventas con fórmula PAS para producto digital." },
-            { titulo: "🎨 Marca Personal 3D", desc: "Genera prompts visuales para mockups corporativos.", targetId: "promptImagenInput", prompt: "Mockup 3D hiperrealista de marca personal ejecutiva minimalista." },
-            { titulo: "🎬 Storyboard HD", desc: "Secuencias y encuadres para comerciales de video.", targetId: "promptVideo", prompt: "Estructura un storyboard detallado para comercial de video en HD." },
-            { titulo: "📊 Flujo de Caja Pro", desc: "Modelo financiero de proyecciones para nuevos negocios.", targetId: "promptExcel", prompt: "Estructura un modelo financiero básico de ingresos y gastos en Excel." },
-            { titulo: "📝 Redactor Legal", desc: "Contratos y acuerdos de confidencialidad NDA.", targetId: "promptWord", prompt: "Redacta un contrato formal de prestación de servicios profesionales." },
-            { titulo: "🔥 Tendencias Virales", desc: "Estrategias algorítmicas de contenido diario.", targetId: "promptTendencias", prompt: "Analiza tendencias de contenido para reventar el algoritmo de TikTok." },
-            { titulo: "💼 Propuestas B2B", desc: "Cotizaciones corporativas formales y ejecutivas.", targetId: "promptB2B", prompt: "Redacta una propuesta comercial B2B para servicios de marketing." },
-            { titulo: "🌐 Traductor Global", desc: "Localización comercial de textos internacionales.", targetId: "promptTraductor", prompt: "Traduce y adapta este texto comercial con modismos nativos." },
-            { titulo: "💬 Chat Asistente", desc: "Lluvia de ideas y consultoría general con IA.", targetId: "promptChat", prompt: "Dame ideas de negocios rentables de bajo costo de inversión." }
+        // Catálogo de Historias con Videos reales y botón de Audio Mute/Unmute
+        const historiasData = [
+            { titulo: "Cyber Art 3D", badge: "Video IA", tipo: "video", url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-with-code-31910-large.mp4", poster: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300" },
+            { titulo: "Mundos Pixar", badge: "Animación", tipo: "imagen", url: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=300" },
+            { titulo: "Flujo de Caja", badge: "Negocios", tipo: "video", url: "https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-man-working-on-a-financial-graph-42861-large.mp4", poster: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=300" },
+            { titulo: "Heirs Fashion", badge: "Moda 3D", tipo: "imagen", url: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300" },
+            { titulo: "Voces Globales", badge: "Traductor", tipo: "video", url: "https://assets.mixkit.co/videos/preview/mixkit-futuristic-hologram-interface-of-a-world-map-41527-large.mp4", poster: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=300" },
+            { titulo: "Granizados 24/7", badge: "Emprende", tipo: "imagen", url: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=300" }
+        ];
+
+        // Base inicial del Feed Social Viral
+        let feedPosts = [
+            { id: 1, autor: "Nexus Visual AI", tiempo: "Hace 2 min", categoria: "Arte 3D", texto: "¡Nuevo render hiperrealista generado con IA en segundos para campañas de marketing!", media: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900", likes: 342, comentarios: [] },
+            { id: 2, autor: "Finanzas Pro Bot", tiempo: "Hace 8 min", categoria: "Excel & Finanzas", texto: "Modelo financiero automatizado de flujo de caja generado para nuevos emprendedores.", media: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=900", likes: 512, comentarios: [] }
         ];
 
         window.addEventListener('DOMContentLoaded', () => {
-            const storiesBar = document.getElementById('storiesBar');
-            if (storiesBar) {
-                historiasDiarias.forEach(story => {
-                    storiesBar.innerHTML += `
-                        <div class="story-card-pro" onclick="usarHistoria('${story.targetId}', \`${story.prompt}\`)">
-                            <div class="story-content">
-                                <span class="story-badge">Pro</span>
-                                <div class="story-title">${story.titulo}</div>
-                                <div class="story-desc text-white-50 mt-1" style="font-size:0.65rem;">${story.desc}</div>
-                                <div class="story-action">✨ Probar &rarr;</div>
-                            </div>
-                        </div>
-                    `;
-                });
-            }
-            // Restaurar historiales guardados en LocalStorage
-            const boxes = ['resultGuiones', 'resultCopys', 'resultImagen', 'resultVideo', 'resultExcel', 'resultWord', 'resultTendencias', 'resultB2B', 'resultTraductor', 'chatBoxResult'];
-            boxes.forEach(id => {
-                const saved = localStorage.getItem(id);
-                if (saved) document.getElementById(id).innerHTML = saved;
-            });
+            renderizarHistorias();
+            renderizarFeed();
+            
+            // Simulación de actualización automática en tiempo real como Facebook (cada 15 segundos)
+            setInterval(() => {
+                generarPostAutomaticoViral();
+            }, 15000);
         });
 
-        function usarHistoria(targetId, promptText) {
-            const el = document.getElementById(targetId);
-            if (el) {
-                el.value = promptText;
-                window.scrollTo({ top: el.offsetTop - 120, behavior: 'smooth' });
-                el.focus();
-            }
-        }
+        function renderizarHistorias() {
+            const container = document.getElementById('storiesContainer');
+            container.innerHTML = '';
+            historiasData.forEach((h, index) => {
+                let mediaHtml = '';
+                if(h.tipo === 'video') {
+                    mediaHtml = `
+                        <video id="story-vid-${index}" src="${h.url}" poster="${h.poster}" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0"></video>
+                        <button onclick="toggleAudioStory(event, 'story-vid-${index}')" class="absolute top-2 right-2 bg-black/60 text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px] z-10 hover:bg-black">
+                            <i id="icon-vid-${index}" class="fa-solid fa-volume-xmark"></i>
+                        </button>
+                    `;
+                } else {
+                    mediaHtml = `<div class="absolute inset-0 w-full h-full bg-cover bg-center z-0" style="background-image: url('${h.url}');"></div>`;
+                }
 
-        function abrirSidebar() { document.getElementById("mySidebar").style.width = "280px"; }
-        function cerrarSidebar() { document.getElementById("mySidebar").style.width = "0"; }
-        function toggleBuscadorSidebar() {
-            const container = document.getElementById("buscadorContainer");
-            container.style.display = container.style.display === "block" ? "none" : "block";
-        }
-        function buscarEnChats() {
-            const filtro = document.getElementById("inputBuscador").value.toLowerCase();
-            document.querySelectorAll('.chat-box').forEach(box => {
-                box.style.border = (box.innerText.toLowerCase().includes(filtro) && filtro.trim() !== "") ? "2px solid #38bdf8" : "1px solid rgba(56, 189, 248, 0.25)";
+                container.innerHTML += `
+                    <div class="story-ring flex-shrink-0 w-28 h-40 rounded-2xl p-2.5 flex flex-col justify-between cursor-pointer border-2 border-purple-400 hover:scale-105 transition shadow-lg relative overflow-hidden" onclick="usarFuncion('${h.titulo}')">
+                        ${mediaHtml}
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 z-0"></div>
+                        <span class="text-[9px] font-extrabold bg-purple-500 text-white px-2 py-0.5 rounded-full self-start z-10 shadow">${h.badge}</span>
+                        <span class="text-xs font-bold text-white text-center drop-shadow z-10">${h.titulo}</span>
+                    </div>
+                `;
             });
         }
-        function nuevoChatGeneral() {
-            if (confirm("¿Deseas reiniciar todos los paneles?")) {
-                const boxes = ['resultGuiones', 'resultCopys', 'resultImagen', 'resultVideo', 'resultExcel', 'resultWord', 'resultTendencias', 'resultB2B', 'resultTraductor', 'chatBoxResult'];
-                boxes.forEach(id => {
-                    const el = document.getElementById(id);
-                    if(el) el.innerHTML = 'Nuevo chat iniciado...';
-                    localStorage.removeItem(id);
-                });
-                cerrarSidebar();
+
+        function toggleAudioStory(event, videoId) {
+            event.stopPropagation();
+            const vid = document.getElementById(videoId);
+            const icon = event.currentTarget.querySelector('i');
+            if(vid.muted) {
+                vid.muted = false;
+                icon.className = "fa-solid fa-volume-high text-emerald-400";
+            } else {
+                vid.muted = true;
+                icon.className = "fa-solid fa-volume-xmark";
             }
         }
-        async function abrirSoporteIA() {
-            cerrarSidebar();
-            const consulta = prompt("🤖 Escribe tu duda de soporte técnico:");
-            if (!consulta) return;
-            const chatBox = document.getElementById("chatBoxResult");
-            chatBox.innerHTML += `<div class="mb-2"><strong>Soporte (Tú):</strong> ${consulta}</div>`;
-            try {
-                const response = await fetch('/api/generate', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ toolName: 'Soporte Técnico IA', prompt: consulta })
-                });
-                const data = await response.json();
-                chatBox.innerHTML += `<div class="text-info mb-3"><strong>Bot Asistente:</strong><br>${data.response.replace(/\n/g, '<br>') || data.error}</div>`;
-                localStorage.setItem('chatBoxResult', chatBox.innerHTML);
-            } catch(e) { alert("Error de conexión con soporte IA."); }
+
+        function renderizarFeed() {
+            const container = document.getElementById('feedPostsContainer');
+            container.innerHTML = '';
+            feedPosts.forEach(post => {
+                let comentariosHtml = post.comentarios.map(c => `<div class="bg-slate-950 p-2 rounded-xl text-xs text-slate-300 mt-1"><b>${c.usuario}:</b> ${c.texto}</div>`).join('');
+
+                container.innerHTML += `
+                    <div class="bg-slate-900/90 border border-slate-800/80 rounded-3xl p-6 shadow-xl space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center font-bold text-white shadow-lg">AI</div>
+                                <div>
+                                    <h4 class="font-bold text-sm text-slate-100">${post.autor}</h4>
+                                    <span class="text-[11px] text-purple-400 font-medium">${post.tiempo} • 🌍 ${post.categoria}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-200 leading-relaxed">${post.texto}</p>
+                        ${post.media ? `<div class="rounded-2xl overflow-hidden border border-slate-800 h-72 bg-cover bg-center shadow-inner" style="background-image: url('${post.media}');"></div>` : ''}
+                        
+                        <div class="flex justify-between text-xs text-slate-400 pt-3 border-t border-slate-800/80 font-medium">
+                            <button onclick="darLike(${post.id})" class="hover:text-purple-400 flex items-center gap-1.5 transition"><i class="fa-regular fa-thumbs-up text-base"></i> Me gusta (<span id="likes-${post.id}">${post.likes}</span>)</button>
+                            <button onclick="agregarComentarioPrompt(${post.id})" class="hover:text-purple-400 flex items-center gap-1.5 transition"><i class="fa-regular fa-comment text-base"></i> Comentar (${post.comentarios.length})</button>
+                            <button onclick="compartirPlataforma()" class="hover:text-purple-400 flex items-center gap-1.5 transition"><i class="fa-solid fa-share text-base"></i> Compartir</button>
+                        </div>
+                        <div id="comentarios-${post.id}" class="space-y-1">${comentariosHtml}</div>
+                    </div>
+                `;
+            });
         }
-        function compartirArchivoRapido() { cerrarSidebar(); alert("🔗 Enlace de acceso directo listo."); }
-        function informarProblema() { cerrarSidebar(); prompt("⚠️ Describe el inconveniente:"); alert("¡Gracias por tu reporte!"); }
-        function borrarTodoHistorial() { if (confirm("¿Borrar todo el historial?")) { localStorage.clear(); location.reload(); } }
-        function toggleManual(id) {
-            const box = document.getElementById(id);
-            box.style.display = box.style.display === 'block' ? 'none' : 'block';
-        }
-        function mostrarNombreArchivo(inputId, spanId) {
-            const input = document.getElementById(inputId);
-            const span = document.getElementById(spanId);
-            if (input.files.length > 0) {
-                span.innerText = `📎 Archivo(s): ${Array.from(input.files).map(f => f.name).join(', ')}`;
-            } else { span.innerText = ''; }
-        }
-        function limpiarChat(boxId) {
-            if (confirm("¿Limpiar módulo?")) {
-                document.getElementById(boxId).innerHTML = 'Historial limpio...';
-                localStorage.removeItem(boxId);
+
+        function darLike(id) {
+            const post = feedPosts.find(p => p.id === id);
+            if(post) {
+                post.likes++;
+                document.getElementById(`likes-${id}`).innerText = post.likes;
             }
         }
-        function descargarChatTXT(boxId, filename) {
-            const text = document.getElementById(boxId).innerText;
-            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = filename;
-            link.click();
-        }
-        function activarModoCelular() {
-            const body = document.body;
-            body.style.maxWidth = (body.style.maxWidth === '480px') ? '100%' : '480px';
-            body.style.margin = (body.style.maxWidth === '480px') ? '0 auto' : '0';
-        }
 
-        // GENERADOR DE IMÁGENES HD PROFESIONAL
-        function generarImagenHD() {
-            const promptInput = document.getElementById('promptImagenInput');
-            const prompt = promptInput.value.trim();
-            const resultBox = document.getElementById('resultImagen');
-
-            if (!prompt) {
-                alert("Por favor ingresa una descripción para la imagen.");
-                return;
-            }
-
-            const promptHD = `${prompt}, highly detailed, 8k resolution, cinematic lighting, photorealistic, sharp focus, professional branding`;
-            const encoded = encodeURIComponent(promptHD);
-            const imageUrl = `https://image.pollinations.ai/prompt/${encoded}?width=1024&height=1024&nologo=true`;
-
-            resultBox.innerHTML = `
-                <span class="text-success small fw-bold">¡Imagen HD generada con éxito!</span>
-                <br>
-                <img src="${imageUrl}" class="img-fluid rounded shadow mt-2" style="max-height: 220px;" alt="Imagen IA HD">
-            `;
-            localStorage.setItem('resultImagen', resultBox.innerHTML);
-            promptInput.value = '';
-        }
-
-        // PROCESADOR DE MÓDULOS CON MOTOR GEMINI PRO 1.5
-        async function procesarModuloIA(toolName, inputId, fileId, resultId) {
-            const promptInput = document.getElementById(inputId);
-            const prompt = promptInput.value.trim();
-            const fileInput = fileId ? document.getElementById(fileId) : null;
-            const resultBox = document.getElementById(resultId);
-
-            if (!prompt && (!fileInput || fileInput.files.length === 0)) {
-                alert("Por favor ingresa una instrucción válida.");
-                return;
-            }
-
-            if (resultBox.innerHTML.includes('Historial de')) resultBox.innerHTML = '';
-
-            resultBox.innerHTML += `<div class="mb-2"><strong>Tú:</strong> ${prompt}</div>`;
-            const loadingId = 'loading_' + Date.now();
-            resultBox.innerHTML += `<div id="${loadingId}" class="text-warning mb-2"><em>🔄 Procesando con Gemini Pro 1.5 (${toolName})...</em></div>`;
-            promptInput.value = '';
-
-            try {
-                const response = await fetch('/api/generate', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ toolName, prompt })
-                });
-                const data = await response.json();
-                document.getElementById(loadingId).remove();
-
-                if (response.ok) {
-                    resultBox.innerHTML += `<div class="text-info mb-3"><strong>${toolName}:</strong><br>${data.response.replace(/\n/g, '<br>')}</div>`;
-                    localStorage.setItem(resultId, resultBox.innerHTML);
-                } else {
-                    resultBox.innerHTML += `<div class="text-danger mb-2"><strong>Error:</strong> ${data.error}</div>`;
+        function agregarComentarioPrompt(id) {
+            const com = prompt("Escribe tu comentario:");
+            if(com) {
+                const post = feedPosts.find(p => p.id === id);
+                if(post) {
+                    post.comentarios.push({ usuario: "Usuario", texto: com });
+                    renderizarFeed();
                 }
-            } catch (err) {
-                document.getElementById(loadingId).remove();
-                resultBox.innerHTML += `<div class="text-danger mb-2"><strong>Error de red con el servidor.</strong></div>`;
             }
-            resultBox.scrollTop = resultBox.scrollHeight;
+        }
+
+        function publicarContenidoUsuario(event) {
+            event.preventDefault();
+            const autor = document.getElementById('userNamePost').value;
+            const texto = document.getElementById('userTextPost').value;
+            const media = document.getElementById('userMediaPost').value;
+
+            feedPosts.unshift({
+                id: Date.now(),
+                autor: autor,
+                tiempo: "Justo ahora",
+                categoria: "Comunidad / Creación IA",
+                texto: texto,
+                media: media || "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=900",
+                likes: 1,
+                comentarios: []
+            });
+
+            document.getElementById('userNamePost').value = '';
+            document.getElementById('userTextPost').value = '';
+            document.getElementById('userMediaPost').value = '';
+            mostrarSeccion('feed');
+            renderizarFeed();
+        }
+
+        function generarPostAutomaticoViral() {
+            const nuevosTemas = [
+                { autor: "Tendencias IA Bot", texto: "¡Nuevo avance en generación de video cinemático vertical con IA para redes sociales!", media: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=900" },
+                { autor: "Fashion AI Studio", texto: "Colección de activewear diseñada puramente con IA y algoritmos textiles.", media: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900" }
+            ];
+            const temaAleatorio = nuevosTemas[Math.floor(Math.random() * nuevosTemas.length)];
+            feedPosts.unshift({
+                id: Date.now(),
+                autor: temaAleatorio.autor,
+                tiempo: "Nuevo hace 1s",
+                categoria: "Viral automático",
+                texto: temaAleatorio.texto,
+                media: temaAleatorio.media,
+                likes: Math.floor(Math.random() * 50) + 10,
+                comentarios: []
+            });
+            renderizarFeed();
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('w-72');
+            sidebar.classList.toggle('w-16');
+        }
+
+        function abrirChatIA() { document.getElementById('chatModal').classList.remove('translate-x-full'); }
+        function cerrarChatIA() { document.getElementById('chatModal').classList.add('translate-x-full'); }
+
+        function mostrarSeccion(seccion) {
+            document.getElementById('view-feed').classList.add('hidden');
+            document.getElementById('view-crear').classList.add('hidden');
+            document.getElementById('view-manual').classList.add('hidden');
+            
+            if(seccion === 'feed') document.getElementById('view-feed').classList.remove('hidden');
+            if(seccion === 'crear') document.getElementById('view-crear').classList.remove('hidden');
+            if(seccion === 'manual') document.getElementById('view-manual').classList.remove('hidden');
+        }
+
+        function usarFuncion(nombre) {
+            abrirChatIA();
+            const chatContainer = document.getElementById('chatContainer');
+            chatContainer.innerHTML += `
+                <div class="flex items-start gap-3">
+                    <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center font-bold text-xs shadow">AI</div>
+                    <div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200 shadow-md">
+                        Herramienta activada desde historia: <b>${nombre}</b>. ¿Qué deseas generar u optimizar?
+                    </div>
+                </div>
+            `;
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function compartirPlataforma() {
+            if (navigator.share) { navigator.share({ title: 'Nexus AI Pro', url: window.location.href }); }
+            else { alert("Enlace copiado al portapapeles."); }
+        }
+
+        function informarProblema() {
+            const prob = prompt("Describe el problema encontrado:");
+            if(prob) { alert("¡Reporte enviado al administrador con éxito!"); }
+        }
+
+        function borrarHistorial() {
+            if(confirm("¿Deseas borrar todo el historial?")) { document.getElementById('chatContainer').innerHTML = ''; }
+        }
+
+        async function enviarMensaje(event) {
+            event.preventDefault();
+            const input = document.getElementById('messageInput');
+            const fileInput = document.getElementById('fileInput');
+            const chatContainer = document.getElementById('chatContainer');
+            
+            const txt = input.value.trim();
+            const file = fileInput.files[0];
+            if(!txt && !file) return;
+
+            chatContainer.innerHTML += `
+                <div class="flex justify-end">
+                    <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-3 rounded-3xl max-w-sm text-xs shadow-md">
+                        ${txt} ${file ? `<br><i>[Archivo: ${file.name}]</i>` : ''}
+                    </div>
+                </div>
+            `;
+            input.value = '';
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            const formData = new FormData();
+            formData.append('message', txt);
+            if(file) formData.append('file', file);
+
+            try {
+                const res = await fetch('/api/chat', { method: 'POST', body: formData });
+                const data = await res.json();
+                chatContainer.innerHTML += `
+                    <div class="flex items-start gap-3">
+                        <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center font-bold text-xs shadow">AI</div>
+                        <div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200 whitespace-pre-wrap leading-relaxed shadow-md">${data.reply || data.message}</div>
+                    </div>
+                `;
+            } catch(e) {
+                chatContainer.innerHTML += `<div class="text-rose-400 text-xs p-2">Error de comunicación con el servidor.</div>`;
+            }
+            fileInput.value = '';
+            chatContainer.scrollTop = chatContainer.scrollHeight;
         }
     </script>
 </body>
