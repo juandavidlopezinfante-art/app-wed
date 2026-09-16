@@ -42,12 +42,13 @@
                     <label class="block text-xs font-bold text-slate-300 mb-1">Contraseña</label>
                     <input type="password" id="authPassword" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none focus:border-purple-500">
                 </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white py-3.5 rounded-xl font-bold text-sm shadow-lg shadow-purple-900/40 transition">
+                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white py-3.5 rounded-xl font-bold text-sm shadow-lg transition">
                     Crear Cuenta Global
                 </button>
                 <div class="flex gap-2 pt-2">
-                    <button type="button" onclick="entrarModoVisita()" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-slate-300 py-2.5 rounded-xl font-bold text-xs transition">Modo Visita (Solo Chat)</button>
-                    <button type="button" onclick="accesoCreadorSecreto()" class="w-1/2 bg-purple-900/40 hover:bg-purple-900/60 text-purple-300 py-2.5 rounded-xl font-bold text-xs transition border border-purple-500/30">Acceso Creador</button>
+                    <button type="button" onclick="entrarModoVisita()" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-slate-300 py-2.5 rounded-xl font-bold text-xs transition">Modo Visita (Chat)</button>
+                    <!-- BOTÓN DE CREADOR: SOLO APARECE SI ES LAPTOP/DESKTOP -->
+                    <button type="button" id="btnAccesoCreador" onclick="accesoCreadorSecreto()" class="w-1/2 bg-purple-900/40 hover:bg-purple-900/60 text-purple-300 py-2.5 rounded-xl font-bold text-xs transition border border-purple-500/30 hidden">Acceso Creador</button>
                 </div>
             </form>
         </div>
@@ -79,7 +80,7 @@
         </div>
     </div>
 
-    <!-- MENÚ LATERAL IZQUIERDO (CORREGIDO PARA QUE NO SE DEFORME AL CONTRAER) -->
+    <!-- MENÚ LATERAL -->
     <aside id="sidebar" class="w-72 bg-slate-900 border-r border-slate-800 flex flex-col transition-all duration-300 z-30 shadow-2xl">
         <div class="p-4 border-b border-slate-800 flex items-center justify-between">
             <span id="logoText" class="font-extrabold text-lg bg-gradient-to-r from-purple-400 via-pink-500 to-amber-400 bg-clip-text text-transparent truncate">Nexus AI Pro</span>
@@ -96,6 +97,9 @@
         <nav class="flex-1 overflow-y-auto px-3 space-y-1.5 text-sm scrollbar-hide">
             <button onclick="mostrarSeccion('feed')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium">
                 <i class="fa-solid fa-newspaper text-purple-400 text-base flex-shrink-0"></i> <span class="nav-text truncate">Feed Viral Global</span>
+            </button>
+            <button onclick="mostrarSeccion('reels')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium">
+                <i class="fa-solid fa-clapperboard text-pink-400 text-base flex-shrink-0"></i> <span class="nav-text truncate">Reels de IA</span>
             </button>
             <button onclick="mostrarSeccion('comunidades')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium">
                 <i class="fa-solid fa-users-rectangle text-cyan-400 text-base flex-shrink-0"></i> <span class="nav-text truncate">Comunidades</span>
@@ -121,7 +125,7 @@
     <!-- CONTENEDOR PRINCIPAL -->
     <main class="flex-1 flex flex-col h-full overflow-y-auto bg-slate-950 relative">
         
-        <!-- BARRA SUPERIOR CON HISTORIAL (RETROCEDER/AVANZAR), BÚSQUEDA Y BOTÓN DE REELS DE IA -->
+        <!-- BARRA SUPERIOR -->
         <div class="bg-slate-950 border-b border-slate-900 px-6 py-3 sticky top-0 z-30 flex items-center justify-between gap-4">
             <div class="flex items-center gap-2">
                 <button onclick="history.back()" title="Retroceder" class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-arrow-left text-xs"></i></button>
@@ -134,18 +138,17 @@
             </div>
 
             <div class="flex items-center gap-3">
-                <!-- Botón de Reels Generados por IA -->
-                <button onclick="abrirReelsIA()" class="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white px-3.5 py-2 rounded-full text-xs font-bold flex items-center gap-2 shadow-lg shadow-pink-900/40 transition">
+                <button onclick="mostrarSeccion('reels')" class="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white px-3.5 py-2 rounded-full text-xs font-bold flex items-center gap-2 shadow-lg shadow-pink-900/40 transition">
                     <i class="fa-solid fa-clapperboard"></i> Reels IA
                 </button>
                 <span class="text-xs text-purple-400 font-bold hidden md:inline" id="topNavUser">Modo Global</span>
             </div>
         </div>
 
-        <!-- TOPBAR DE HISTORIAS & BOTÓN PARA REINICIAR FEED -->
+        <!-- TOPBAR DE HISTORIAS & REINICIAR FEED -->
         <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 p-4 z-20 shadow-md flex items-center gap-4">
             <button onclick="reiniciarFeed()" title="Reiniciar Feed al Inicio" class="flex-shrink-0 w-12 h-40 bg-purple-900/30 border border-purple-500/40 rounded-2xl flex flex-col items-center justify-center text-purple-300 hover:bg-purple-900/50 transition cursor-pointer shadow-lg">
-                <i class="fa-solid fa-rotate-right text-lg mb-1 animate-spin-slow"></i>
+                <i class="fa-solid fa-rotate-right text-lg mb-1"></i>
                 <span class="text-[9px] font-bold text-center px-1">Reiniciar Feed</span>
             </button>
             <div id="storiesContainer" class="flex-1 flex gap-4 overflow-x-auto scrollbar-hide pb-1"></div>
@@ -154,23 +157,32 @@
         <!-- CONTENIDO DINÁMICO -->
         <div id="mainContent" class="flex-1 p-6 max-w-3xl mx-auto w-full space-y-6">
             
-            <!-- VISTA 1: FEED GLOBAL VIVO -->
+            <!-- VISTA 1: FEED GLOBAL -->
             <div id="view-feed" class="space-y-6">
                 <div class="bg-gradient-to-r from-purple-900/60 via-slate-900 to-pink-900/60 border border-purple-500/30 rounded-3xl p-6 shadow-2xl backdrop-blur flex items-center justify-between">
                     <div>
                         <h2 class="font-black text-xl mb-1 flex items-center gap-2.5 bg-gradient-to-r from-amber-400 to-pink-400 bg-clip-text text-transparent">
                             <i class="fa-solid fa-fire text-amber-400 animate-bounce"></i> Feed Global de Inteligencia Artificial
                         </h2>
-                        <p class="text-xs text-slate-300">Contenido viral masivo generado en tiempo real con IA de máxima potencia.</p>
+                        <p class="text-xs text-slate-300">Contenido viral masivo generado en tiempo real con IA de alto rendimiento.</p>
                     </div>
                     <span class="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-3 py-1.5 rounded-full text-xs font-bold animate-pulse">
-                        <i class="fa-solid fa-circle text-[8px]"></i> Activo
+                        <i class="fa-solid fa-circle text-[8px]"></i> Servidor Activo
                     </span>
                 </div>
                 <div id="feedPostsContainer" class="space-y-6"></div>
             </div>
 
-            <!-- VISTA 2: COMUNIDADES -->
+            <!-- VISTA 2: REELS DE IA -->
+            <div id="view-reels" class="hidden space-y-6">
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
+                    <h2 class="font-bold text-xl text-pink-400 flex items-center gap-2"><i class="fa-solid fa-clapperboard"></i> Reels de Inteligencia Artificial Global</h2>
+                    <p class="text-xs text-slate-400">Videos generados automáticamente por la plataforma y creadores de todo el mundo.</p>
+                    <div id="reelsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2"></div>
+                </div>
+            </div>
+
+            <!-- VISTA 3: COMUNIDADES -->
             <div id="view-comunidades" class="hidden space-y-6">
                 <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
                     <h2 class="font-bold text-xl text-cyan-400 flex items-center gap-2"><i class="fa-solid fa-users-rectangle"></i> Comunidades Temáticas Globales</h2>
@@ -178,7 +190,7 @@
                 </div>
             </div>
 
-            <!-- VISTA 3: PERFIL & CONFIGURACIÓN -->
+            <!-- VISTA 4: PERFIL -->
             <div id="view-perfil" class="hidden space-y-6">
                 <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-xl space-y-6">
                     <div class="flex items-center gap-4 border-b border-slate-800 pb-5">
@@ -188,23 +200,10 @@
                             <span class="text-xs text-amber-400 font-bold bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">Rango: Innovador Nivel 3 🌟</span>
                         </div>
                     </div>
-                    
-                    <form onsubmit="actualizarPerfilConfig(event)" class="space-y-4">
-                        <h3 class="font-bold text-sm text-purple-400"><i class="fa-solid fa-gear"></i> Configuración de Cuenta</h3>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-300 mb-1">Nombre de Usuario</label>
-                            <input type="text" id="configUsername" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-300 mb-1">Nueva Contraseña</label>
-                            <input type="password" id="configPassword" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none">
-                        </div>
-                        <button type="submit" class="bg-purple-600 hover:bg-purple-500 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition">Guardar Cambios</button>
-                    </form>
                 </div>
             </div>
 
-            <!-- VISTA 4: PUBLICAR CONTENIDO -->
+            <!-- VISTA 5: PUBLICAR -->
             <div id="view-crear" class="hidden space-y-6">
                 <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
                     <h2 class="font-bold text-xl text-emerald-400 flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up"></i> Publicar Contenido (Sin Restricciones)</h2>
@@ -214,7 +213,7 @@
                             <textarea id="userTextPost" required placeholder="Comparte tu idea, prompt o archivo..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none resize-none h-28"></textarea>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-300 mb-1">Adjuntar Archivo (Word, Excel, Imagen, Video, Audio)</label>
+                            <label class="block text-xs font-bold text-slate-300 mb-1">Adjuntar Archivo</label>
                             <input type="file" id="userFilePost" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-300">
                         </div>
                         <button type="submit" class="w-full bg-gradient-to-r from-emerald-600 to-cyan-600 text-white py-3 rounded-xl font-bold text-xs">Publicar al Feed Mundial</button>
@@ -222,11 +221,11 @@
                 </div>
             </div>
 
-            <!-- VISTA 5: MANUAL MAESTRO -->
+            <!-- VISTA 6: MANUAL -->
             <div id="view-manual" class="hidden space-y-6 text-sm text-slate-300">
                 <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 space-y-6 shadow-2xl">
                     <h2 class="font-black text-2xl text-pink-400">Manual Maestro: Domina Nexus AI Pro</h2>
-                    <p class="text-xs text-slate-400">Guía completa de todas las funciones operativas de la plataforma global.</p>
+                    <p class="text-xs text-slate-400">Guía completa de todas las funciones operativas.</p>
                 </div>
             </div>
 
@@ -237,8 +236,12 @@
     <div id="chatModal" class="fixed inset-y-0 right-0 w-full md:w-[600px] bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 z-50">
         <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950">
             <div class="flex items-center gap-3">
-                <span class="font-bold text-sm text-purple-400"><i class="fa-solid fa-robot"></i> Chat IA Multimodal Pro</span>
-                <button onclick="borrarHistorialChat()" class="text-xs text-rose-400 hover:text-rose-300 bg-rose-500/10 px-2.5 py-1 rounded-lg border border-rose-500/20 transition"><i class="fa-solid fa-trash mr-1"></i> Borrar Chat</button>
+                <span class="font-bold text-sm text-purple-400"><i class="fa-solid fa-robot"></i> Chat IA Pro</span>
+                <!-- Botón de Historial y Borrar Chat juntos -->
+                <div class="flex items-center gap-1.5">
+                    <button onclick="verHistorialChat()" class="text-xs text-cyan-400 hover:text-cyan-300 bg-cyan-500/10 px-2 py-1 rounded-lg border border-cyan-500/20 transition"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Historial</button>
+                    <button onclick="borrarHistorialChat()" class="text-xs text-rose-400 hover:text-rose-300 bg-rose-500/10 px-2 py-1 rounded-lg border border-rose-500/20 transition"><i class="fa-solid fa-trash mr-1"></i> Borrar</button>
+                </div>
             </div>
             <button onclick="cerrarChatIA()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
         </div>
@@ -247,7 +250,7 @@
             <div class="flex items-start gap-3">
                 <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center font-bold text-xs shadow">AI</div>
                 <div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200">
-                    ¡Hola! Conectado con inteligencia artificial máxima potencia (Gemini 2.5). Sube archivos Word/Excel, fotos, audios o usa el micrófono.
+                    ¡Hola! Conectado con el nuevo servidor de inteligencia artificial de alto rendimiento. Sube archivos, fotos o haz tus consultas.
                 </div>
             </div>
         </div>
@@ -261,7 +264,7 @@
                 <button type="button" onclick="grabarAudioChat()" class="text-slate-400 hover:text-emerald-400 px-2" title="Nota de Voz">
                     <i class="fa-solid fa-microphone text-base"></i>
                 </button>
-                <input type="text" id="messageInput" placeholder="Escribe tu mensaje a máxima potencia..." class="flex-1 bg-transparent border-none outline-none text-slate-100 text-xs px-1">
+                <input type="text" id="messageInput" placeholder="Escribe tu mensaje al nuevo servidor..." class="flex-1 bg-transparent border-none outline-none text-slate-100 text-xs px-1">
                 <button type="submit" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-5 py-2.5 rounded-xl font-bold text-xs">
                     <i class="fa-solid fa-paper-plane"></i>
                 </button>
@@ -272,30 +275,40 @@
     <!-- SCRIPT GENERAL -->
     <script>
         let usuarioActual = { nombre: "Visitante", email: "visita@nexus.ai", esCreador: false };
+        let historialChatArray = [];
 
         const historiasData = [
-            { titulo: "Cyber Art 3D", badge: "Video IA", tipo: "video", url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-with-code-31910-large.mp4", poster: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300" },
-            { titulo: "Mundos Pixar", badge: "Animación", tipo: "imagen", url: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=300" },
-            { titulo: "Flujo de Caja", badge: "Negocios", tipo: "video", url: "https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-man-working-on-a-financial-graph-42861-large.mp4", poster: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=300" },
-            { titulo: "Cripto & Web3", badge: "Tendencia", tipo: "video", url: "https://assets.mixkit.co/videos/preview/mixkit-futuristic-hologram-interface-of-a-world-map-41527-large.mp4", poster: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=300" },
-            { titulo: "Python Code AI", badge: "Desarrollo", tipo: "video", url: "https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-codes-43152-large.mp4", poster: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=300" }
+            { titulo: "Cyber Art 3D", badge: "Video IA", url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-with-code-31910-large.mp4", poster: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300" },
+            { titulo: "Mundos Pixar", badge: "Animación", url: "https://assets.mixkit.co/videos/preview/mixkit-plexus-background-of-plexus-animation-31911-large.mp4", poster: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=300" },
+            { titulo: "Flujo de Caja", badge: "Negocios", url: "https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-man-working-on-a-financial-graph-42861-large.mp4", poster: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=300" }
         ];
 
         let feedPosts = [
-            { id: 1, autor: "Nexus AI Core", tiempo: "Hace 1 min", categoria: "Arte 3D & VFX", texto: "¡Renderizado masivo de arquitectura futurista generado automáticamente con IA a máxima potencia!", media: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900", likes: 1420, comentarios: [] },
-            { id: 2, autor: "Global Financial Bot", tiempo: "Hace 4 min", categoria: "Negocios & Cripto", texto: "Nuevo reporte automatizado de flujo de caja y análisis predictivo para emprendedores mundiales.", media: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=900", likes: 980, comentarios: [] }
+            { id: 1, autor: "Nexus AI Core", tiempo: "Hace 1 min", categoria: "Arte 3D & VFX", texto: "¡Renderizado masivo de arquitectura futurista generado con el nuevo servidor de alta potencia!", media: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900", likes: 1420, comentarios: [] }
+        ];
+
+        let reelsData = [
+            { id: 1, autor: "DeepAI Generator", texto: "Reel generado por IA: Arquitectura cibernética.", url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-with-code-31910-large.mp4", likes: 3200 }
         ];
 
         window.addEventListener('DOMContentLoaded', () => {
             renderizarHistorias();
             renderizarFeed();
+            renderizarReels();
+            detectarDispositivoCreador();
         });
+
+        // VALIDAR SI ES LAPTOP/DESKTOP PARA MOSTRAR EL BOTÓN DE CREADOR EXCLUSIVAMENTE
+        function detectarDispositivoCreador() {
+            const esMovil = /Mobi|Android|iPhone/i.test(navigator.userAgent);
+            if (!esMovil) {
+                document.getElementById('btnAccesoCreador').classList.remove('hidden');
+            }
+        }
 
         function registrarUsuario(event) {
             event.preventDefault();
-            const uname = document.getElementById('authUsername').value;
-            const email = document.getElementById('authEmail').value;
-            usuarioActual = { nombre: uname, email: email, esCreador: false };
+            usuarioActual = { nombre: document.getElementById('authUsername').value, email: document.getElementById('authEmail').value, esCreador: false };
             aplicarDatosUsuario();
         }
 
@@ -329,28 +342,13 @@
             mostrarSeccion('crear');
         }
 
-        function actualizarPerfilConfig(event) {
-            event.preventDefault();
-            const nuevoNombre = document.getElementById('configUsername').value;
-            if(nuevoNombre) {
-                usuarioActual.nombre = nuevoNombre;
-                document.getElementById('profileDisplayName').innerText = nuevoNombre;
-                document.getElementById('profileInitial').innerText = nuevoNombre.charAt(0).toUpperCase();
-                document.getElementById('topNavUser').innerText = nuevoNombre;
-                alert("¡Configuración guardada con éxito!");
-            }
-        }
-
         function renderizarHistorias() {
             const container = document.getElementById('storiesContainer');
             container.innerHTML = '';
             historiasData.forEach((h, index) => {
-                let mediaHtml = `<video id="story-vid-${index}" src="${h.url}" poster="${h.poster}" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0"></video>
-                     <button onclick="toggleAudioStory(event, 'story-vid-${index}')" class="absolute top-2 right-2 bg-black/70 text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px] z-10 hover:bg-black"><i id="icon-vid-${index}" class="fa-solid fa-volume-xmark"></i></button>`;
-
                 container.innerHTML += `
                     <div class="story-ring flex-shrink-0 w-28 h-40 rounded-2xl p-2.5 flex flex-col justify-between cursor-pointer border-2 border-purple-400 hover:scale-105 transition shadow-lg relative overflow-hidden" onclick="usarFuncion('${h.titulo}')">
-                        ${mediaHtml}
+                        <video src="${h.url}" poster="${h.poster}" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0"></video>
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 z-0"></div>
                         <span class="text-[9px] font-extrabold bg-purple-500 text-white px-2 py-0.5 rounded-full self-start z-10 shadow">${h.badge}</span>
                         <span class="text-xs font-bold text-white text-center drop-shadow z-10">${h.titulo}</span>
@@ -359,12 +357,21 @@
             });
         }
 
-        function toggleAudioStory(event, videoId) {
-            event.stopPropagation();
-            const vid = document.getElementById(videoId);
-            const icon = event.currentTarget.querySelector('i');
-            if(vid.muted) { vid.muted = false; icon.className = "fa-solid fa-volume-high text-emerald-400"; }
-            else { vid.muted = true; icon.className = "fa-solid fa-volume-xmark"; }
+        function renderizarReels() {
+            const container = document.getElementById('reelsContainer');
+            container.innerHTML = '';
+            reelsData.forEach(r => {
+                container.innerHTML += `
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-xl space-y-2 p-3">
+                        <video src="${r.url}" autoplay muted loop playsinline class="w-full h-64 object-cover rounded-xl"></video>
+                        <div class="flex items-center justify-between text-xs pt-1">
+                            <span class="font-bold text-purple-400">@${r.autor}</span>
+                            <span class="text-slate-400"><i class="fa-solid fa-heart text-pink-500"></i> ${r.likes}</span>
+                        </div>
+                        <p class="text-xs text-slate-300">${r.texto}</p>
+                    </div>
+                `;
+            });
         }
 
         function reiniciarFeed() {
@@ -372,16 +379,10 @@
             alert("🔄 Feed reiniciado al inicio con éxito.");
         }
 
-        function abrirReelsIA() {
-            alert("🎬 Abriendo sección de Reels generados por IA a máxima potencia...");
-            mostrarSeccion('feed');
-        }
-
         function renderizarFeed() {
             const container = document.getElementById('feedPostsContainer');
             container.innerHTML = '';
             feedPosts.forEach(post => {
-                let comentariosHtml = post.comentarios.map(c => `<div class="bg-slate-950 p-2 rounded-xl text-xs text-slate-300 mt-1"><b>${c.usuario}:</b> ${c.texto}</div>`).join('');
                 container.innerHTML += `
                     <div class="bg-slate-900/90 border border-slate-800/80 rounded-3xl p-6 shadow-xl space-y-4">
                         <div class="flex items-center justify-between">
@@ -395,88 +396,44 @@
                         </div>
                         <p class="text-sm text-slate-200 leading-relaxed">${post.texto}</p>
                         ${post.media ? `<div class="rounded-2xl overflow-hidden border border-slate-800 h-72 bg-cover bg-center shadow-inner" style="background-image: url('${post.media}');"></div>` : ''}
-                        <div class="flex justify-between text-xs text-slate-400 pt-3 border-t border-slate-800/80 font-medium">
-                            <button onclick="darLike(${post.id})" class="hover:text-purple-400 flex items-center gap-1.5 transition"><i class="fa-regular fa-thumbs-up text-base"></i> Me gusta (<span id="likes-${post.id}">${post.likes}</span>)</button>
-                            <button onclick="agregarComentario(${post.id})" class="hover:text-purple-400 flex items-center gap-1.5 transition"><i class="fa-regular fa-comment text-base"></i> Comentar (${post.comentarios.length})</button>
-                            <button onclick="compartirPlataforma()" class="hover:text-purple-400 flex items-center gap-1.5 transition"><i class="fa-solid fa-share text-base"></i> Compartir</button>
-                        </div>
-                        <div id="comentarios-${post.id}" class="space-y-1">${comentariosHtml}</div>
                     </div>
                 `;
             });
         }
 
-        function darLike(id) {
-            const p = feedPosts.find(x => x.id === id);
-            if(p) { p.likes++; document.getElementById(`likes-${id}`).innerText = p.likes; }
-        }
-
-        function agregarComentario(id) {
-            const com = prompt("Escribe tu comentario:");
-            if(com) {
-                const p = feedPosts.find(x => x.id === id);
-                if(p) { p.comentarios.push({ usuario: usuarioActual.nombre, texto: com }); renderizarFeed(); }
-            }
-        }
-
         function publicarContenidoUsuario(event) {
             event.preventDefault();
             const texto = document.getElementById('userTextPost').value;
-            const fileInput = document.getElementById('userFilePost');
-            const fileName = fileInput.files[0] ? fileInput.files[0].name : null;
-
             feedPosts.unshift({
                 id: Date.now(),
                 autor: usuarioActual.nombre,
                 tiempo: "Justo ahora",
                 categoria: "Aporte Global",
-                texto: texto + (fileName ? `<br><i>📁 Archivo adjunto: ${fileName}</i>` : ''),
+                texto: texto,
                 media: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=900",
                 likes: 1,
                 comentarios: []
             });
-
             document.getElementById('userTextPost').value = '';
-            fileInput.value = '';
             mostrarSeccion('feed');
             renderizarFeed();
         }
 
-        function buscarEnPlataforma() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            if(!query) return;
-        }
-
         function grabarAudioChat() {
-            alert("🎙️ Grabando nota de voz a máxima potencia...");
-            const chatContainer = document.getElementById('chatContainer');
-            chatContainer.innerHTML += `<div class="flex justify-end"><div class="bg-purple-600 text-white p-3 rounded-3xl max-w-sm text-xs">🎤 [Nota de voz enviada]</div></div>`;
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+            alert("🎙️ Grabando nota de voz...");
         }
 
         function toggleSidebar() {
             const s = document.getElementById('sidebar');
-            const texts = document.querySelectorAll('.nav-text');
-            const logo = document.getElementById('logoText');
-            
-            if(s.classList.contains('w-72')) {
-                s.classList.remove('w-72');
-                s.classList.add('w-20');
-                texts.forEach(t => t.classList.add('hidden'));
-                logo.classList.add('hidden');
-            } else {
-                s.classList.remove('w-20');
-                s.classList.add('w-72');
-                texts.forEach(t => t.classList.remove('hidden'));
-                logo.classList.remove('hidden');
-            }
+            s.classList.toggle('w-72');
+            s.classList.toggle('w-20');
         }
 
         function abrirChatIA() { document.getElementById('chatModal').classList.remove('translate-x-full'); }
         function cerrarChatIA() { document.getElementById('chatModal').classList.add('translate-x-full'); }
 
         function mostrarSeccion(sec) {
-            ['feed', 'comunidades', 'perfil', 'crear', 'manual'].forEach(s => {
+            ['feed', 'reels', 'comunidades', 'perfil', 'crear', 'manual'].forEach(s => {
                 document.getElementById('view-' + s).classList.add('hidden');
             });
             document.getElementById('view-' + sec).classList.remove('hidden');
@@ -485,23 +442,31 @@
         function usarFuncion(nombre) {
             abrirChatIA();
             const c = document.getElementById('chatContainer');
-            c.innerHTML += `<div class="flex items-start gap-3"><div class="w-9 h-9 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-xs">AI</div><div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200">Herramienta activada: <b>${nombre}</b>. ¿Qué deseas realizar?</div></div>`;
+            c.innerHTML += `<div class="flex items-start gap-3"><div class="w-9 h-9 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-xs">AI</div><div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200">Herramienta activada: <b>${nombre}</b>.</div></div>`;
             c.scrollTop = c.scrollHeight;
         }
 
         function compartirPlataforma() {
             if (navigator.share) { navigator.share({ title: 'Nexus AI Pro', url: window.location.href }); }
-            else { alert("Enlace copiado al portapapeles."); }
+            else { alert("Enlace copiado."); }
         }
 
         function informarProblema() {
-            const p = prompt("Describe el problema:");
-            if(p) alert("Reporte enviado con éxito.");
+            prompt("Describe el problema:");
         }
 
         function borrarHistorialChat() {
-            if(confirm("¿Deseas borrar todo el historial de este chat?")) {
+            if(confirm("¿Borrar historial del chat?")) {
                 document.getElementById('chatContainer').innerHTML = '';
+                historialChatArray = [];
+            }
+        }
+
+        function verHistorialChat() {
+            if(historialChatArray.length === 0) {
+                alert("No hay mensajes previos en el historial de esta sesión.");
+            } else {
+                alert("Historial de la sesión:\n\n" + historialChatArray.join("\n"));
             }
         }
 
@@ -515,7 +480,8 @@
             const file = fileInput.files[0];
             if(!txt && !file) return;
 
-            chatContainer.innerHTML += `<div class="flex justify-end"><div class="bg-purple-600 text-white p-3 rounded-3xl max-w-sm text-xs">${txt} ${file ? `<br><i>[Archivo: ${file.name}]</i>` : ''}</div></div>`;
+            chatContainer.innerHTML += `<div class="flex justify-end"><div class="bg-purple-600 text-white p-3 rounded-3xl max-w-sm text-xs">${txt}</div></div>`;
+            historialChatArray.push("Tú: " + txt);
             input.value = '';
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
@@ -526,9 +492,10 @@
             try {
                 const res = await fetch('/api/chat', { method: 'POST', body: formData });
                 const data = await res.json();
-                chatContainer.innerHTML += `<div class="flex items-start gap-3"><div class="w-9 h-9 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-xs">AI</div><div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200 whitespace-pre-wrap">${data.reply || data.message}</div></div>`;
+                chatContainer.innerHTML += `<div class="flex items-start gap-3"><div class="w-9 h-9 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-xs">AI</div><div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200 whitespace-pre-wrap">${data.reply}</div></div>`;
+                historialChatArray.push("IA: " + data.reply);
             } catch(e) {
-                chatContainer.innerHTML += `<div class="text-rose-400 text-xs p-2">Error de comunicación con el servidor.</div>`;
+                chatContainer.innerHTML += `<div class="text-rose-400 text-xs p-2">Error de comunicación con el nuevo servidor.</div>`;
             }
             fileInput.value = '';
             chatContainer.scrollTop = chatContainer.scrollHeight;
