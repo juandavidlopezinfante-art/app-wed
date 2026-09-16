@@ -9,165 +9,236 @@
     <style>
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        /* Animación suave para historias y elementos brillantes */
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(236, 72, 153, 0.8); }
+        }
+        .story-ring {
+            animation: pulseGlow 3s infinite;
+        }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 flex h-screen overflow-hidden">
 
     <!-- MENÚ LATERAL IZQUIERDO DESPLEGABLE -->
-    <aside id="sidebar" class="w-72 bg-slate-900 border-r border-slate-800 flex flex-col transition-all duration-300 z-30">
+    <aside id="sidebar" class="w-72 bg-slate-900 border-r border-slate-800 flex flex-col transition-all duration-300 z-30 shadow-2xl">
         <div class="p-4 border-b border-slate-800 flex items-center justify-between">
-            <span class="font-extrabold text-lg bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">Nexus AI Pro</span>
-            <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-bars"></i></button>
+            <span class="font-extrabold text-lg bg-gradient-to-r from-purple-400 via-pink-500 to-amber-400 bg-clip-text text-transparent">Nexus AI Pro</span>
+            <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-bars text-lg"></i></button>
         </div>
         
         <div class="p-3">
-            <button onclick="abrirChatIA()" class="w-full bg-purple-600 hover:bg-purple-500 text-white py-2.5 px-4 rounded-xl font-medium flex items-center gap-2 transition shadow-lg shadow-purple-900/40">
-                <i class="fa-solid fa-robot"></i> Abrir Chat IA
+            <button onclick="abrirChatIA()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-purple-900/50">
+                <i class="fa-solid fa-robot text-lg"></i> Abrir Chat IA Pro
             </button>
         </div>
 
-        <nav class="flex-1 overflow-y-auto px-3 space-y-1 text-sm">
-            <button onclick="mostrarSeccion('feed')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition text-left"><i class="fa-solid fa-newspaper text-purple-400"></i> Feed Social IA</button>
-            <button onclick="mostrarSeccion('foro')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition text-left"><i class="fa-solid fa-comments text-blue-400"></i> Foro Comunitario</button>
-            <button onclick="mostrarSeccion('manual')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition text-left"><i class="fa-solid fa-book text-pink-400"></i> Manual de Usuario</button>
-            <button onclick="mostrarSeccion('sugerencias')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition text-left"><i class="fa-solid fa-box-archive text-yellow-400"></i> Buzón de sugerencias</button>
-            <button onclick="compartirPlataforma()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition text-left"><i class="fa-solid fa-share-nodes text-green-400"></i> Compartir plataforma</button>
-            <button onclick="informarProblema()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition text-left"><i class="fa-solid fa-triangle-exclamation text-red-400"></i> Informar un problema</button>
+        <nav class="flex-1 overflow-y-auto px-3 space-y-1.5 text-sm scrollbar-hide">
+            <button onclick="mostrarSeccion('feed')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium group"><i class="fa-solid fa-newspaper text-purple-400 group-hover:scale-110 transition"></i> Feed Social IA</button>
+            <button onclick="mostrarSeccion('foro')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium group"><i class="fa-solid fa-comments text-cyan-400 group-hover:scale-110 transition"></i> Foro Comunitario</button>
+            <button onclick="mostrarSeccion('manual')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium group"><i class="fa-solid fa-book-open-reader text-pink-400 group-hover:scale-110 transition"></i> Manual Maestro IA</button>
+            <button onclick="mostrarSeccion('sugerencias')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium group"><i class="fa-solid fa-box-archive text-amber-400 group-hover:scale-110 transition"></i> Buzón de sugerencias</button>
+            <button onclick="compartirPlataforma()" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium group"><i class="fa-solid fa-share-nodes text-emerald-400 group-hover:scale-110 transition"></i> Compartir plataforma</button>
+            <button onclick="informarProblema()" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium group"><i class="fa-solid fa-triangle-exclamation text-rose-400 group-hover:scale-110 transition"></i> Informar un problema</button>
         </nav>
 
         <div class="p-3 border-t border-slate-800">
-            <button onclick="borrarHistorial()" class="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-400 hover:bg-red-500/10 transition text-sm">
+            <button onclick="borrarHistorial()" class="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl text-rose-400 hover:bg-rose-500/10 transition text-sm font-medium">
                 <i class="fa-solid fa-trash"></i> Borrar todo el historial
             </button>
         </div>
     </aside>
 
-    <!-- CONTENEDOR PRINCIPAL (FEED + HISTORIAS) -->
+    <!-- CONTENEDOR PRINCIPAL (FEED + HISTORIAS LLAMATIVAS) -->
     <main class="flex-1 flex flex-col h-full overflow-y-auto bg-slate-950 relative">
         
-        <!-- TOPBAR DE HISTORIAS TIKTOK / REELS -->
-        <header class="bg-slate-900/60 backdrop-blur border-b border-slate-800 p-4 sticky top-0 z-20">
+        <!-- TOPBAR DE HISTORIAS TIKTOK / REELS (MUCHAS Y VARIADAS) -->
+        <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 p-4 sticky top-0 z-20 shadow-md">
             <div class="max-w-4xl mx-auto flex gap-4 overflow-x-auto scrollbar-hide pb-1">
-                <!-- Historia 1: Fotos IA -->
-                <div onclick="usarFuncion('Generador de Fotos IA')" class="flex-shrink-0 w-24 h-36 bg-gradient-to-b from-purple-600 to-indigo-900 rounded-xl p-2 flex flex-col justify-between cursor-pointer border border-purple-500/40 hover:scale-105 transition shadow-md bg-cover bg-center" style="background-image: linear-gradient(to top, rgba(0,0,0,0.8), transparent), url('https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?w=300');">
-                    <span class="text-[10px] font-bold bg-purple-500 text-white px-1.5 py-0.5 rounded self-start">Visual</span>
-                    <span class="text-xs font-bold text-white text-center">Fotos IA Pro</span>
+                <!-- Historia 1 -->
+                <div onclick="usarFuncion('Cyberpunk & Neon Concept')" class="story-ring flex-shrink-0 w-28 h-40 bg-gradient-to-b from-purple-600 to-indigo-950 rounded-2xl p-2.5 flex flex-col justify-between cursor-pointer border-2 border-purple-400 hover:scale-105 transition shadow-lg bg-cover bg-center relative overflow-hidden" style="background-image: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300');">
+                    <span class="text-[9px] font-extrabold bg-purple-500 text-white px-2 py-0.5 rounded-full self-start shadow">Trending</span>
+                    <span class="text-xs font-bold text-white text-center drop-shadow">Cyber Art 3D</span>
                 </div>
-                <!-- Historia 2: Videos IA -->
-                <div onclick="usarFuncion('Generador de Videos IA')" class="flex-shrink-0 w-24 h-36 bg-gradient-to-b from-pink-600 to-rose-900 rounded-xl p-2 flex flex-col justify-between cursor-pointer border border-pink-500/40 hover:scale-105 transition shadow-md bg-cover bg-center" style="background-image: linear-gradient(to top, rgba(0,0,0,0.8), transparent), url('https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=300');">
-                    <span class="text-[10px] font-bold bg-pink-500 text-white px-1.5 py-0.5 rounded self-start">Videos</span>
-                    <span class="text-xs font-bold text-white text-center">Reels & TikTok</span>
+                <!-- Historia 2 -->
+                <div onclick="usarFuncion('Cuentos y Animación Infantil')" class="story-ring flex-shrink-0 w-28 h-40 bg-gradient-to-b from-pink-600 to-rose-950 rounded-2xl p-2.5 flex flex-col justify-between cursor-pointer border-2 border-pink-400 hover:scale-105 transition shadow-lg bg-cover bg-center relative overflow-hidden" style="background-image: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1534447677768-be436bb09401?w=300');">
+                    <span class="text-[9px] font-extrabold bg-pink-500 text-white px-2 py-0.5 rounded-full self-start shadow">Estilo Pixar</span>
+                    <span class="text-xs font-bold text-white text-center drop-shadow">Mundos Mágicos</span>
                 </div>
-                <!-- Historia 3: Word y Excel -->
-                <div onclick="usarFuncion('Word y Excel Pro')" class="flex-shrink-0 w-24 h-36 bg-gradient-to-b from-emerald-600 to-teal-900 rounded-xl p-2 flex flex-col justify-between cursor-pointer border border-emerald-500/40 hover:scale-105 transition shadow-md bg-cover bg-center" style="background-image: linear-gradient(to top, rgba(0,0,0,0.8), transparent), url('https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=300');">
-                    <span class="text-[10px] font-bold bg-emerald-500 text-white px-1.5 py-0.5 rounded self-start">Docs</span>
-                    <span class="text-xs font-bold text-white text-center">Word & Excel</span>
+                <!-- Historia 3 -->
+                <div onclick="usarFuncion('Finanzas y Excel Automatizado')" class="story-ring flex-shrink-0 w-28 h-40 bg-gradient-to-b from-emerald-600 to-teal-950 rounded-2xl p-2.5 flex flex-col justify-between cursor-pointer border-2 border-emerald-400 hover:scale-105 transition shadow-lg bg-cover bg-center relative overflow-hidden" style="background-image: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=300');">
+                    <span class="text-[9px] font-extrabold bg-emerald-500 text-white px-2 py-0.5 rounded-full self-start shadow">Negocios</span>
+                    <span class="text-xs font-bold text-white text-center drop-shadow">Flujo de Caja</span>
                 </div>
-                <!-- Historia 4: Traductor -->
-                <div onclick="usarFuncion('Traducción de Voz y Texto')" class="flex-shrink-0 w-24 h-36 bg-gradient-to-b from-blue-600 to-cyan-900 rounded-xl p-2 flex flex-col justify-between cursor-pointer border border-blue-500/40 hover:scale-105 transition shadow-md bg-cover bg-center" style="background-image: linear-gradient(to top, rgba(0,0,0,0.8), transparent), url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=300');">
-                    <span class="text-[10px] font-bold bg-blue-500 text-white px-1.5 py-0.5 rounded self-start">Global</span>
-                    <span class="text-xs font-bold text-white text-center">Traductor IA</span>
+                <!-- Historia 4 -->
+                <div onclick="usarFuncion('Moda y E-commerce AI')" class="story-ring flex-shrink-0 w-28 h-40 bg-gradient-to-b from-amber-600 to-orange-950 rounded-2xl p-2.5 flex flex-col justify-between cursor-pointer border-2 border-amber-400 hover:scale-105 transition shadow-lg bg-cover bg-center relative overflow-hidden" style="background-image: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300');">
+                    <span class="text-[9px] font-extrabold bg-amber-500 text-white px-2 py-0.5 rounded-full self-start shadow">Heirs Fashion</span>
+                    <span class="text-xs font-bold text-white text-center drop-shadow">Ropa & Estilo</span>
+                </div>
+                <!-- Historia 5 -->
+                <div onclick="usarFuncion('Traducción Global y Voces')" class="story-ring flex-shrink-0 w-28 h-40 bg-gradient-to-b from-blue-600 to-cyan-950 rounded-2xl p-2.5 flex flex-col justify-between cursor-pointer border-2 border-cyan-400 hover:scale-105 transition shadow-lg bg-cover bg-center relative overflow-hidden" style="background-image: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=300');">
+                    <span class="text-[9px] font-extrabold bg-blue-500 text-white px-2 py-0.5 rounded-full self-start shadow">Global</span>
+                    <span class="text-xs font-bold text-white text-center drop-shadow">Voces IA</span>
+                </div>
+                <!-- Historia 6 -->
+                <div onclick="usarFuncion('Granizados & Bebidas Gourmet')" class="story-ring flex-shrink-0 w-28 h-40 bg-gradient-to-b from-rose-600 to-purple-950 rounded-2xl p-2.5 flex flex-col justify-between cursor-pointer border-2 border-rose-400 hover:scale-105 transition shadow-lg bg-cover bg-center relative overflow-hidden" style="background-image: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=300');">
+                    <span class="text-[9px] font-extrabold bg-rose-500 text-white px-2 py-0.5 rounded-full self-start shadow">Emprendimiento</span>
+                    <span class="text-xs font-bold text-white text-center drop-shadow">Granizados 24/7</span>
                 </div>
             </div>
         </header>
 
-        <!-- CONTENIDO DINÁMICO (VISTAS PRINCIPALES) -->
+        <!-- CONTENIDO DINÁMICO -->
         <div id="mainContent" class="flex-1 p-6 max-w-3xl mx-auto w-full space-y-6">
             
-            <!-- VISTA 1: FEED TIPO FACEBOOK -->
+            <!-- VISTA 1: FEED SOCIAL LLENO DE COLOR Y PUBLICACIONES VIRALES -->
             <div id="view-feed" class="space-y-6">
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow">
-                    <h2 class="font-bold text-lg mb-2 flex items-center gap-2"><i class="fa-solid fa-fire text-orange-400"></i> Tendencias Virales de IA hoy</h2>
-                    <p class="text-xs text-slate-400">Contenido generado automáticamente por la comunidad e inteligencia artificial.</p>
+                <div class="bg-gradient-to-r from-purple-900/60 via-slate-900 to-pink-900/60 border border-purple-500/30 rounded-3xl p-6 shadow-2xl backdrop-blur">
+                    <h2 class="font-black text-xl mb-1 flex items-center gap-2.5 bg-gradient-to-r from-amber-400 to-pink-400 bg-clip-text text-transparent">
+                        <i class="fa-solid fa-fire text-amber-400 animate-bounce"></i> Tendencias Virales de IA en Tiempo Real
+                    </h2>
+                    <p class="text-xs text-slate-300">Explora lo más impactante del mundo digital creado con inteligencia artificial y conéctate al instante.</p>
                 </div>
 
-                <!-- Post del Feed 1 -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-3">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center font-bold">AI</div>
-                        <div>
-                            <h4 class="font-bold text-sm">Nexus Bot Oficial</h4>
-                            <span class="text-[10px] text-slate-400">Hace 15 minutos • 🌍 Público</span>
+                <!-- Post 1: Arte Visual 3D -->
+                <div class="bg-slate-900/90 border border-slate-800/80 rounded-3xl p-6 shadow-xl space-y-4 hover:border-purple-500/40 transition">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center font-bold text-white shadow-lg">AI</div>
+                            <div>
+                                <h4 class="font-bold text-sm text-slate-100">Nexus Visual Creator</h4>
+                                <span class="text-[11px] text-purple-400 font-medium">Hace 10 min • 🌍 Contenido Público</span>
+                            </div>
                         </div>
+                        <span class="bg-purple-500/10 text-purple-400 text-xs font-bold px-3 py-1 rounded-full border border-purple-500/20">Arte Digital</span>
                     </div>
-                    <p class="text-sm text-slate-200">¡Nuevo avance en generación de imágenes hiperrealistas 3D para marcas y e-commerce! Pruébalo ahora mismo en el generador visual.</p>
-                    <div class="rounded-xl overflow-hidden border border-slate-800 h-64 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?w=800');"></div>
-                    <div class="flex justify-between text-xs text-slate-400 pt-2 border-t border-slate-800">
-                        <button class="hover:text-purple-400"><i class="fa-regular fa-thumbs-up"></i> Me gusta (342)</button>
-                        <button onclick="abrirChatIA()" class="hover:text-purple-400"><i class="fa-regular fa-comment"></i> Comentar con IA</button>
-                        <button class="hover:text-purple-400"><i class="fa-solid fa-share"></i> Compartir</button>
+                    <p class="text-sm text-slate-200 leading-relaxed">¡Increíble concepto arquitectónico futurista renderizado con IA en segundos! ¿Te gustaría generar diseños hiperrealistas como este para tus proyectos? Pruébalo ahora mismo.</p>
+                    <div class="rounded-2xl overflow-hidden border border-slate-800 h-72 bg-cover bg-center shadow-inner hover:scale-[1.01] transition duration-300" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900');"></div>
+                    <div class="flex justify-between text-xs text-slate-400 pt-3 border-t border-slate-800/80 font-medium">
+                        <button onclick="this.classList.toggle('text-purple-400');" class="hover:text-purple-400 flex items-center gap-1.5 transition"><i class="fa-regular fa-thumbs-up text-base"></i> Me gusta (512)</button>
+                        <button onclick="abrirChatIA()" class="hover:text-purple-400 flex items-center gap-1.5 transition"><i class="fa-regular fa-comment text-base"></i> Comentar con IA</button>
+                        <button onclick="compartirPlataforma()" class="hover:text-purple-400 flex items-center gap-1.5 transition"><i class="fa-solid fa-share text-base"></i> Compartir</button>
                     </div>
                 </div>
 
-                <!-- Post del Feed 2 -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-3">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-bold">U</div>
-                        <div>
-                            <h4 class="font-bold text-sm">Creador Anónimo</h4>
-                            <span class="text-[10px] text-slate-400">Hace 1 hora • 👥 Foro Público</span>
+                <!-- Post 2: Emprendimiento y Negocios -->
+                <div class="bg-slate-900/90 border border-slate-800/80 rounded-3xl p-6 shadow-xl space-y-4 hover:border-pink-500/40 transition">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-600 flex items-center justify-center font-bold text-white shadow-lg">NX</div>
+                            <div>
+                                <h4 class="font-bold text-sm text-slate-100">Business & Financial Pro</h4>
+                                <span class="text-[11px] text-emerald-400 font-medium">Hace 35 min • 📈 Negocios</span>
+                            </div>
                         </div>
+                        <span class="bg-emerald-500/10 text-emerald-400 text-xs font-bold px-3 py-1 rounded-full border border-emerald-500/20">Finanzas Excel</span>
                     </div>
-                    <p class="text-sm text-slate-200">¿Alguien ha probado estructurar los flujos de caja en Excel usando la nueva herramienta de la plataforma? ¡Los resultados financieros salen automáticos!</p>
-                    <div class="flex justify-between text-xs text-slate-400 pt-2 border-t border-slate-800">
-                        <button class="hover:text-blue-400"><i class="fa-regular fa-thumbs-up"></i> Me gusta (128)</button>
-                        <button onclick="abrirChatIA()" class="hover:text-blue-400"><i class="fa-regular fa-comment"></i> Comentar con IA</button>
-                        <button class="hover:text-blue-400"><i class="fa-solid fa-share"></i> Compartir</button>
+                    <p class="text-sm text-slate-200 leading-relaxed">Estructura flujos de caja automáticos y proyecciones de ventas profesionales sin tocar fórmulas complejas. Deja que la IA organice tu negocio.</p>
+                    <div class="rounded-2xl overflow-hidden border border-slate-800 h-72 bg-cover bg-center shadow-inner hover:scale-[1.01] transition duration-300" style="background-image: url('https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=900');"></div>
+                    <div class="flex justify-between text-xs text-slate-400 pt-3 border-t border-slate-800/80 font-medium">
+                        <button onclick="this.classList.toggle('text-emerald-400');" class="hover:text-emerald-400 flex items-center gap-1.5 transition"><i class="fa-regular fa-thumbs-up text-base"></i> Me gusta (384)</button>
+                        <button onclick="abrirChatIA()" class="hover:text-emerald-400 flex items-center gap-1.5 transition"><i class="fa-regular fa-comment text-base"></i> Comentar con IA</button>
+                        <button onclick="compartirPlataforma()" class="hover:text-emerald-400 flex items-center gap-1.5 transition"><i class="fa-solid fa-share text-base"></i> Compartir</button>
+                    </div>
+                </div>
+
+                <!-- Post 3: Estilo de Vida y Moda -->
+                <div class="bg-slate-900/90 border border-slate-800/80 rounded-3xl p-6 shadow-xl space-y-4 hover:border-amber-500/40 transition">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-600 to-rose-600 flex items-center justify-center font-bold text-white shadow-lg">HF</div>
+                            <div>
+                                <h4 class="font-bold text-sm text-slate-100">Heirs of Fashion Studio</h4>
+                                <span class="text-[11px] text-amber-400 font-medium">Hace 1 hora • 🎨 Branding</span>
+                            </div>
+                        </div>
+                        <span class="bg-amber-500/10 text-amber-400 text-xs font-bold px-3 py-1 rounded-full border border-amber-500/20">Moda & Estilo</span>
+                    </div>
+                    <p class="text-sm text-slate-200 leading-relaxed">Garments for Every Moment. Diseños versátiles y activewear optimizados mediante branding visual impulsado por inteligencia artificial.</p>
+                    <div class="rounded-2xl overflow-hidden border border-slate-800 h-72 bg-cover bg-center shadow-inner hover:scale-[1.01] transition duration-300" style="background-image: url('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900');"></div>
+                    <div class="flex justify-between text-xs text-slate-400 pt-3 border-t border-slate-800/80 font-medium">
+                        <button onclick="this.classList.toggle('text-amber-400');" class="hover:text-amber-400 flex items-center gap-1.5 transition"><i class="fa-regular fa-thumbs-up text-base"></i> Me gusta (720)</button>
+                        <button onclick="abrirChatIA()" class="hover:text-amber-400 flex items-center gap-1.5 transition"><i class="fa-regular fa-comment text-base"></i> Comentar con IA</button>
+                        <button onclick="compartirPlataforma()" class="hover:text-amber-400 flex items-center gap-1.5 transition"><i class="fa-solid fa-share text-base"></i> Compartir</button>
                     </div>
                 </div>
             </div>
 
             <!-- VISTA 2: FORO COMUNITARIO -->
             <div id="view-foro" class="hidden space-y-4">
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-                    <h2 class="font-bold text-lg mb-2 text-blue-400"><i class="fa-solid fa-comments"></i> Foro Comunitario Anónimo y Público</h2>
-                    <p class="text-xs text-slate-400 mb-4">Comparte tus ideas libremente con otros usuarios de la plataforma.</p>
-                    <textarea placeholder="Escribe tu idea de forma pública o anónima..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-200 outline-none resize-none h-24 mb-3"></textarea>
-                    <button class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-sm font-medium">Publicar en el Foro</button>
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
+                    <h2 class="font-bold text-xl mb-2 text-cyan-400 flex items-center gap-2"><i class="fa-solid fa-comments"></i> Foro Comunitario Anónimo y Público</h2>
+                    <p class="text-xs text-slate-400 mb-4 leading-relaxed">Comparte tus ideas, proyectos y estrategias libremente con otros usuarios de la plataforma en tiempo real.</p>
+                    <textarea placeholder="Escribe tu idea o debate de forma pública o anónima..." class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-4 text-sm text-slate-200 outline-none resize-none h-32 mb-3 focus:border-cyan-500 transition"></textarea>
+                    <button class="bg-cyan-600 hover:bg-cyan-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-cyan-900/30 transition">Publicar en el Foro</button>
                 </div>
             </div>
 
-            <!-- VISTA 3: MANUAL DE USUARIO -->
-            <div id="view-manual" class="hidden space-y-4 text-sm text-slate-300">
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-3">
-                    <h2 class="font-bold text-xl text-pink-400"><i class="fa-solid fa-book"></i> Manual Oficial de Nexus AI Pro</h2>
-                    <p>Bienvenido al manual completo. Aquí se explica cómo operar todas las funciones:</p>
-                    <ul class="list-disc pl-5 space-y-2 text-xs text-slate-400">
-                        <li><b>Chat Libre Multimodal:</b> Permite adjuntar textos, audios, fotos, documentos de Word y hojas de Excel para que la IA los procese al instante.</li>
-                        <li><b>Generador de Fotos y Videos IA:</b> Diseña mockups, animaciones y contenido publicitario para redes sociales.</li>
-                        <li><b>Traducción Global:</b> Traduce contenidos comerciales y adapta voces con inteligencia artificial.</li>
-                        <li><b>Redactor de Documentos:</b> Capaz de redactar contratos, reportes y estructurar modelos financieros completos en Excel.</li>
-                    </ul>
+            <!-- VISTA 3: MANUAL MAESTRO DE IA (MUCHO MÁS INFORMATIVO Y PROFUNDO) -->
+            <div id="view-manual" class="hidden space-y-6 text-sm text-slate-300">
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 space-y-6 shadow-2xl">
+                    <div class="border-b border-slate-800 pb-4">
+                        <h2 class="font-black text-2xl bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent flex items-center gap-3">
+                            <i class="fa-solid fa-graduation-cap text-pink-400"></i> Manual Maestro: Exprime al 100% la IA
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1">Guía definitiva para dominar todas las herramientas avanzadas de la plataforma.</p>
+                    </div>
+
+                    <div class="space-y-5">
+                        <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-5 space-y-2">
+                            <h3 class="font-bold text-purple-400 text-base flex items-center gap-2"><i class="fa-solid fa-robot"></i> 1. Chat Libre Multimodal Avanzado</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed">El chat no es solo para texto. Puedes adjuntar cualquier archivo haciendo clic en el icono del clip (📎):</p>
+                            <ul class="list-disc pl-5 text-xs text-slate-400 space-y-1">
+                                <li><b>Documentos Word (.docx) y Excel (.xlsx):</b> Sube tus archivos para que la IA los analice, corrija redactando contratos o genere tablas de datos financieras completas.</li>
+                                <li><b>Audios y Notas de Voz:</b> Envía grabaciones para transcripción y síntesis inteligente.</li>
+                                <li><b>Fotografías e Imágenes:</b> Sube capturas de pantalla o diseños para obtener análisis visuales y sugerencias de código o branding.</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-5 space-y-2">
+                            <h3 class="font-bold text-pink-400 text-base flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles"></i> 2. Generación de Fotos, Videos y Prompts 3D</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed">Utiliza las historias superiores para activar herramientas visuales. Escribe instrucciones detalladas especificando iluminación de estudio, estilos (como Cyberpunk o Pixar) y paletas de colores para obtener resultados profesionales de nivel publicitario.</p>
+                        </div>
+
+                        <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-5 space-y-2">
+                            <h3 class="font-bold text-emerald-400 text-base flex items-center gap-2"><i class="fa-solid fa-chart-line"></i> 3. Automatización de Negocios y Documentos</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed">Pídele al chat que te redacte campañas estructuradas bajo la fórmula PAS (Problema-Agitación-Solución), planes de negocio para tiendas de ropa, o menús optimizados para emprendimientos de bebidas y comida.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
         </div>
     </main>
 
-    <!-- MODAL / PANEL DESPLEGABLE DE CHAT IA -->
-    <div id="chatModal" class="fixed inset-y-0 right-0 w-full md:w-[480px] bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 z-50">
+    <!-- MODAL / PANEL DESPLEGABLE DE CHAT IA (MÁS GRANDE Y CÓMODO) -->
+    <div id="chatModal" class="fixed inset-y-0 right-0 w-full md:w-[600px] bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 z-50">
         <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950">
-            <span class="font-bold text-sm text-purple-400"><i class="fa-solid fa-robot"></i> Chat IA Multimodal Pro</span>
-            <button onclick="cerrarChatIA()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="flex items-center gap-2.5">
+                <div class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
+                <span class="font-bold text-sm text-purple-400"><i class="fa-solid fa-robot"></i> Chat IA Multimodal Pro (Ampliado)</span>
+            </div>
+            <button onclick="cerrarChatIA()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-xmark text-xl"></i></button>
         </div>
         
-        <div id="chatContainer" class="flex-1 overflow-y-auto p-4 space-y-4">
+        <div id="chatContainer" class="flex-1 overflow-y-auto p-5 space-y-4">
             <div class="flex items-start gap-3">
-                <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center font-bold text-xs">AI</div>
-                <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl text-xs text-slate-200">
-                    ¡Hola! Pregúntame lo que necesites o adjunta archivos (Word, Excel, fotos, audios) para trabajar.
+                <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center font-bold text-xs shadow">AI</div>
+                <div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200 leading-relaxed shadow-md">
+                    ¡Hola! Soy tu núcleo de inteligencia artificial avanzado. Puedes preguntarme lo que sea, subir documentos de Word/Excel, audios, fotos o solicitar código. ¡Estoy listo para trabajar contigo!
                 </div>
             </div>
         </div>
 
-        <div class="p-3 bg-slate-950 border-t border-slate-800">
-            <form id="chatForm" onsubmit="enviarMensaje(event)" class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-xl p-2">
-                <label class="cursor-pointer text-slate-400 hover:text-purple-400 px-2">
-                    <i class="fa-solid fa-paperclip"></i>
+        <div class="p-4 bg-slate-950 border-t border-slate-800">
+            <form id="chatForm" onsubmit="enviarMensaje(event)" class="flex items-center gap-2.5 bg-slate-900 border border-slate-800 rounded-2xl p-2.5 shadow-inner">
+                <label class="cursor-pointer text-slate-400 hover:text-purple-400 px-2.5 transition">
+                    <i class="fa-solid fa-paperclip text-base"></i>
                     <input type="file" id="fileInput" class="hidden">
                 </label>
-                <input type="text" id="messageInput" placeholder="Escribe tu mensaje..." class="flex-1 bg-transparent border-none outline-none text-slate-100 text-xs px-1">
-                <button type="submit" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-lg text-xs font-medium">
+                <input type="text" id="messageInput" placeholder="Escribe tu mensaje o adjunta un archivo..." class="flex-1 bg-transparent border-none outline-none text-slate-100 text-xs px-1">
+                <button type="submit" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-md shadow-purple-900/40 transition">
                     <i class="fa-solid fa-paper-plane"></i>
                 </button>
             </form>
@@ -205,9 +276,9 @@
             const chatContainer = document.getElementById('chatContainer');
             chatContainer.innerHTML += `
                 <div class="flex items-start gap-3">
-                    <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center font-bold text-xs">AI</div>
-                    <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl text-xs text-slate-200">
-                        Has seleccionado: <b>${nombre}</b>. ¿Qué deseas generar hoy con esta herramienta?
+                    <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center font-bold text-xs shadow">AI</div>
+                    <div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200 shadow-md">
+                        Has seleccionado la herramienta: <b>${nombre}</b>. ¿Qué deseas generar o analizar hoy?
                     </div>
                 </div>
             `;
@@ -230,7 +301,7 @@
         }
 
         function borrarHistorial() {
-            if(confirm("¿Borrar todo el historial de chat?")) {
+            if(confirm("¿Deseas borrar todo el historial de chat?")) {
                 document.getElementById('chatContainer').innerHTML = '';
             }
         }
@@ -247,8 +318,8 @@
 
             chatContainer.innerHTML += `
                 <div class="flex justify-end">
-                    <div class="bg-purple-600 text-white p-2.5 rounded-2xl max-w-xs text-xs shadow">
-                        ${txt} ${file ? `<br><i>[Archivo: ${file.name}]</i>` : ''}
+                    <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-3 rounded-3xl max-w-sm text-xs shadow-md">
+                        ${txt} ${file ? `<br><i>[Archivo adjunto: ${file.name}]</i>` : ''}
                     </div>
                 </div>
             `;
@@ -264,12 +335,12 @@
                 const data = await res.json();
                 chatContainer.innerHTML += `
                     <div class="flex items-start gap-3">
-                        <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center font-bold text-xs">AI</div>
-                        <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl text-xs text-slate-200 whitespace-pre-wrap">${data.reply || data.message}</div>
+                        <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center font-bold text-xs shadow">AI</div>
+                        <div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200 whitespace-pre-wrap leading-relaxed shadow-md">${data.reply || data.message}</div>
                     </div>
                 `;
             } catch(e) {
-                chatContainer.innerHTML += `<div class="text-red-400 text-xs">Error de comunicación con el servidor de IA.</div>`;
+                chatContainer.innerHTML += `<div class="text-rose-400 text-xs p-2">Error de comunicación con el servidor de IA.</div>`;
             }
             fileInput.value = '';
             chatContainer.scrollTop = chatContainer.scrollHeight;
