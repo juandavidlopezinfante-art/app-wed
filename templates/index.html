@@ -15,7 +15,7 @@
         .btn-primary { background-color: #2563eb; border: none; font-weight: 600; border-radius: 6px; }
         .btn-primary:hover { background-color: #1d4ed8; }
         
-        /* ESTILO DE HISTORIAS PRO SUPERIOR (NUEVO) */
+        /* ESTILO DE HISTORIAS PRO SUPERIOR */
         .stories-container {
             display: flex;
             gap: 15px;
@@ -67,7 +67,6 @@
             border-top-right-radius: 0;
         }
         
-        /* BARRA DE HERRAMIENTAS DINÁMICA QUE APARECE CON LAS RESPUESTAS */
         .response-tools-bar {
             display: flex;
             justify-content: space-between;
@@ -98,7 +97,6 @@
         .file-indicator { font-size: 0.8rem; color: #38bdf8; margin-top: 5px; display: block; }
         .banner-libre { background: linear-gradient(135deg, #1e3a8a, #2563eb); border: 1px solid #3b82f6; border-radius: 8px; padding: 12px 20px; margin-bottom: 25px; text-align: center; font-weight: 600; }
         
-        /* Estilos de la Barra Lateral (Sidebar) */
         .sidebar {
             height: 100%;
             width: 0;
@@ -159,7 +157,6 @@
                 <input type="text" id="inputBuscador" class="form-control form-control-sm" placeholder="Escribe para buscar..." onkeyup="buscarEnChats()">
             </div>
             <button class="btn btn-outline-success w-100 mb-2 text-start" onclick="abrirSoporteIA()">🤖 Ayuda Técnica con IA</button>
-            <!-- NUEVO BOTÓN DE BUZÓN DE SUGERENCIAS -->
             <button class="btn btn-outline-warning w-100 mb-2 text-start" onclick="abrirBuzonSugerencias()">💡 Buzón de Sugerencias y Mejoras</button>
             <button class="btn btn-outline-light w-100 mb-2 text-start" onclick="compartirArchivoRapido()">🔗 Compartir / Exportar Archivos</button>
             <button class="btn btn-outline-danger w-100 mb-2 text-start" onclick="informarProblema()">⚠️ Informar un Problema</button>
@@ -183,7 +180,7 @@
         
         <!-- NUEVA BARRA DE HISTORIAS PRO SUPERIOR -->
         <div class="mb-3">
-            <span class="text-info fw-bold small text-uppercase">🌟 Historias Pro & Tendencias de Hoy</span>
+            <span class="text-info fw-bold small text-uppercase">🌟 Historias Pro & Tendencias de Hoy (Videos IA rotativos 24h)</span>
             <div class="stories-container" id="storiesBar">
                 <!-- Se cargan dinámicamente -->
             </div>
@@ -569,25 +566,49 @@
 
     <!-- SCRIPT DE CONTROL Y FUNCIONALIDADES DE LA SIDEBAR Y TENDENCIAS -->
     <script>
-        // Array de Historias Pro dinámicas superiores (NUEVO)
-        const historiasDiarias = [
-            { titulo: "🚀 Crecimiento Express", desc: "Estrategia para duplicar seguidores en Reels usando ganchos de alto impacto.", targetId: "promptGuiones", prompt: "Crea una estrategia express de retención para duplicar seguidores en Reels." },
-            { titulo: "💸 Oferta Irresistible", desc: "Redacta un anuncio con estructura PAS para campañas de conversión directa.", targetId: "promptCopys", prompt: "Redacta un anuncio de ventas con fórmula PAS para producto digital." },
-            { titulo: "🎨 Marca Personal 3D", desc: "Genera el prompt visual perfecto para mockups y branding corporativo.", targetId: "promptImagenInput", prompt: "Mockup 3D hiperrealista de marca personal ejecutiva minimalista." },
-            { titulo: "📊 Flujo de Caja Pro", desc: "Estructura un modelo financiero de proyecciones para un nuevo negocio.", targetId: "promptExcel", prompt: "Estructura un modelo financiero básico de ingresos y gastos en Excel." }
+        // Banco amplio de videos de IA en movimiento para rotación diaria cada 24 horas
+        const bancoVideosIA = [
+            { titulo: "🚀 Crecimiento Express", badge: "Reels Pro", videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-and-code-31938-large.mp4", targetId: "promptGuiones", prompt: "Crea una estrategia express de retención para duplicar seguidores en Reels." },
+            { titulo: "💸 Oferta Irresistible", badge: "Conversión", videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-futuristic-technology-interface-screen-31937-large.mp4", targetId: "promptCopys", prompt: "Redacta un anuncio de ventas con fórmula PAS para producto digital." },
+            { titulo: "🎨 Generador de Imágenes", badge: "Multimedia", videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-hands-holding-a-smartphone-with-a-green-screen-42999-large.mp4", targetId: "promptImagenInput", prompt: "Mockup hiperrealista 3D de alta gama para campaña publicitaria digital." },
+            { titulo: "📊 Control Financiero", badge: "Negocios", videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-background-animation-42981-large.mp4", targetId: "promptExcel", prompt: "Estructura un modelo financiero optimizado de flujo de caja y proyección de ventas." },
+            { titulo: "🌍 Traductor Global", badge: "Multiidioma", videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-plexus-network-background-animation-43003-large.mp4", targetId: "promptTraductor", prompt: "Traduce y adapta este contenido comercial al mercado internacional." },
+            { titulo: "⚡ Marca Personal 3D", badge: "Branding", videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-and-code-31938-large.mp4", targetId: "promptTendencias", prompt: "Genera la estrategia visual y el prompt maestro para mockups de branding corporativo." }
         ];
+
+        // Función para cambiar de forma aleatoria cada 24 horas usando la fecha como semilla
+        function obtenerHistoriasDiariasAleatorias() {
+            const hoy = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+            let semilla = 0;
+            for (let i = 0; i < hoy.length; i++) {
+                semilla += hoy.charCodeAt(i);
+            }
+            let mezclado = [...bancoVideosIA];
+            for (let i = mezclado.length - 1; i > 0; i--) {
+                const j = (semilla + i) % mezclado.length;
+                [mezclado[i], mezclado[j]] = [mezclado[j], mezclado[i]];
+            }
+            return mezclado.slice(0, 4); // Devuelve 4 casillas con video rotativas al día
+        }
 
         // Cargar historiales almacenados al iniciar y mostrar su barra de herramientas si ya hay contenido guardado
         window.onload = function() {
-            // Renderizar Historias Pro arriba (NUEVO)
+            // Renderizar Historias Pro arriba con VIDEOS EN MOVIMIENTO Y ROTACIÓN DIARIA
             const storiesBar = document.getElementById('storiesBar');
             if (storiesBar) {
-                historiasDiarias.forEach(story => {
+                storiesBar.innerHTML = '';
+                const historiasHoy = obtenerHistoriasDiariasAleatorias();
+                historiasHoy.forEach(story => {
                     storiesBar.innerHTML += `
-                        <div class="story-card" onclick="usarHistoria('${story.targetId}', \`${story.prompt}\`)">
-                            <div class="story-title">${story.titulo}</div>
-                            <div class="story-desc">${story.desc}</div>
-                            <button class="story-btn">✨ Probar</button>
+                        <div class="story-card-video" onclick="usarHistoria('${story.targetId}', \`${story.prompt}\`)">
+                            <video autoplay muted loop playsinline>
+                                <source src="${story.videoUrl}" type="video/mp4">
+                            </video>
+                            <div class="story-content-overlay">
+                                <span class="story-badge">${story.badge}</span>
+                                <div class="story-title-visual">${story.titulo}</div>
+                                <div class="story-action-text">⚡ Probar herramienta &rarr;</div>
+                            </div>
                         </div>
                     `;
                 });
@@ -886,14 +907,14 @@
         }
     </script>
 <style>
-    /* Estilo de Historias Pro & Dinámicas 24/7 con Animación en Movimiento */
+    /* Estilo de Historias Pro & Dinámicas con Video en Movimiento */
     #storiesBar {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 15px;
         margin-bottom: 25px;
     }
-    .story-card-visual {
+    .story-card-video {
         position: relative;
         height: 230px;
         border-radius: 16px;
@@ -905,41 +926,34 @@
         flex-direction: column;
         justify-content: flex-end;
         padding: 14px;
-        background-size: cover;
-        background-position: center;
         border: 1px solid rgba(56, 189, 248, 0.3);
-        animation: flotarSuave 6s ease-in-out infinite;
+        background: #000;
     }
-    
-    /* Efecto de movimiento sutil flotante independiente por tarjeta */
-    .story-card-visual:nth-child(even) {
-        animation-delay: 2s;
+    .story-card-video video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+        opacity: 0.75;
     }
-    .story-card-visual:nth-child(3n) {
-        animation-delay: 4s;
-    }
-
-    @keyframes flotarSuave {
-        0%, 100% { transform: translateY(0px) scale(1); }
-        50% { transform: translateY(-8px) scale(1.01); }
-    }
-
-    .story-card-visual:hover {
+    .story-card-video:hover {
         transform: translateY(-10px) scale(1.02);
         box-shadow: 0 15px 30px rgba(56, 189, 248, 0.5);
         border-color: #38bdf8;
-        animation-play-state: paused;
     }
-    .story-card-visual::before {
+    .story-card-video::before {
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(to top, rgba(15,23,42,0.92) 15%, rgba(15,23,42,0.3) 65%, transparent 100%);
-        z-index: 1;
+        background: linear-gradient(to top, rgba(15,23,42,0.95) 15%, rgba(15,23,42,0.3) 65%, transparent 100%);
+        z-index: 2;
     }
     .story-content-overlay {
         position: relative;
-        z-index: 2;
+        z-index: 3;
     }
     .story-badge {
         font-size: 0.65rem;
@@ -967,83 +981,5 @@
         font-weight: 700;
     }
 </style>
-
-<script>
-    // Base completa con TODAS las herramientas de la plataforma para publicidad cruzada 24/7
-    const catalogoPublicitarioTotal = [
-        {
-            titulo: "🎨 Generador de Imágenes IA",
-            badge: "Multimedia Pro",
-            imagen: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?w=500&auto=format&fit=crop&q=60",
-            targetId: "promptImagenInput",
-            prompt: "Mockup hiperrealista 3D de alta gama para campaña publicitaria digital con iluminación de estudio."
-        },
-        {
-            titulo: "🎬 Videos y Animación IA",
-            badge: "Tendencia 24/7",
-            imagen: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=500&auto=format&fit=crop&q=60",
-            targetId: "promptGuiones",
-            prompt: "Crea una estructura de video cinemático vertical con gancho altamente viral para redes sociales."
-        },
-        {
-            titulo: "🌍 Traductor Global & Voces",
-            badge: "Multiidioma",
-            imagen: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=500&auto=format&fit=crop&q=60",
-            targetId: "promptTraductor",
-            prompt: "Traduce y adapta este contenido comercial al mercado internacional manteniendo el tono persuasivo."
-        },
-        {
-            titulo: "📊 Control Financiero & Excel",
-            badge: "Negocios",
-            imagen: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=500&auto=format&fit=crop&q=60",
-            targetId: "promptExcel",
-            prompt: "Estructura un modelo financiero optimizado de flujo de caja y proyección de ventas."
-        },
-        {
-            titulo: "⚡ Oferta Irresistible PAS",
-            badge: "Conversión Pro",
-            imagen: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&auto=format&fit=crop&q=60",
-            targetId: "promptCopys",
-            prompt: "Redacta un anuncio publicitario de alto impacto aplicando la fórmula PAS para campañas de conversión."
-        },
-        {
-            titulo: "🚀 Marca Personal 3D",
-            badge: "Branding",
-            imagen: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=500&auto=format&fit=crop&q=60",
-            targetId: "promptBranding",
-            prompt: "Genera la estrategia visual y el prompt maestro para mockups de branding corporativo."
-        }
-    ];
-
-    window.addEventListener('DOMContentLoaded', () => {
-        const storiesBar = document.getElementById('storiesBar');
-        if (storiesBar) {
-            storiesBar.innerHTML = ''; 
-            // Llena de forma automática y dinámica TODAS las casillas disponibles
-            catalogoPublicitarioTotal.forEach((item) => {
-                storiesBar.innerHTML += `
-                    <div class="story-card-visual" style="background-image: url('${item.imagen}');" onclick="usarHistoria('${item.targetId}', \`${item.prompt}\`)">
-                        <div class="story-content-overlay">
-                            <span class="story-badge">${item.badge}</span>
-                            <div class="story-title-visual">${item.titulo}</div>
-                            <div class="story-action-text">⚡ Probar herramienta &rarr;</div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-    });
-
-    function usarHistoria(targetId, promptText) {
-        const el = document.getElementById(targetId) || document.querySelector('textarea, input');
-        if (el) {
-            el.value = promptText;
-            window.scrollTo({ top: el.offsetTop - 150, behavior: 'smooth' });
-            el.focus();
-            el.style.borderColor = '#38bdf8';
-            setTimeout(() => { el.style.borderColor = '#475569'; }, 1500);
-        }
-    }
-</script>
-  </body>
+</body>
 </html>
