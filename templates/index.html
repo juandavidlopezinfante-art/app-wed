@@ -14,6 +14,11 @@
             50% { box-shadow: 0 0 30px rgba(236, 72, 153, 0.9); }
         }
         .story-ring { animation: pulseGlow 2.5s infinite; }
+        @keyframes pulseAdult {
+            0%, 100% { box-shadow: 0 0 15px rgba(244, 63, 94, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(225, 29, 72, 0.9); }
+        }
+        .story-ring-adult { animation: pulseAdult 2.5s infinite; }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 flex h-screen overflow-hidden">
@@ -53,14 +58,14 @@
         </div>
     </div>
 
-    <!-- MODAL DE VERIFICACIÓN 18+ (NUEVO) -->
+    <!-- MODAL DE VERIFICACIÓN 18+ -->
     <div id="modalEdad18" class="fixed inset-0 bg-slate-950/90 z-50 hidden flex items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-slate-900 border border-rose-500/50 rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6 text-center">
             <div class="w-16 h-16 rounded-2xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center mx-auto text-2xl font-bold text-rose-400">
                 <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
-            <h2 class="font-black text-2xl text-rose-400">Zona 18+ (Cómics y Arte Libre)</h2>
-            <p class="text-xs text-slate-300 leading-relaxed">Esta sección contiene herramientas de desarrollo de personajes, cómics y arte visual sin restricciones de filtros tradicionales. Debes ser mayor de edad para continuar.</p>
+            <h2 class="font-black text-2xl text-rose-400">Zona 18+ (Contenido Exclusivo)</h2>
+            <p class="text-xs text-slate-300 leading-relaxed">Esta sección contiene material, imágenes, videos y publicaciones explícitas para adultos sin restricciones. Debes confirmar tu mayoría de edad para acceder.</p>
             <div class="flex gap-3 pt-2">
                 <button onclick="cerrarModalEdad()" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-slate-300 py-3 rounded-xl font-bold text-xs transition">Salir</button>
                 <button onclick="confirmarMayorEdad()" class="w-1/2 bg-rose-600 hover:bg-rose-500 text-white py-3 rounded-xl font-bold text-xs shadow-lg transition">Soy mayor de 18 años</button>
@@ -124,10 +129,12 @@
             <button onclick="verificarPermisoCrear()" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium">
                 <i class="fa-solid fa-cloud-arrow-up text-emerald-400 text-base flex-shrink-0"></i> <span class="nav-text truncate">Publicar Creación IA</span>
             </button>
-            <!-- BOTÓN ZONA 18+ EN EL MENÚ -->
+            
+            <!-- BOTÓN ZONA 18+ SIMPLIFICADO -->
             <button onclick="pedirVerificacionEdad()" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-rose-300 hover:bg-rose-950/40 transition text-left font-medium border border-rose-500/20">
-                <i class="fa-solid fa-triangle-exclamation text-rose-400 text-base flex-shrink-0"></i> <span class="nav-text truncate">Zona 18+ (Cómics)</span>
+                <i class="fa-solid fa-triangle-exclamation text-rose-400 text-base flex-shrink-0"></i> <span class="nav-text truncate">Zona 18+</span>
             </button>
+
             <button onclick="mostrarSeccion('manual')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium">
                 <i class="fa-solid fa-book-open-reader text-pink-400 text-base flex-shrink-0"></i> <span class="nav-text truncate">Manual Maestro</span>
             </button>
@@ -175,7 +182,7 @@
         <!-- CONTENIDO DINÁMICO -->
         <div id="mainContent" class="flex-1 p-6 max-w-3xl mx-auto w-full space-y-6">
             
-            <!-- VISTA 1: FEED GLOBAL (CON BOTONES DE SALTO AL CHAT) -->
+            <!-- VISTA 1: FEED GLOBAL -->
             <div id="view-feed" class="space-y-6">
                 <div class="bg-gradient-to-r from-purple-900/60 via-slate-900 to-pink-900/60 border border-purple-500/30 rounded-3xl p-6 shadow-2xl backdrop-blur flex items-center justify-between">
                     <div>
@@ -239,18 +246,33 @@
                 </div>
             </div>
 
-            <!-- VISTA 6: ZONA 18+ (CÓMICS Y ARTE LIBRE) -->
+            <!-- VISTA 6: ZONA 18+ (CON HISTORIAS Y FEED DE VIDEOS E IMÁGENES ADULTAS) -->
             <div id="view-adultos" class="hidden space-y-6">
+                <div class="bg-gradient-to-r from-rose-950 via-slate-900 to-rose-950 border border-rose-500/40 rounded-3xl p-6 shadow-2xl flex items-center justify-between">
+                    <div>
+                        <h2 class="font-black text-xl mb-1 flex items-center gap-2.5 text-rose-400">
+                            <i class="fa-solid fa-triangle-exclamation animate-bounce"></i> Zona 18+ Exclusiva
+                        </h2>
+                        <p class="text-xs text-slate-300">Feed de historias, videos e imágenes sin censura para adultos.</p>
+                    </div>
+                    <span class="bg-rose-500/20 border border-rose-500/40 text-rose-300 px-3 py-1 rounded-full text-xs font-bold">18+ Sin Filtros</span>
+                </div>
+
+                <!-- HISTORIAS 18+ -->
+                <div class="space-y-2">
+                    <span class="text-xs font-bold text-rose-400 uppercase tracking-wider">🔥 Historias Exclusivas 18+</span>
+                    <div id="storiesAdultContainer" class="flex gap-3 overflow-x-auto scrollbar-hide pb-2"></div>
+                </div>
+
+                <!-- FORMULARIO DE GENERACIÓN 18+ -->
                 <div class="bg-slate-900 border border-rose-500/40 rounded-3xl p-6 shadow-xl space-y-4">
-                    <h2 class="font-bold text-xl text-rose-400 flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation"></i> Zona 18+ / Cómics y Arte sin Filtros</h2>
-                    <p class="text-xs text-slate-400">Espacio libre para la conceptualización de personajes, novelas gráficas y arte visual avanzado.</p>
+                    <h3 class="font-bold text-sm text-rose-300 flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles"></i> Generador Gráfico & Video 18+</h3>
                     <form action="/generar" method="POST" class="space-y-4">
                         <input type="hidden" name="adultZone" value="true">
                         <div>
-                            <label class="block text-xs font-bold text-slate-300 mb-1">Prompt Artístico / Descripción del Personaje o Escena</label>
-                            <textarea name="prompt" required placeholder="Describe con detalle el concepto visual, atuendo, iluminación o estilo de cómic..." class="w-full bg-slate-950 border border-rose-500/30 rounded-xl p-3 text-xs text-slate-100 outline-none resize-none h-28 focus:border-rose-500"></textarea>
+                            <textarea name="prompt" required placeholder="Describe la imagen, personaje o video explícito que deseas generar..." class="w-full bg-slate-950 border border-rose-500/30 rounded-xl p-3 text-xs text-slate-100 outline-none resize-none h-24 focus:border-rose-500"></textarea>
                         </div>
-                        <button type="submit" class="w-full bg-gradient-to-r from-rose-600 to-pink-600 text-white py-3 rounded-xl font-bold text-xs shadow-lg shadow-rose-900/40">Generar Creación Gráfica Libre</button>
+                        <button type="submit" class="w-full bg-gradient-to-r from-rose-600 to-pink-600 text-white py-3 rounded-xl font-bold text-xs shadow-lg shadow-rose-900/40">Generar Contenido 18+</button>
                     </form>
                     {% if imagen_url %}
                     <div class="mt-4 text-center bg-slate-950 p-4 rounded-2xl border border-rose-500/30">
@@ -258,6 +280,12 @@
                         <img src="{{ imagen_url }}" class="img-fluid rounded-xl border border-rose-500/50 mt-2 mx-auto max-h-96" alt="Arte 18+">
                     </div>
                     {% endif %}
+                </div>
+
+                <!-- FEED 18+ -->
+                <div class="space-y-3">
+                    <span class="text-xs font-bold text-rose-400 uppercase tracking-wider">📂 Publicaciones y Videos del Feed 18+</span>
+                    <div id="feedAdultPostsContainer" class="space-y-6"></div>
                 </div>
             </div>
 
@@ -322,8 +350,19 @@
             { titulo: "Flujo de Caja", badge: "Negocios", url: "https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-man-working-on-a-financial-graph-42861-large.mp4", poster: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=300", prompt: "Estructura un modelo de flujo de caja optimizado para una startup." }
         ];
 
+        // HISTORIAS EXCLUSIVAS 18+
+        const historiasAdultData = [
+            { titulo: "Modelo 18+", badge: "Exclusivo", url: "https://assets.mixkit.co/videos/preview/mixkit-model-posing-in-a-photo-studio-41525-large.mp4", poster: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300" },
+            { titulo: "Arte Sin Censura", badge: "Video 18+", url: "https://assets.mixkit.co/videos/preview/mixkit-neon-lights-tunnel-background-animation-43003-large.mp4", poster: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=300" }
+        ];
+
         let feedPosts = [
             { id: 1, autor: "Nexus AI Core", tiempo: "Hace 1 min", categoria: "Arte 3D & VFX", texto: "¡Renderizado masivo de arquitectura futurista generado con el clúster multi-servidor de alta potencia!", media: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900", promptIdea: "Desarrolla el prompt avanzado y la arquitectura técnica para renderizar ciudades futuristas en 3D.", likes: 1420, comentarios: [] }
+        ];
+
+        // FEED EXCLUSIVO 18+
+        let feedAdultPosts = [
+            { id: 101, autor: "Studio 18+", tiempo: "Hace 2 min", categoria: "Contenido Adulto", texto: "Creación de personaje y concepto visual sin restricciones para adultos.", media: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900", videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-model-posing-in-a-photo-studio-41525-large.mp4", likes: 890 }
         ];
 
         let reelsData = [
@@ -332,7 +371,9 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             renderizarHistorias();
+            renderizarHistoriasAdultas();
             renderizarFeed();
+            renderizarFeedAdultos();
             renderizarReels();
             detectarDispositivoCreador();
         });
@@ -407,6 +448,22 @@
             });
         }
 
+        function renderizarHistoriasAdultas() {
+            const container = document.getElementById('storiesAdultContainer');
+            if(!container) return;
+            container.innerHTML = '';
+            historiasAdultData.forEach((h) => {
+                container.innerHTML += `
+                    <div class="story-ring-adult flex-shrink-0 w-28 h-40 rounded-2xl p-2.5 flex flex-col justify-between cursor-pointer border-2 border-rose-500 hover:scale-105 transition shadow-lg relative overflow-hidden">
+                        <video src="${h.url}" poster="${h.poster}" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0"></video>
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-slate-950/40 z-0"></div>
+                        <span class="text-[9px] font-extrabold bg-rose-600 text-white px-2 py-0.5 rounded-full self-start z-10 shadow">${h.badge}</span>
+                        <span class="text-xs font-bold text-white text-center drop-shadow z-10">${h.titulo}</span>
+                    </div>
+                `;
+            });
+        }
+
         function renderizarReels() {
             const container = document.getElementById('reelsContainer');
             container.innerHTML = '';
@@ -454,6 +511,30 @@
             });
         }
 
+        function renderizarFeedAdultos() {
+            const container = document.getElementById('feedAdultPostsContainer');
+            if(!container) return;
+            container.innerHTML = '';
+            feedAdultPosts.forEach(post => {
+                container.innerHTML += `
+                    <div class="bg-slate-900/90 border border-rose-500/30 rounded-3xl p-6 shadow-xl space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-rose-600 to-pink-600 flex items-center justify-center font-bold text-white shadow-lg">18+</div>
+                                <div>
+                                    <h4 class="font-bold text-sm text-rose-300">${post.autor}</h4>
+                                    <span class="text-[11px] text-rose-400 font-medium">${post.tiempo} • 🔞 ${post.categoria}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-200 leading-relaxed">${post.texto}</p>
+                        ${post.videoUrl ? `<video src="${post.videoUrl}" autoplay muted loop playsinline class="w-full h-72 object-cover rounded-2xl border border-rose-500/30 shadow-inner"></video>` : ''}
+                        ${post.media && !post.videoUrl ? `<div class="rounded-2xl overflow-hidden border border-rose-500/30 h-72 bg-cover bg-center shadow-inner" style="background-image: url('${post.media}');"></div>` : ''}
+                    </div>
+                `;
+            });
+        }
+
         function publicarContenidoUsuario(event) {
             event.preventDefault();
             const texto = document.getElementById('userTextPost').value;
@@ -486,7 +567,6 @@
         function abrirChatIA() { document.getElementById('chatModal').classList.remove('translate-x-full'); }
         function cerrarChatIA() { document.getElementById('chatModal').classList.add('translate-x-full'); }
 
-        // SALTO DIRECTO AL CHAT CON PROMPT PRECARGADO
         async function desarrollarIdeaChat(promptTexto) {
             abrirChatIA();
             document.getElementById('messageInput').value = promptTexto;
