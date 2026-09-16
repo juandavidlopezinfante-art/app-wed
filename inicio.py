@@ -1,61 +1,55 @@
 import os
-import logging
-from flask import Flask, request, jsonify, render_template
-import google.generativeai as genai
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("DigitalBusinessIA-ProMax")
+from flask import Flask, render_template, request, jsonify
+from google import genai
+from google.genai import types
 
 app = Flask(__name__)
 
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-if GEMINI_API_KEY:
-    genai.configure(api_key=GEMINI_API_KEY)
-
-def obtener_motor_ia():
-    # Usamos gemini-1.5-pro para garantizar respuestas de calidad superior, analíticas y profesionales
-    try:
-        return genai.GenerativeModel('gemini-1.5-pro')
-    except Exception:
-        return genai.GenerativeModel('gemini-1.5-flash')
+# Configuración de la API de Google Gemini (Asegúrate de tener tu variable de entorno GEMINI_API_KEY configurada en tu servidor)
+client = genai.Client()
 
 @app.route('/')
-def index():
+def home():
     return render_template('index.html')
 
-@app.route('/health', methods=['GET'])
-def health():
-    return jsonify({"status": "online", "engine": "Gemini Pro 1.5"}), 200
-
-@app.route('/api/generate', methods=['POST'])
-def api_generate():
+@app.route('/api/chat', methods=['POST'])
+def chat_con_ia():
     try:
-        data = request.get_json(silent=True) or {}
-        tool_name = data.get('toolName', 'Asistente IA').strip()
-        prompt = data.get('prompt', '').strip()
-
-        if not prompt:
-            return jsonify({"error": "El prompt se encuentra vacío."}), 400
-
-        if not GEMINI_API_KEY:
-            return jsonify({"error": "La API Key de Gemini no está configurada en las variables de entorno de Render."}), 500
-
-        model = obtener_motor_ia()
+        # Recibir mensaje del usuario y archivos adjuntos si los hubiera
+        user_message = request.form.get('message', '')
+        file = request.files.get('file')
         
-        # Prompt maestro de máxima exigencia para evitar respuestas cortas o de baja calidad
-        prompt_maestro = (
-            f"Actúa como un director ejecutivo, estratega senior y experto absoluto en {tool_name}. "
-            f"No des respuestas genéricas ni cortas. Proporciona una solución exhaustiva, altamente desarrollada, "
-            f"estructurada profesionalmente con formato Markdown (negritas, listas, subtítulos claros) y lista para aplicarse en el mundo real:\n\n{prompt}"
+        contents = [user_message]
+        
+        # Si el usuario adjunta un archivo (imagen, documento, audio, etc.)
+        if file:
+            file_bytes = file.read()
+            # Subimos/procesamos el archivo de forma temporal para que la IA lo lea
+            uploaded_file = client.files.upload(
+                file=file_bytes,
+                config=types.UploadFileConfig(mime_type=file.mimetype)
+            )
+            contents.append(uploaded_file)
+
+        # Usamos el modelo más potente y rápido de Gemini para responder
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=contents,
+            config=types.GenerateContentConfig(
+                system_instruction="Eres el núcleo de inteligencia artificial de una plataforma social y de productividad avanzada. Ayuda al usuario con código, redacción de documentos Word/Excel, análisis de archivos y generación de ideas creativas con un tono profesional y dinámico."
+            )
         )
 
-        response = model.generate_content(prompt_maestro)
-        return jsonify({"response": response.text, "success": True})
+        return jsonify({
+            "status": "success",
+            "reply": response.text
+        })
 
     except Exception as e:
-        logger.error(f"Error crítico en motor IA: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=5000, debug=True)
