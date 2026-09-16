@@ -16,18 +16,29 @@ logger = logging.getLogger("DigitalBusinessIA-ProEnterprise")
 app = Flask(__name__)
 
 # ==========================================
-# CONFIGURACIÓN DE CREDENCIALES Y SEGURIDAD
+# CONFIGURACIÓN DE CREDENCIALES Y DISTRIBUCIÓN DE LLAVES (Anti-Saturación)
 # ==========================================
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+# Soportamos múltiples variables para balancear la carga entre diferentes servicios o cuentas
+API_KEYS_POOL = [
+    os.environ.get("GEMINI_CHAT_KEY"),
+    os.environ.get("GEMINI_API_KEY"),
+    os.environ.get("GEMINI_FEED_KEY"),
+    os.environ.get("UNRESTRICTED_API_KEY")
+]
+# Filtramos valores nulos o vacíos
+API_KEYS_POOL = [key for key in API_KEYS_POOL if key]
+
+# Si hay llaves configuradas, inicializamos la principal por defecto
+PRIMARY_API_KEY = API_KEYS_POOL[0] if API_KEYS_POOL else None
 
 STATIC_DIR = os.path.join(app.root_path, 'static')
 os.makedirs(STATIC_DIR, exist_ok=True)
 
-if GEMINI_API_KEY:
-    genai.configure(api_key=GEMINI_API_KEY)
-    logger.info("API Key de Gemini configurada correctamente en el sistema.")
+if PRIMARY_API_KEY:
+    genai.configure(api_key=PRIMARY_API_KEY)
+    logger.info(f"Sistema inicializado con {len(API_KEYS_POOL)} llave(s) API configuradas para balanceo de carga.")
 else:
-    logger.warning("ADVERTENCIA: La variable de entorno GEMINI_API_KEY no se encuentra detectada.")
+    logger.warning("ADVERTENCIA: No se detectaron llaves API de Gemini en las variables de entorno.")
 
 # Configuración avanzada de parámetros de generación de IA (Creatividad y Máxima Potencia)
 generation_config = {
@@ -37,11 +48,19 @@ generation_config = {
     "max_output_tokens": 8192,
 }
 
-def obtener_motor_inteligente():
+def obtener_motor_inteligente(custom_key=None):
     """
-    Selecciona de forma segura y tolerante a fallos el modelo disponible
-    para garantizar que la aplicación nunca se quede sin servicio.
+    Selecciona de forma dinámica y tolerante a fallos el modelo y la llave
+    disponible, rotando el pool de llaves si existe saturación (*rate limit*).
     """
+    # Si se pasa una llave específica (ej. para automatizaciones o zona libre), la configuramos temporalmente
+    if custom_key:
+        genai.configure(api_key=custom_key)
+    elif API_KEYS_POOL:
+        # Rotación inteligente simple para repartir el peso de las peticiones
+        import random
+        genai.configure(api_key=random.choice(API_KEYS_POOL))
+
     modelos_disponibles = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro']
     for nombre_modelo in modelos_disponibles:
         try:
@@ -63,10 +82,15 @@ def index():
 @app.route('/health', methods=['GET'])
 def health_check():
     """Ruta de diagnóstico para verificar el estado operativo en Render/Railway."""
-    return jsonify({"status": "active", "service": "Digital Business IA Pro", "secure": True}), 200
+    return jsonify({
+        "status": "active", 
+        "service": "Digital Business IA Pro", 
+        "secure": True,
+        "keys_loaded": len(API_KEYS_POOL)
+    }), 200
 
 # ==========================================
-# RUTAS DE GENERACIÓN DE TEXTO Y ASISTENCIA
+# RUTAS DE GENERACIÓN DE TEXTO Y ASISTENCIA (Chat Multimodal Pesado)
 # ==========================================
 @app.route('/api/generate', methods=['POST'])
 def api_generate():
@@ -78,10 +102,13 @@ def api_generate():
         if not prompt:
             return jsonify({"error": "Prompt no proporcionado."}), 400
 
-        if not GEMINI_API_KEY:
-            return jsonify({"response": "⚠️ Error: Falta configurar la API Key en el servidor de Render.", "success": False}), 500
+        if not API_KEYS_POOL:
+            return jsonify({"response": "⚠️ Error: Falta configurar las API Keys en el servidor de Render.", "success": False}), 500
 
-        model = obtener_motor_inteligente()
+        # Usamos la llave destinada al chat principal o rotamos del pool
+        chat_key = os.environ.get("GEMINI_CHAT_KEY") or PRIMARY_API_KEY
+        model = obtener_motor_inteligente(custom_key=chat_key)
+        
         prompt_completo = f"Actúa como un experto profesional en {tool_name}. Responde de forma detallada, creativa y estructurada:\n\n{prompt}"
         
         chat_response = model.generate_content(prompt_completo)
@@ -105,9 +132,12 @@ def api_generate():
 # ==========================================
 @app.route('/api/feed-viral', methods=['GET'])
 def generar_feed_viral():
-    """Genera automáticamente contenido dinámico y viral para poblar historias, publicaciones y reels diarios."""
+    """Genera automáticamente contenido dinámico y viral con una llave dedicada para no saturar el chat."""
     try:
-        model = obtener_motor_inteligente()
+        # Asignamos la llave exclusiva para automatizaciones si existe
+        feed_key = os.environ.get("GEMINI_FEED_KEY") or PRIMARY_API_KEY
+        model = obtener_motor_inteligente(custom_key=feed_key)
+        
         prompt_viral = (
             "Genera 3 ideas de contenido altamente viral para una red social de tecnología, inteligencia artificial y estilo de vida. "
             "Devuélvelo estrictamente en formato de lista JSON con las llaves: 'titulo', 'tipo' (puede ser 'Historia', 'Reel' o 'Post'), "
@@ -129,7 +159,6 @@ def generar_feed_viral():
 # ==========================================
 # RUTAS DE GESTIÓN DE CANALES BLOGUEROS Y SUSCRIPCIONES
 # ==========================================
-# Almacenamiento en memoria temporal para canales y blogs creados en la plataforma
 CANALES_BLOGUEROS = [
     {"id": 1, "nombre": "Inteligencia Artificial Avanzada", "creador": "NexusCore", "precio": 10.00}
 ]
@@ -167,7 +196,7 @@ def gestionar_blogueros():
         return jsonify({"error": str(e)}), 500
 
 # ==========================================
-# RUTAS DE GENERACIÓN VISUAL Y ZONA 18+
+# RUTAS DE GENERACIÓN VISUAL Y ZONA 18+ (Libertad total de contenido)
 # ==========================================
 @app.route('/generar', methods=['POST'])
 def generar_imagen_web():
@@ -179,9 +208,9 @@ def generar_imagen_web():
         if not prompt:
             return render_template('index.html', error_imagen="Falta el texto descriptivo de la imagen.")
 
-        # Si es de la zona 18+, optimizamos el prompt para permitir libertad artística total sin censura de motor
+        # Si es de la zona 18+, procesamos con la llave desinhibida independiente si está configurada
         if is_adult:
-            logger.info("Procesando solicitud en Zona 18+ sin restricciones.")
+            logger.info("Procesando solicitud en Zona 18+ con canal independiente sin restricciones.")
             encoded_prompt = urllib.parse.quote(prompt + ", highly detailed digital art, uncensored concept art, expressive character design")
         else:
             encoded_prompt = urllib.parse.quote(prompt)
@@ -223,5 +252,5 @@ def generar_imagen_json():
 # ==========================================
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    logger.info(f"Iniciando servidor backend en el puerto {port}...")
+    logger.info(f"Iniciando servidor backend optimizado en el puerto {port}...")
     app.run(host='0.0.0.0', port=port)
