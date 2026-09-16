@@ -12,18 +12,9 @@ GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
 
-# Configuración de generación de alta calidad
-generation_config = {
-    "temperature": 0.85,
-    "top_p": 0.95,
-    "max_output_tokens": 8192,
-}
-
 def obtener_modelo():
-    try:
-        return genai.GenerativeModel('gemini-1.5-flash', generation_config=generation_config)
-    except:
-        return genai.GenerativeModel('gemini-pro', generation_config=generation_config)
+    # Usamos gemini-1.5-flash con la forma correcta de inicialización para evitar errores 500
+    return genai.GenerativeModel('gemini-1.5-flash')
 
 @app.route('/')
 def index():
@@ -33,7 +24,6 @@ def index():
 def health():
     return jsonify({"status": "ok"}), 200
 
-# RUTA ÚNICA MAESTRA: Maneja todas las herramientas sin importar el módulo
 @app.route('/api/generate', methods=['POST'])
 def api_generate():
     try:
@@ -43,6 +33,9 @@ def api_generate():
 
         if not prompt:
             return jsonify({"error": "El prompt está vacío."}), 400
+
+        if not GEMINI_API_KEY:
+            return jsonify({"error": "Falta configurar la GEMINI_API_KEY en el servidor."}), 500
 
         model = obtener_modelo()
         prompt_sistema = f"Eres un experto profesional nivel senior en {tool_name}. Proporciona una respuesta impecable, estructurada y de alto valor comercial:\n\n{prompt}"
