@@ -5,7 +5,7 @@ import google.generativeai as genai
 
 logger = logging.getLogger("DigitalBusinessIA-Motor")
 
-# Pool avanzado de llaves API para balanceo de carga masivo
+# Pool avanzado de llaves API
 API_KEYS_POOL = [
     os.environ.get("GEMINI_CHAT_KEY"),
     os.environ.get("GEMINI_CHAT_KEY_1"),
@@ -28,11 +28,12 @@ generation_config = {
 }
 
 def obtener_motor_inteligente():
-    """Selecciona aleatoriamente una llave del pool para evitar saturación (rate limits)."""
+    """Selecciona aleatoriamente una llave del pool para evitar saturación."""
     if API_KEYS_POOL:
         import random
         genai.configure(api_key=random.choice(API_KEYS_POOL))
     
+    # Usamos gemini-1.5-flash que es perfectamente compatible con google-generativeai==0.8.3
     modelos_disponibles = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro']
     for nombre_modelo in modelos_disponibles:
         try:
@@ -42,7 +43,7 @@ def obtener_motor_inteligente():
     return genai.GenerativeModel('gemini-pro', generation_config=generation_config)
 
 def procesar_prompt_ia(tool_name, prompt):
-    """Ejecuta la consulta con el modelo de Gemini de forma ultra segura."""
+    """Ejecuta la consulta con Gemini de forma ultra segura."""
     try:
         if not API_KEYS_POOL:
             return "⚠️ Error: Faltan las API Keys de Gemini configuradas en el servidor de Render."
@@ -63,7 +64,7 @@ def procesar_prompt_ia(tool_name, prompt):
         return f"⚠️ Error interno procesando la solicitud: {str(e)}"
 
 def generar_url_imagen(prompt, is_adult=False):
-    """Genera URLs dinámicas de alta calidad (con soporte para contenido libre/adulto)."""
+    """Genera URLs dinámicas de alta calidad."""
     if is_adult:
         encoded_prompt = urllib.parse.quote(prompt + ", highly detailed digital art, uncensored concept art, expressive character design")
     else:
