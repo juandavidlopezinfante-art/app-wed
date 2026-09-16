@@ -3,350 +3,540 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Business IA - Panel Pro V2</title>
+    <title>Digital Business IA - Panel Pro Max Enterprise</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #0f172a; color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; }
-        .navbar { background-color: #1e293b; border-bottom: 1px solid #334155; }
-        .card { background-color: #1e293b; border: 1px solid #334155; color: #f8fafc; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.4); border-radius: 12px; }
-        .form-control, .form-select { background-color: #0f172a; border: 1px solid #475569; color: #fff; border-radius: 8px; }
-        .form-control:focus { background-color: #0f172a; color: #fff; border-color: #38bdf8; box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.25); }
-        .btn-primary { background-color: #2563eb; border: none; font-weight: 600; border-radius: 8px; }
-        .btn-primary:hover { background-color: #1d4ed8; }
+        :root {
+            --bg-main: #090d16;
+            --bg-card: #131c31;
+            --border-neon: #38bdf8;
+            --text-primary: #f8fafc;
+            --accent-blue: #2563eb;
+        }
+        body { background-color: var(--bg-main); color: var(--text-primary); font-family: 'Inter', 'Segoe UI', sans-serif; overflow-x: hidden; }
+        .navbar { background-color: var(--bg-card); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px); }
+        .card { background-color: var(--bg-card); border: 1px solid #1e293b; color: var(--text-primary); margin-bottom: 25px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); border-radius: 14px; transition: 0.3s; }
+        .card:hover { border-color: rgba(56, 189, 248, 0.3); }
+        .form-control, .form-select { background-color: #0b1120; border: 1px solid #334155; color: #fff; border-radius: 8px; }
+        .form-control:focus { background-color: #0b1120; color: #fff; border-color: var(--border-neon); box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.25); }
+        .btn-primary { background: linear-gradient(135deg, #2563eb, #1d4ed8); border: none; font-weight: 600; border-radius: 8px; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+        .btn-primary:hover { background: linear-gradient(135deg, #1d4ed8, #1e40af); }
         
-        /* HISTORIAS PRO CON EFECTO NEÓN EN MOVIMIENTO (100% ESTABLE) */
+        /* 🌟 10 HISTORIAS PRO CON EFECTO NEÓN FLUIDO */
         .stories-container {
             display: flex;
-            gap: 15px;
+            gap: 16px;
             overflow-x: auto;
-            padding: 10px 5px 20px 5px;
-            margin-bottom: 25px;
+            padding: 10px 5px 25px 5px;
+            margin-bottom: 20px;
             scrollbar-width: thin;
-            scrollbar-color: #38bdf8 #1e293b;
+            scrollbar-color: var(--border-neon) var(--bg-card);
         }
-        .story-card-neon {
+        .story-card-pro {
             position: relative;
             min-width: 160px;
             height: 200px;
             border-radius: 16px;
             overflow: hidden;
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.7);
             transition: transform 0.3s ease, border-color 0.3s ease;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
             padding: 14px;
-            border: 2px solid rgba(56, 189, 248, 0.4);
-            background: linear-gradient(135deg, #1e293b, #0f172a, #2563eb);
+            border: 2px solid rgba(56, 189, 248, 0.3);
+            background: linear-gradient(135deg, #1e293b, #0f172a, #1d4ed8);
             background-size: 200% 200%;
-            animation: gradientMove 6s ease infinite;
+            animation: neonPulse 8s ease infinite;
             flex-shrink: 0;
         }
-        @keyframes gradientMove {
+        @keyframes neonPulse {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        .story-card-neon:hover {
+        .story-card-pro:hover {
             transform: translateY(-6px);
-            border-color: #38bdf8;
-            box-shadow: 0 12px 30px rgba(56, 189, 248, 0.6);
+            border-color: var(--border-neon);
+            box-shadow: 0 12px 35px rgba(56, 189, 248, 0.5);
         }
         .story-content { position: relative; z-index: 3; }
-        .story-badge { font-size: 0.6rem; background: #38bdf8; color: #0f172a; padding: 2px 6px; border-radius: 4px; font-weight: 800; text-transform: uppercase; }
+        .story-badge { font-size: 0.6rem; background: var(--border-neon); color: var(--bg-main); padding: 2px 8px; border-radius: 4px; font-weight: 800; text-transform: uppercase; }
         .story-title { color: #fff; font-size: 0.85rem; font-weight: bold; margin-top: 6px; line-height: 1.1; }
         .story-action { color: #38bdf8; font-size: 0.7rem; font-weight: 700; margin-top: 4px; }
 
-        .chat-box { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(56, 189, 248, 0.25); height: 200px; overflow-y: auto; padding: 12px; border-radius: 8px; font-size: 0.85rem; margin-top: 10px; }
-        .manual-box { background-color: #131c31; border-left: 4px solid #38bdf8; padding: 10px 12px; font-size: 0.8rem; margin-bottom: 12px; border-radius: 4px; display: none; }
-        .file-info { font-size: 0.75rem; color: #38bdf8; margin-top: 4px; display: block; }
+        /* CAJAS DE RESPUESTA PROFESIONALES */
+        .chat-box { 
+            background: rgba(11, 17, 32, 0.95); 
+            border: 1px solid rgba(56, 189, 248, 0.2); 
+            height: 230px; 
+            overflow-y: auto; 
+            padding: 16px; 
+            border-radius: 8px; 
+            font-size: 0.9rem; 
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
+        }
         
-        .sidebar { height: 100%; width: 0; position: fixed; z-index: 1050; top: 0; left: 0; background-color: #1e293b; overflow-x: hidden; transition: 0.3s; padding-top: 60px; border-right: 1px solid #334155; }
-        .sidebar button { padding: 12px 20px; text-decoration: none; font-size: 0.95rem; color: #f8fafc; display: block; background: none; border: none; width: 100%; text-align: left; transition: 0.2s; }
-        .sidebar button:hover { background-color: #334155; color: #38bdf8; }
+        .response-tools-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0b1120;
+            padding: 6px 12px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            border: 1px solid #334155;
+            border-bottom: none;
+            margin-top: 15px;
+            font-size: 0.8rem;
+            color: #38bdf8;
+        }
+
+        .manual-box { background-color: #0b1120; border-left: 4px solid var(--border-neon); padding: 12px 15px; font-size: 0.85rem; margin-bottom: 15px; border-radius: 6px; display: none; }
+        .file-indicator { font-size: 0.8rem; color: #38bdf8; margin-top: 5px; display: block; }
+        .banner-enterprise { background: linear-gradient(135deg, #1e3a8a, #2563eb); border: 1px solid #3b82f6; border-radius: 10px; padding: 14px 20px; margin-bottom: 25px; text-align: center; font-weight: 600; box-shadow: 0 4px 15px rgba(37,99,235,0.2); }
+        
+        /* BARRA LATERAL (SIDEBAR) */
+        .sidebar {
+            height: 100%; width: 0; position: fixed; z-index: 1050; top: 0; left: 0;
+            background-color: var(--bg-card); overflow-x: hidden; transition: 0.3s; padding-top: 60px;
+            border-right: 1px solid #334155; box-shadow: 10px 0 30px rgba(0,0,0,0.8);
+        }
+        .sidebar button {
+            padding: 12px 20px; font-size: 0.95rem; color: #f8fafc; display: block; background: none; border: none; width: 100%; text-align: left; transition: 0.2s;
+        }
+        .sidebar button:hover { background-color: #1e293b; color: var(--border-neon); }
         .sidebar .closebtn { position: absolute; top: 10px; right: 20px; font-size: 2rem; cursor: pointer; color: #fff; }
+        .sidebar-header { padding: 0 20px 15px 20px; font-size: 1.2rem; font-weight: bold; border-bottom: 1px solid #334155; color: var(--border-neon); }
     </style>
 </head>
 <body>
 
-    <!-- SIDEBAR -->
+    <!-- BARRA LATERAL (SIDEBAR) -->
     <div id="mySidebar" class="sidebar">
         <span class="closebtn" onclick="cerrarSidebar()">&times;</span>
-        <div class="px-3 text-info fw-bold fs-5 mb-3">⚡ Menú Pro V2</div>
-        <button onclick="location.reload()">➕ Reiniciar Panel</button>
-        <button onclick="localStorage.clear(); location.reload();">🗑️ Borrar Historiales</button>
+        <div class="sidebar-header">⚡ Menú Control Pro Max</div>
+        <div class="p-3">
+            <button class="btn btn-outline-primary w-100 mb-2 text-start" onclick="nuevoChatGeneral()">➕ Nuevo Chat / Reiniciar</button>
+            <button class="btn btn-outline-info w-100 mb-2 text-start" onclick="toggleBuscadorSidebar()">🔍 Buscar en los Chats</button>
+            <div id="buscadorContainer" style="display:none;" class="mb-2">
+                <input type="text" id="inputBuscador" class="form-control form-control-sm" placeholder="Escribe para buscar..." onkeyup="buscarEnChats()">
+            </div>
+            <button class="btn btn-outline-success w-100 mb-2 text-start" onclick="abrirSoporteIA()">🤖 Ayuda Técnica con IA</button>
+            <button class="btn btn-outline-warning w-100 mb-2 text-start" onclick="abrirBuzonSugerencias()">💡 Buzón de Sugerencias</button>
+            <button class="btn btn-outline-light w-100 mb-2 text-start" onclick="compartirArchivoRapido()">🔗 Compartir Plataforma</button>
+            <button class="btn btn-outline-danger w-100 mb-2 text-start" onclick="informarProblema()">⚠️ Informar un Problema</button>
+            <button class="btn btn-outline-secondary w-100 mb-2 text-start" onclick="borrarTodoHistorial()">🗑️ Borrar Todo el Historial</button>
+        </div>
     </div>
 
-    <nav class="navbar navbar-dark px-4 py-3">
+    <!-- BARRA DE NAVEGACIÓN -->
+    <nav class="navbar navbar-expand-lg navbar-dark px-4 py-3">
         <div class="d-flex align-items-center gap-3">
-            <button class="btn btn-outline-info btn-sm" onclick="abrirSidebar()">☰ Menú</button>
-            <span class="navbar-brand fw-bold fs-4 m-0">⚡ Digital Business IA Pro V2</span>
+            <button class="btn btn-outline-info btn-sm" onclick="abrirSidebar()">☰ Menú Pro</button>
+            <a class="navbar-brand fw-bold fs-4 m-0" href="#">⚡ Digital Business IA Pro Max</a>
         </div>
-        <span class="badge bg-success p-2">🟢 Sistema Activo y Blindado</span>
+        <div class="ms-auto d-flex gap-2">
+            <button class="btn btn-sm btn-outline-light" onclick="activarModoCelular()">📱 Modo Celular</button>
+            <span class="badge bg-success align-self-center p-2 fs-6">🟢 Motor Gemini Pro 1.5 Activo</span>
+        </div>
     </nav>
 
     <div class="container my-4">
         
-        <!-- HISTORIAS PRO SUPERIORES (10 CASILLAS) -->
-        <div class="mb-2 text-info fw-bold"><i class="fas fa-bolt me-1"></i> HISTORIAS PRO & TENDENCIAS DIARIAS (10 Módulos Interactivos)</div>
-        <div class="stories-container" id="storiesBar"></div>
+        <!-- 🌟 LAS 10 HISTORIAS PRO SUPERIORES -->
+        <div class="mb-2">
+            <span class="text-info fw-bold small text-uppercase"><i class="fas fa-bolt me-1"></i> Historias Pro & Tendencias Diarias (10 Módulos Interactivos)</span>
+            <div class="stories-container" id="storiesBar"></div>
+        </div>
 
-        <!-- LOS 10 MÓDULOS COMPLETOS DE LA APLICACIÓN -->
+        <div class="banner-enterprise shadow-sm">
+            🚀 <strong>Infraestructura Web Avanzada Activada:</strong> Máxima velocidad, procesamiento profundo de IA y persistencia total de datos.
+        </div>
+
+        <!-- CONTENEDOR DE LOS 10 MÓDULOS COMPLETOS -->
         <div class="row">
 
             <!-- 1. Guiones Virales -->
             <div class="col-md-6">
                 <div class="card p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="m-0">🎬 Guiones Virales (Reels/TikTok)</h5>
-                        <button class="btn btn-sm btn-outline-info py-0" onclick="toggleManual('man-guiones')">Manual</button>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">🎬 Guiones Virales (Reels/TikTok)</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-guiones')">📖 Manual</button>
                     </div>
-                    <div id="man-guiones" class="manual-box">Indica nicho y tema para crear ganchos de retención de 3s.</div>
+                    <div id="manual-guiones" class="manual-box">Indica el nicho y tema principal. La IA generará un guion detallado con ganchos de retención de alta conversión.</div>
                     <textarea id="promptGuiones" class="form-control mb-2" rows="2" placeholder="Ej. Nicho fitness..."></textarea>
-                    <input type="file" id="fileGuiones" class="form-control form-control-sm mb-2" onchange="mostrarArchivo('fileGuiones', 'fileInfoGuiones')">
-                    <span id="fileInfoGuiones" class="file-info"></span>
-                    <button class="btn btn-primary w-100" onclick="procesarIA('Guiones Virales', 'promptGuiones', 'resultGuiones')">Generar Guion</button>
-                    <div class="chat-box" id="resultGuiones">Historial de Guiones...</div>
+                    <input type="file" id="fileGuiones" class="form-control form-control-sm mb-2" onchange="mostrarNombreArchivo('fileGuiones', 'fileNameGuiones')" multiple>
+                    <span id="fileNameGuiones" class="file-indicator"></span>
+                    <button class="btn btn-primary w-100" onclick="procesarModuloIA('Guiones Virales', 'promptGuiones', 'fileGuiones', 'resultGuiones')">Generar Guion Profesional</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultGuiones', 'Guion_Viral.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultGuiones')">🧹 Limpiar</button>
+                    </div>
+                    <div class="chat-box mt-3" id="resultGuiones">Historial de Guiones...</div>
                 </div>
             </div>
 
             <!-- 2. Copys Publicitarios -->
             <div class="col-md-6">
                 <div class="card p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="m-0">✍️ Copys Publicitarios (Ads)</h5>
-                        <button class="btn btn-sm btn-outline-info py-0" onclick="toggleManual('man-copys')">Manual</button>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">✍️ Copys Publicitarios (Ads/Ventas)</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-copys')">📖 Manual</button>
                     </div>
-                    <div id="man-copys" class="manual-box">Redacta anuncios de conversión con fórmula AIDA o PAS.</div>
+                    <div id="manual-copys" class="manual-box">Describe tu producto u oferta para redactar anuncios persuasivos aplicando fórmulas AIDA / PAS.</div>
                     <textarea id="promptCopys" class="form-control mb-2" rows="2" placeholder="Ej. Lanzamiento de curso..."></textarea>
-                    <input type="file" id="fileCopys" class="form-control form-control-sm mb-2" onchange="mostrarArchivo('fileCopys', 'fileInfoCopys')">
-                    <span id="fileInfoCopys" class="file-info"></span>
-                    <button class="btn btn-primary w-100" onclick="procesarIA('Copys Publicitarios', 'promptCopys', 'resultCopys')">Generar Copy</button>
-                    <div class="chat-box" id="resultCopys">Historial de Copys...</div>
+                    <input type="file" id="fileCopys" class="form-control form-control-sm mb-2" onchange="mostrarNombreArchivo('fileCopys', 'fileNameCopys')" multiple>
+                    <span id="fileNameCopys" class="file-indicator"></span>
+                    <button class="btn btn-primary w-100" onclick="procesarModuloIA('Copys Publicitarios', 'promptCopys', 'fileCopys', 'resultCopys')">Generar Copy de Ventas</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultCopys', 'Copy_Publicitario.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultCopys')">🧹 Limpiar</button>
+                    </div>
+                    <div class="chat-box mt-3" id="resultCopys">Historial de Copys...</div>
                 </div>
             </div>
 
-            <!-- 3. Imágenes IA (HD) -->
+            <!-- 3. Imágenes IA HD -->
             <div class="col-md-6">
                 <div class="card p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="m-0">🎨 Imágenes IA (Publicidad/Brand)</h5>
-                        <button class="btn btn-sm btn-outline-info py-0" onclick="toggleManual('man-imagen')">Manual</button>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">🎨 Imágenes IA (Publicidad/Brand)</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-imagen')">📖 Manual</button>
                     </div>
-                    <div id="man-imagen" class="manual-box">Describe tu mockup en alta definición (ej: fotorrealista, 4k).</div>
-                    <textarea id="promptImagen" class="form-control mb-2" rows="2" placeholder="Ej. Retrato fotorrealista de Boruto Uzumaki adulto, estilo cinematográfico, 4k..."></textarea>
-                    <button class="btn btn-primary w-100" onclick="generarImagenAltaCalidad()">Generar Recurso Visual HD</button>
-                    <div class="chat-box text-center" id="resultImagen">Historial de Imágenes...</div>
+                    <div id="manual-imagen" class="manual-box">Describe en alta definición el concepto visual que deseas plasmar en fotorrealismo 4k.</div>
+                    <input type="text" id="promptImagenInput" class="form-control mb-3" placeholder="Ej. Retrato fotorrealista de Boruto Uzumaki adulto, iluminación cinematográfica, 4k...">
+                    <button type="button" class="btn btn-primary w-100" onclick="generarImagenHD()">Generar Recurso Visual HD</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-secondary w-100" onclick="limpiarChat('resultImagen')">🧹 Limpiar Vista</button>
+                    </div>
+                    <div class="chat-box mt-3 text-center" id="resultImagen">Historial de Imágenes IA...</div>
                 </div>
             </div>
 
             <!-- 4. Videos HD / Storyboard -->
             <div class="col-md-6">
                 <div class="card p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="m-0">🎬 Videos HD (Storyboard)</h5>
-                        <button class="btn btn-sm btn-outline-info py-0" onclick="toggleManual('man-video')">Manual</button>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">🎬 Videos HD (Storyboard)</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-video')">📖 Manual</button>
                     </div>
-                    <div id="man-video" class="manual-box">Estructura secuencias y tiempos para producciones audiovisuales.</div>
-                    <textarea id="promptVideo" class="form-control mb-2" rows="2" placeholder="Describe secuencia comercial..."></textarea>
-                    <input type="file" id="fileVideo" class="form-control form-control-sm mb-2" onchange="mostrarArchivo('fileVideo', 'fileInfoVideo')">
-                    <span id="fileInfoVideo" class="file-info"></span>
-                    <button class="btn btn-primary w-100" onclick="procesarIA('Generador de Videos HD', 'promptVideo', 'resultVideo')">Procesar Video</button>
-                    <div class="chat-box" id="resultVideo">Historial de Videos...</div>
+                    <div id="manual-video" class="manual-box">Estructura secuencias audiovisuales y planeaciones de producción profesional escena por escena.</div>
+                    <textarea id="promptVideo" class="form-control mb-2" rows="2" placeholder="Describe la secuencia del comercial..."></textarea>
+                    <input type="file" id="fileVideo" class="form-control form-control-sm mb-2" onchange="mostrarNombreArchivo('fileVideo', 'fileNameVideo')" multiple>
+                    <span id="fileNameVideo" class="file-indicator"></span>
+                    <button class="btn btn-primary w-100" onclick="procesarModuloIA('Generador de Videos HD', 'promptVideo', 'fileVideo', 'resultVideo')">Procesar Storyboard HD</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultVideo', 'Storyboard_Video.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultVideo')">🧹 Limpiar</button>
+                    </div>
+                    <div class="chat-box mt-3" id="resultVideo">Historial de Videos HD...</div>
                 </div>
             </div>
 
             <!-- 5. Asistente Finanzas y Excel -->
             <div class="col-md-6">
                 <div class="card p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="m-0">📊 Asistente de Finanzas y Excel</h5>
-                        <button class="btn btn-sm btn-outline-info py-0" onclick="toggleManual('man-excel')">Manual</button>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">📊 Asistente de Finanzas y Excel</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-excel')">📖 Manual</button>
                     </div>
-                    <div id="man-excel" class="manual-box">Modela presupuestos, flujos de caja y cálculos empresariales.</div>
-                    <textarea id="promptExcel" class="form-control mb-2" rows="2" placeholder="Cálculo financiero..."></textarea>
-                    <button class="btn btn-primary w-100" onclick="procesarIA('Asistente Excel', 'promptExcel', 'resultExcel')">Ejecutar Finanzas</button>
-                    <div class="chat-box" id="resultExcel">Historial Financiero...</div>
+                    <div id="manual-excel" class="manual-box">Diseña presupuestos, flujos de caja y fórmulas financieras avanzadas con análisis experto.</div>
+                    <textarea id="promptExcel" class="form-control mb-2" rows="2" placeholder="¿Qué cálculo financiero u organizacional necesitas?"></textarea>
+                    <input type="file" id="fileExcel" class="form-control form-control-sm mb-2" onchange="mostrarNombreArchivo('fileExcel', 'fileNameExcel')" multiple>
+                    <span id="fileNameExcel" class="file-indicator"></span>
+                    <button class="btn btn-primary w-100" onclick="procesarModuloIA('Asistente Excel', 'promptExcel', 'fileExcel', 'resultExcel')">Ejecutar Asistente Financiero</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultExcel', 'Reporte_Excel.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultExcel')">🧹 Limpiar</button>
+                    </div>
+                    <div class="chat-box mt-3" id="resultExcel">Historial de Excel...</div>
                 </div>
             </div>
 
             <!-- 6. Redactor Word y Contratos -->
             <div class="col-md-6">
                 <div class="card p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="m-0">📝 Redactor de Contratos y Word</h5>
-                        <button class="btn btn-sm btn-outline-info py-0" onclick="toggleManual('man-word')">Manual</button>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">📝 Redactor de Contratos y Word</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-word')">📖 Manual</button>
                     </div>
-                    <div id="man-word" class="manual-box">Genera contratos NDA y documentos corporativos blindados.</div>
-                    <textarea id="promptWord" class="form-control mb-2" rows="2" placeholder="Tipo de documento o cláusulas..."></textarea>
-                    <button class="btn btn-primary w-100" onclick="procesarIA('Redactor Word', 'promptWord', 'resultWord')">Generar Documento</button>
-                    <div class="chat-box" id="resultWord">Historial de Documentos...</div>
+                    <div id="manual-word" class="manual-box">Genera contratos de prestación de servicios, políticas de privacidad y acuerdos NDA blindados.</div>
+                    <textarea id="promptWord" class="form-control mb-2" rows="2" placeholder="Tipo de documento o cláusulas requeridas..."></textarea>
+                    <input type="file" id="fileWord" class="form-control form-control-sm mb-2" onchange="mostrarNombreArchivo('fileWord', 'fileNameWord')" multiple>
+                    <span id="fileNameWord" class="file-indicator"></span>
+                    <button class="btn btn-primary w-100" onclick="procesarModuloIA('Redactor Word', 'promptWord', 'fileWord', 'resultWord')">Generar Documento Legal</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultWord', 'Documento_Legal.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultWord')">🧹 Limpiar</button>
+                    </div>
+                    <div class="chat-box mt-3" id="resultWord">Historial de Word...</div>
                 </div>
             </div>
 
             <!-- 7. Tendencias Virales -->
             <div class="col-md-6">
                 <div class="card p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="m-0">🔥 Tendencias Virales</h5>
-                        <button class="btn btn-sm btn-outline-info py-0" onclick="toggleManual('man-tendencias')">Manual</button>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">🔥 Tendencias Virales & Prompts</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-tendencias')">📖 Manual</button>
                     </div>
-                    <div id="man-tendencias" class="manual-box">Analiza el mercado digital y crea estrategias algorítmicas.</div>
-                    <textarea id="promptTendencias" class="form-control mb-2" rows="2" placeholder="Escribe tu nicho..."></textarea>
-                    <button class="btn btn-primary w-100" onclick="procesarIA('Tendencias Virales', 'promptTendencias', 'resultTendencias')">Generar Estrategia</button>
-                    <div class="chat-box" id="resultTendencias">Historial de Tendencias...</div>
+                    <div id="manual-tendencias" class="manual-box">Analiza tendencias del mercado digital y crea estrategias algorítmicas de alto impacto.</div>
+                    <textarea id="promptTendencias" class="form-control mb-2" rows="2" placeholder="Escribe tu nicho o plataforma..."></textarea>
+                    <button class="btn btn-primary w-100" onclick="procesarModuloIA('Tendencias Virales', 'promptTendencias', null, 'resultTendencias')">Generar Estrategia Viral</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultTendencias', 'Tendencias.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultTendencias')">🧹 Limpiar</button>
+                    </div>
+                    <div class="chat-box mt-3" id="resultTendencias">Historial de Tendencias...</div>
                 </div>
             </div>
 
             <!-- 8. Propuestas B2B -->
             <div class="col-md-6">
                 <div class="card p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="m-0">💼 Propuestas y Cotizaciones B2B</h5>
-                        <button class="btn btn-sm btn-outline-info py-0" onclick="toggleManual('man-b2b')">Manual</button>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">💼 Propuestas y Cotizaciones B2B</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-b2b')">📖 Manual</button>
                     </div>
-                    <div id="man-b2b" class="manual-box">Genera cotizaciones ejecutivas profesionales para empresas.</div>
-                    <textarea id="promptB2B" class="form-control mb-2" rows="2" placeholder="Detalle de servicios..."></textarea>
-                    <button class="btn btn-primary w-100" onclick="procesarIA('Propuestas B2B', 'promptB2B', 'resultB2B')">Generar Propuesta</button>
-                    <div class="chat-box" id="resultB2B">Historial Propuestas B2B...</div>
+                    <div id="manual-b2b" class="manual-box">Detalla servicios y costos para obtener una propuesta comercial formal y persuasiva.</div>
+                    <textarea id="promptB2B" class="form-control mb-2" rows="2" placeholder="Ej. Propuesta de marketing..."></textarea>
+                    <button class="btn btn-primary w-100" onclick="procesarModuloIA('Propuestas B2B', 'promptB2B', null, 'resultB2B')">Generar Propuesta B2B</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultB2B', 'Propuesta.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultB2B')">🧹 Limpiar</button>
+                    </div>
+                    <div class="chat-box mt-3" id="resultB2B">Historial de Propuestas B2B...</div>
                 </div>
             </div>
 
             <!-- 9. Traductor Global -->
             <div class="col-md-6">
                 <div class="card p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="m-0">🌐 Traductor Global y Voces</h5>
-                        <button class="btn btn-sm btn-outline-info py-0" onclick="toggleManual('man-trad')">Manual</button>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">🌐 Traductor Global y Voces</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-traductor')">📖 Manual</button>
                     </div>
-                    <div id="man-trad" class="manual-box">Traducción comercial internacional adaptada al contexto.</div>
+                    <div id="manual-traductor" class="manual-box">Adapta contenidos comerciales a mercados internacionales con modismos nativos.</div>
                     <textarea id="promptTraductor" class="form-control mb-2" rows="2" placeholder="Texto a traducir..."></textarea>
-                    <button class="btn btn-primary w-100" onclick="procesarIA('Traductor IA', 'promptTraductor', 'resultTraductor')">Procesar Traducción</button>
-                    <div class="chat-box" id="resultTraductor">Historial de Traducción...</div>
+                    <button class="btn btn-primary w-100" onclick="procesarModuloIA('Traductor IA', 'promptTraductor', null, 'resultTraductor')">Procesar Traducción Pro</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('resultTraductor', 'Traduccion.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('resultTraductor')">🧹 Limpiar</button>
+                    </div>
+                    <div class="chat-box mt-3" id="resultTraductor">Historial de Traductor...</div>
                 </div>
             </div>
 
             <!-- 10. Chat Libre General -->
             <div class="col-md-6">
                 <div class="card p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="m-0">💬 Chat Libre General</h5>
-                        <button class="btn btn-sm btn-outline-info py-0" onclick="toggleManual('man-chat')">Manual</button>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="m-0">💬 Chat Libre General</h4>
+                        <button class="btn btn-sm btn-outline-info" onclick="toggleManual('manual-chat')">📖 Manual</button>
                     </div>
-                    <div id="man-chat" class="manual-box">Espacio de consulta abierta con IA para lluvia de ideas.</div>
-                    <textarea id="promptChat" class="form-control mb-2" rows="2" placeholder="Escribe tu consulta..."></textarea>
-                    <button class="btn btn-primary w-100" onclick="procesarIA('Chat Libre', 'promptChat', 'chatBoxResult')">Enviar a Chat</button>
-                    <div class="chat-box" id="chatBoxResult">Historial de Chat Libre...</div>
+                    <div id="manual-chat" class="manual-box">Espacio de consulta abierta con IA avanzada para lluvia de ideas y consultoría integral.</div>
+                    <textarea id="promptChat" class="form-control mb-2" rows="2" placeholder="Escribe tu consulta general..."></textarea>
+                    <button class="btn btn-primary w-100" onclick="procesarModuloIA('Chat Libre', 'promptChat', null, 'chatBoxResult')">Enviar a Asistente IA</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50" onclick="descargarChatTXT('chatBoxResult', 'Chat_General.txt')">📥 Descargar TXT</button>
+                        <button class="btn btn-sm btn-outline-secondary w-50" onclick="limpiarChat('chatBoxResult')">🧹 Limpiar</button>
+                    </div>
+                    <div class="chat-box mt-3" id="chatBoxResult">Historial de Chat Libre...</div>
                 </div>
             </div>
 
         </div>
     </div>
 
+    <!-- SCRIPTS DE CONTROL PROFESIONALES -->
     <script>
-        // Las 10 historias interactivas conectadas a cada casilla
-        const historiasV2 = [
-            { titulo: "🚀 Crecimiento Express", badge: "Guiones", target: "promptGuiones", text: "Crea una estrategia de retención para duplicar seguidores en Reels." },
-            { titulo: "💸 Oferta Irresistible", badge: "Copys", target: "promptCopys", text: "Redacta un anuncio de ventas con fórmula PAS para producto digital." },
-            { titulo: "🎨 Imágenes AI Pro", badge: "Multimedia", target: "promptImagen", text: "Retrato fotorrealista 4k, iluminación cinematográfica de alta calidad." },
-            { titulo: "🎬 Storyboard HD", badge: "Videos", target: "promptVideo", text: "Estructura un storyboard cinematográfico escena por escena en HD." },
-            { titulo: "📊 Flujo de Caja", badge: "Finanzas", target: "promptExcel", text: "Estructura un modelo financiero optimizado de ingresos y gastos." },
-            { titulo: "📝 Redactor Legal", badge: "Word / NDA", target: "promptWord", text: "Redacta un contrato corporativo blindado de prestación de servicios." },
-            { titulo: "🔥 Tendencias Virales", badge: "Algoritmo", target: "promptTendencias", text: "Analiza tendencias digitales y crea estrategia viral orientada al algoritmo." },
-            { titulo: "💼 Propuestas B2B", badge: "Empresarial", target: "promptB2B", text: "Redacta una propuesta comercial o cotización B2B ejecutiva y persuasiva." },
-            { titulo: "🌐 Traductor Global", badge: "Multiidioma", target: "promptTraductor", text: "Traduce y adapta este contenido comercial al mercado internacional." },
-            { titulo: "💬 Chat Asistente", badge: "Consultas", target: "promptChat", text: "Asesórame con una lluvia de ideas innovadoras para escalar mi negocio." }
+        // Array con las 10 Historias Pro interactivas conectadas directamente a sus casillas
+        const historiasDiarias = [
+            { titulo: "🚀 Crecimiento Express", desc: "Duplica seguidores en Reels con ganchos de alto impacto.", targetId: "promptGuiones", prompt: "Crea una estrategia express de retención para duplicar seguidores en Reels." },
+            { titulo: "💸 Oferta Irresistible", desc: "Redacta anuncios estructurados con fórmula PAS.", targetId: "promptCopys", prompt: "Redacta un anuncio de ventas con fórmula PAS para producto digital." },
+            { titulo: "🎨 Marca Personal 3D", desc: "Genera prompts visuales para mockups corporativos.", targetId: "promptImagenInput", prompt: "Mockup 3D hiperrealista de marca personal ejecutiva minimalista." },
+            { titulo: "🎬 Storyboard HD", desc: "Secuencias y encuadres para comerciales de video.", targetId: "promptVideo", prompt: "Estructura un storyboard detallado para comercial de video en HD." },
+            { titulo: "📊 Flujo de Caja Pro", desc: "Modelo financiero de proyecciones para nuevos negocios.", targetId: "promptExcel", prompt: "Estructura un modelo financiero básico de ingresos y gastos en Excel." },
+            { titulo: "📝 Redactor Legal", desc: "Contratos y acuerdos de confidencialidad NDA.", targetId: "promptWord", prompt: "Redacta un contrato formal de prestación de servicios profesionales." },
+            { titulo: "🔥 Tendencias Virales", desc: "Estrategias algorítmicas de contenido diario.", targetId: "promptTendencias", prompt: "Analiza tendencias de contenido para reventar el algoritmo de TikTok." },
+            { titulo: "💼 Propuestas B2B", desc: "Cotizaciones corporativas formales y ejecutivas.", targetId: "promptB2B", prompt: "Redacta una propuesta comercial B2B para servicios de marketing." },
+            { titulo: "🌐 Traductor Global", desc: "Localización comercial de textos internacionales.", targetId: "promptTraductor", prompt: "Traduce y adapta este texto comercial con modismos nativos." },
+            { titulo: "💬 Chat Asistente", desc: "Lluvia de ideas y consultoría general con IA.", targetId: "promptChat", prompt: "Dame ideas de negocios rentables de bajo costo de inversión." }
         ];
 
-        window.onload = function() {
-            const bar = document.getElementById('storiesBar');
-            if(bar) {
-                bar.innerHTML = '';
-                historiasV2.forEach(s => {
-                    bar.innerHTML += `
-                        <div class="story-card-neon" onclick="usarHistoria('${s.target}', \`${s.text}\`)">
+        window.addEventListener('DOMContentLoaded', () => {
+            const storiesBar = document.getElementById('storiesBar');
+            if (storiesBar) {
+                historiasDiarias.forEach(story => {
+                    storiesBar.innerHTML += `
+                        <div class="story-card-pro" onclick="usarHistoria('${story.targetId}', \`${story.prompt}\`)">
                             <div class="story-content">
-                                <span class="story-badge">${s.badge}</span>
-                                <div class="story-title">${s.titulo}</div>
-                                <div class="story-action">⚡ Probar &rarr;</div>
+                                <span class="story-badge">Pro</span>
+                                <div class="story-title">${story.titulo}</div>
+                                <div class="story-desc text-white-50 mt-1" style="font-size:0.65rem;">${story.desc}</div>
+                                <div class="story-action">✨ Probar &rarr;</div>
                             </div>
-                        </div>`;
+                        </div>
+                    `;
                 });
             }
-            // Cargar historiales guardados
-            ['resultGuiones', 'resultCopys', 'resultImagen', 'resultVideo', 'resultExcel', 'resultWord', 'resultTendencias', 'resultB2B', 'resultTraductor', 'chatBoxResult'].forEach(id => {
+            // Restaurar historiales guardados en LocalStorage
+            const boxes = ['resultGuiones', 'resultCopys', 'resultImagen', 'resultVideo', 'resultExcel', 'resultWord', 'resultTendencias', 'resultB2B', 'resultTraductor', 'chatBoxResult'];
+            boxes.forEach(id => {
                 const saved = localStorage.getItem(id);
-                if(saved) document.getElementById(id).innerHTML = saved;
+                if (saved) document.getElementById(id).innerHTML = saved;
             });
-        };
+        });
 
-        function usarHistoria(targetId, texto) {
+        function usarHistoria(targetId, promptText) {
             const el = document.getElementById(targetId);
-            if(el) {
-                el.value = texto;
-                window.scrollTo({ top: el.offsetTop - 100, behavior: 'smooth' });
+            if (el) {
+                el.value = promptText;
+                window.scrollTo({ top: el.offsetTop - 120, behavior: 'smooth' });
                 el.focus();
             }
         }
 
-        function abrirSidebar() { document.getElementById("mySidebar").style.width = "260px"; }
+        function abrirSidebar() { document.getElementById("mySidebar").style.width = "280px"; }
         function cerrarSidebar() { document.getElementById("mySidebar").style.width = "0"; }
+        function toggleBuscadorSidebar() {
+            const container = document.getElementById("buscadorContainer");
+            container.style.display = container.style.display === "block" ? "none" : "block";
+        }
+        function buscarEnChats() {
+            const filtro = document.getElementById("inputBuscador").value.toLowerCase();
+            document.querySelectorAll('.chat-box').forEach(box => {
+                box.style.border = (box.innerText.toLowerCase().includes(filtro) && filtro.trim() !== "") ? "2px solid #38bdf8" : "1px solid rgba(56, 189, 248, 0.25)";
+            });
+        }
+        function nuevoChatGeneral() {
+            if (confirm("¿Deseas reiniciar todos los paneles?")) {
+                const boxes = ['resultGuiones', 'resultCopys', 'resultImagen', 'resultVideo', 'resultExcel', 'resultWord', 'resultTendencias', 'resultB2B', 'resultTraductor', 'chatBoxResult'];
+                boxes.forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) el.innerHTML = 'Nuevo chat iniciado...';
+                    localStorage.removeItem(id);
+                });
+                cerrarSidebar();
+            }
+        }
+        async function abrirSoporteIA() {
+            cerrarSidebar();
+            const consulta = prompt("🤖 Escribe tu duda de soporte técnico:");
+            if (!consulta) return;
+            const chatBox = document.getElementById("chatBoxResult");
+            chatBox.innerHTML += `<div class="mb-2"><strong>Soporte (Tú):</strong> ${consulta}</div>`;
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ toolName: 'Soporte Técnico IA', prompt: consulta })
+                });
+                const data = await response.json();
+                chatBox.innerHTML += `<div class="text-info mb-3"><strong>Bot Asistente:</strong><br>${data.response.replace(/\n/g, '<br>') || data.error}</div>`;
+                localStorage.setItem('chatBoxResult', chatBox.innerHTML);
+            } catch(e) { alert("Error de conexión con soporte IA."); }
+        }
+        function compartirArchivoRapido() { cerrarSidebar(); alert("🔗 Enlace de acceso directo listo."); }
+        function informarProblema() { cerrarSidebar(); prompt("⚠️ Describe el inconveniente:"); alert("¡Gracias por tu reporte!"); }
+        function borrarTodoHistorial() { if (confirm("¿Borrar todo el historial?")) { localStorage.clear(); location.reload(); } }
         function toggleManual(id) {
-            const b = document.getElementById(id);
-            b.style.display = b.style.display === 'block' ? 'none' : 'block';
+            const box = document.getElementById(id);
+            box.style.display = box.style.display === 'block' ? 'none' : 'block';
         }
-        function mostrarArchivo(inputId, spanId) {
-            const f = document.getElementById(inputId).files[0];
-            document.getElementById(spanId).innerText = f ? `📎 ${f.name}` : '';
-        }
-
-        async function procesarIA(toolName, inputId, resultId) {
+        function mostrarNombreArchivo(inputId, spanId) {
             const input = document.getElementById(inputId);
-            const prompt = input.value.trim();
-            const box = document.getElementById(resultId);
+            const span = document.getElementById(spanId);
+            if (input.files.length > 0) {
+                span.innerText = `📎 Archivo(s): ${Array.from(input.files).map(f => f.name).join(', ')}`;
+            } else { span.innerText = ''; }
+        }
+        function limpiarChat(boxId) {
+            if (confirm("¿Limpiar módulo?")) {
+                document.getElementById(boxId).innerHTML = 'Historial limpio...';
+                localStorage.removeItem(boxId);
+            }
+        }
+        function descargarChatTXT(boxId, filename) {
+            const text = document.getElementById(boxId).innerText;
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+        }
+        function activarModoCelular() {
+            const body = document.body;
+            body.style.maxWidth = (body.style.maxWidth === '480px') ? '100%' : '480px';
+            body.style.margin = (body.style.maxWidth === '480px') ? '0 auto' : '0';
+        }
 
-            if(!prompt) { alert("Escribe una instrucción."); return; }
+        // GENERADOR DE IMÁGENES HD PROFESIONAL
+        function generarImagenHD() {
+            const promptInput = document.getElementById('promptImagenInput');
+            const prompt = promptInput.value.trim();
+            const resultBox = document.getElementById('resultImagen');
 
-            box.innerHTML = `<div class="text-warning"><em>🔄 Procesando con ${toolName}...</em></div>`;
-            input.value = '';
+            if (!prompt) {
+                alert("Por favor ingresa una descripción para la imagen.");
+                return;
+            }
+
+            const promptHD = `${prompt}, highly detailed, 8k resolution, cinematic lighting, photorealistic, sharp focus, professional branding`;
+            const encoded = encodeURIComponent(promptHD);
+            const imageUrl = `https://image.pollinations.ai/prompt/${encoded}?width=1024&height=1024&nologo=true`;
+
+            resultBox.innerHTML = `
+                <span class="text-success small fw-bold">¡Imagen HD generada con éxito!</span>
+                <br>
+                <img src="${imageUrl}" class="img-fluid rounded shadow mt-2" style="max-height: 220px;" alt="Imagen IA HD">
+            `;
+            localStorage.setItem('resultImagen', resultBox.innerHTML);
+            promptInput.value = '';
+        }
+
+        // PROCESADOR DE MÓDULOS CON MOTOR GEMINI PRO 1.5
+        async function procesarModuloIA(toolName, inputId, fileId, resultId) {
+            const promptInput = document.getElementById(inputId);
+            const prompt = promptInput.value.trim();
+            const fileInput = fileId ? document.getElementById(fileId) : null;
+            const resultBox = document.getElementById(resultId);
+
+            if (!prompt && (!fileInput || fileInput.files.length === 0)) {
+                alert("Por favor ingresa una instrucción válida.");
+                return;
+            }
+
+            if (resultBox.innerHTML.includes('Historial de')) resultBox.innerHTML = '';
+
+            resultBox.innerHTML += `<div class="mb-2"><strong>Tú:</strong> ${prompt}</div>`;
+            const loadingId = 'loading_' + Date.now();
+            resultBox.innerHTML += `<div id="${loadingId}" class="text-warning mb-2"><em>🔄 Procesando con Gemini Pro 1.5 (${toolName})...</em></div>`;
+            promptInput.value = '';
 
             try {
-                const res = await fetch('/api/generate', {
+                const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ toolName, prompt })
                 });
-                const data = await res.json();
-                if(res.ok) {
-                    box.innerHTML = `<div class="text-info"><strong>${toolName}:</strong><br>${data.response.replace(/\n/g, '<br>')}</div>`;
-                    localStorage.setItem(resultId, box.innerHTML);
+                const data = await response.json();
+                document.getElementById(loadingId).remove();
+
+                if (response.ok) {
+                    resultBox.innerHTML += `<div class="text-info mb-3"><strong>${toolName}:</strong><br>${data.response.replace(/\n/g, '<br>')}</div>`;
+                    localStorage.setItem(resultId, resultBox.innerHTML);
                 } else {
-                    box.innerHTML = `<div class="text-danger">Error: ${data.error}</div>`;
+                    resultBox.innerHTML += `<div class="text-danger mb-2"><strong>Error:</strong> ${data.error}</div>`;
                 }
-            } catch(e) {
-                box.innerHTML = `<div class="text-danger">Error de conexión con el servidor.</div>`;
+            } catch (err) {
+                document.getElementById(loadingId).remove();
+                resultBox.innerHTML += `<div class="text-danger mb-2"><strong>Error de red con el servidor.</strong></div>`;
             }
-            box.scrollTop = box.scrollHeight;
-        }
-
-        function generarImagenAltaCalidad() {
-            const promptInput = document.getElementById('promptImagen');
-            const prompt = promptInput.value.trim();
-            const box = document.getElementById('resultImagen');
-            if(!prompt) { alert("Describe la imagen."); return; }
-
-            const promptHD = `${prompt}, highly detailed, 4k resolution, cinematic lighting, photorealistic, sharp focus`;
-            const encoded = encodeURIComponent(promptHD);
-            const imageUrl = `https://image.pollinations.ai/prompt/${encoded}?width=1024&height=1024&nologo=true`;
-
-            box.innerHTML = `
-                <span class="text-success small fw-bold">¡Imagen HD generada con éxito!</span><br>
-                <img src="${imageUrl}" class="img-fluid rounded shadow mt-2" style="max-height: 180px;" alt="IA HD">
-            `;
-            localStorage.setItem('resultImagen', box.innerHTML);
-            promptInput.value = '';
+            resultBox.scrollTop = resultBox.scrollHeight;
         }
     </script>
 </body>

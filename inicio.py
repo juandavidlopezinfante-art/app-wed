@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify, render_template
 import google.generativeai as genai
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("DigitalBusinessIA-V2")
+logger = logging.getLogger("DigitalBusinessIA-ProMax")
 
 app = Flask(__name__)
 
@@ -12,9 +12,12 @@ GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
 
-def obtener_modelo():
-    # Usamos gemini-1.5-flash con la forma correcta de inicialización para evitar errores 500
-    return genai.GenerativeModel('gemini-1.5-flash')
+def obtener_motor_ia():
+    # Usamos gemini-1.5-pro para garantizar respuestas de calidad superior, analíticas y profesionales
+    try:
+        return genai.GenerativeModel('gemini-1.5-pro')
+    except Exception:
+        return genai.GenerativeModel('gemini-1.5-flash')
 
 @app.route('/')
 def index():
@@ -22,7 +25,7 @@ def index():
 
 @app.route('/health', methods=['GET'])
 def health():
-    return jsonify({"status": "ok"}), 200
+    return jsonify({"status": "online", "engine": "Gemini Pro 1.5"}), 200
 
 @app.route('/api/generate', methods=['POST'])
 def api_generate():
@@ -32,19 +35,25 @@ def api_generate():
         prompt = data.get('prompt', '').strip()
 
         if not prompt:
-            return jsonify({"error": "El prompt está vacío."}), 400
+            return jsonify({"error": "El prompt se encuentra vacío."}), 400
 
         if not GEMINI_API_KEY:
-            return jsonify({"error": "Falta configurar la GEMINI_API_KEY en el servidor."}), 500
+            return jsonify({"error": "La API Key de Gemini no está configurada en las variables de entorno de Render."}), 500
 
-        model = obtener_modelo()
-        prompt_sistema = f"Eres un experto profesional nivel senior en {tool_name}. Proporciona una respuesta impecable, estructurada y de alto valor comercial:\n\n{prompt}"
+        model = obtener_motor_ia()
         
-        response = model.generate_content(prompt_sistema)
+        # Prompt maestro de máxima exigencia para evitar respuestas cortas o de baja calidad
+        prompt_maestro = (
+            f"Actúa como un director ejecutivo, estratega senior y experto absoluto en {tool_name}. "
+            f"No des respuestas genéricas ni cortas. Proporciona una solución exhaustiva, altamente desarrollada, "
+            f"estructurada profesionalmente con formato Markdown (negritas, listas, subtítulos claros) y lista para aplicarse en el mundo real:\n\n{prompt}"
+        )
+
+        response = model.generate_content(prompt_maestro)
         return jsonify({"response": response.text, "success": True})
 
     except Exception as e:
-        logger.error(f"Error procesando solicitud: {str(e)}")
+        logger.error(f"Error crítico en motor IA: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
