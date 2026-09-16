@@ -18,7 +18,7 @@
 </head>
 <body class="bg-slate-950 text-slate-100 flex h-screen overflow-hidden">
 
-    <!-- MODAL DE ACCESO / REGISTRO / MODO VISITA (SIN BOTÓN DE CREADOR VISIBLE A EXTRAÑOS) -->
+    <!-- MODAL DE ACCESO / REGISTRO / MODO VISITA -->
     <div id="authModal" class="fixed inset-0 bg-slate-950/95 z-50 flex items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-slate-900 border border-purple-500/40 rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6">
             <div class="text-center space-y-2">
@@ -47,19 +47,18 @@
                 </button>
                 <div class="flex gap-2 pt-2">
                     <button type="button" onclick="entrarModoVisita()" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-slate-300 py-2.5 rounded-xl font-bold text-xs transition">Modo Visita (Solo Chat)</button>
-                    <!-- Acceso oculto exclusivo para ti como creador -->
                     <button type="button" onclick="accesoCreadorSecreto()" class="w-1/2 bg-purple-900/40 hover:bg-purple-900/60 text-purple-300 py-2.5 rounded-xl font-bold text-xs transition border border-purple-500/30">Acceso Creador</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL DE ONBOARDING CON MULTITUD DE TEMAS DE INTERÉS -->
+    <!-- MODAL DE ONBOARDING -->
     <div id="onboardingModal" class="fixed inset-0 bg-slate-950/90 z-40 hidden flex items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-slate-900 border border-purple-500/40 rounded-3xl max-w-xl w-full p-8 shadow-2xl space-y-6">
             <div class="text-center space-y-2">
                 <h2 class="font-black text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">¿Qué te gustaría ver en tu Feed?</h2>
-                <p class="text-xs text-slate-300">Selecciona tus intereses mundiales para calibrar el motor de inteligencia artificial:</p>
+                <p class="text-xs text-slate-300">Selecciona tus intereses mundiales para calibrar la inteligencia artificial:</p>
             </div>
             
             <div class="grid grid-cols-3 gap-2.5 max-h-60 overflow-y-auto pr-1">
@@ -69,7 +68,7 @@
                 <label class="flex items-center gap-2 bg-slate-950 border border-slate-800 p-2.5 rounded-xl cursor-pointer hover:border-purple-500 text-[11px] font-medium"><input type="checkbox" checked class="accent-purple-600"> Programación</label>
                 <label class="flex items-center gap-2 bg-slate-950 border border-slate-800 p-2.5 rounded-xl cursor-pointer hover:border-purple-500 text-[11px] font-medium"><input type="checkbox" checked class="accent-purple-600"> Cripto & Web3</label>
                 <label class="flex items-center gap-2 bg-slate-950 border border-slate-800 p-2.5 rounded-xl cursor-pointer hover:border-purple-500 text-[11px] font-medium"><input type="checkbox" checked class="accent-purple-600"> Cine & VFX</label>
-                <label class="flex items-center gap-2 bg-slate-950 border border-slate-800 p-2.5 rounded-xl cursor-pointer hover:border-purple-500 text-[11px] font-medium"><input type="checkbox" checked class="accent-purple-600"> Fitness & Salud</label>
+                <label class="flex items-center gap-2 bg-slate-950 border border-slate-800 p-2.5 rounded-xl cursor-pointer hover:border-purple-500 text-[11px] font-medium"><input type="checkbox" checked class="accent-purple-600"> Fitness</label>
                 <label class="flex items-center gap-2 bg-slate-950 border border-slate-800 p-2.5 rounded-xl cursor-pointer hover:border-purple-500 text-[11px] font-medium"><input type="checkbox" checked class="accent-purple-600"> Ciencia</label>
                 <label class="flex items-center gap-2 bg-slate-950 border border-slate-800 p-2.5 rounded-xl cursor-pointer hover:border-purple-500 text-[11px] font-medium"><input type="checkbox" checked class="accent-purple-600"> Emprendimiento</label>
             </div>
@@ -80,47 +79,76 @@
         </div>
     </div>
 
-    <!-- MENÚ LATERAL IZQUIERDO -->
+    <!-- MENÚ LATERAL IZQUIERDO (CORREGIDO PARA QUE NO SE DEFORME AL CONTRAER) -->
     <aside id="sidebar" class="w-72 bg-slate-900 border-r border-slate-800 flex flex-col transition-all duration-300 z-30 shadow-2xl">
         <div class="p-4 border-b border-slate-800 flex items-center justify-between">
-            <span class="font-extrabold text-lg bg-gradient-to-r from-purple-400 via-pink-500 to-amber-400 bg-clip-text text-transparent">Nexus AI Pro</span>
+            <span id="logoText" class="font-extrabold text-lg bg-gradient-to-r from-purple-400 via-pink-500 to-amber-400 bg-clip-text text-transparent truncate">Nexus AI Pro</span>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-bars text-lg"></i></button>
         </div>
         
         <div class="p-3">
-            <button onclick="abrirChatIA()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-purple-900/50">
-                <i class="fa-solid fa-robot text-lg"></i> Abrir Chat IA Pro
+            <button onclick="abrirChatIA()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white py-3 px-3 rounded-xl font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-purple-900/50">
+                <i class="fa-solid fa-robot text-lg flex-shrink-0"></i> 
+                <span class="nav-text truncate text-xs">Chat IA Pro</span>
             </button>
         </div>
 
         <nav class="flex-1 overflow-y-auto px-3 space-y-1.5 text-sm scrollbar-hide">
-            <button onclick="mostrarSeccion('feed')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium"><i class="fa-solid fa-newspaper text-purple-400"></i> Feed Viral Global</button>
-            <button onclick="mostrarSeccion('comunidades')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium"><i class="fa-solid fa-users-rectangle text-cyan-400"></i> Comunidades Temáticas</button>
-            <button onclick="mostrarSeccion('perfil')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium"><i class="fa-solid fa-id-badge text-amber-400"></i> Mi Perfil & Ajustes</button>
-            <button onclick="verificarPermisoCrear()" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium"><i class="fa-solid fa-cloud-arrow-up text-emerald-400"></i> Publicar Creación IA</button>
-            <button onclick="mostrarSeccion('manual')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium"><i class="fa-solid fa-book-open-reader text-pink-400"></i> Manual Maestro Completo</button>
-            <button onclick="compartirPlataforma()" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium"><i class="fa-solid fa-share-nodes text-green-400"></i> Compartir plataforma</button>
-            <button onclick="informarProblema()" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium"><i class="fa-solid fa-triangle-exclamation text-rose-400"></i> Informar un problema</button>
+            <button onclick="mostrarSeccion('feed')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium">
+                <i class="fa-solid fa-newspaper text-purple-400 text-base flex-shrink-0"></i> <span class="nav-text truncate">Feed Viral Global</span>
+            </button>
+            <button onclick="mostrarSeccion('comunidades')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium">
+                <i class="fa-solid fa-users-rectangle text-cyan-400 text-base flex-shrink-0"></i> <span class="nav-text truncate">Comunidades</span>
+            </button>
+            <button onclick="mostrarSeccion('perfil')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium">
+                <i class="fa-solid fa-id-badge text-amber-400 text-base flex-shrink-0"></i> <span class="nav-text truncate">Mi Perfil & Ajustes</span>
+            </button>
+            <button onclick="verificarPermisoCrear()" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium">
+                <i class="fa-solid fa-cloud-arrow-up text-emerald-400 text-base flex-shrink-0"></i> <span class="nav-text truncate">Publicar Creación IA</span>
+            </button>
+            <button onclick="mostrarSeccion('manual')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium">
+                <i class="fa-solid fa-book-open-reader text-pink-400 text-base flex-shrink-0"></i> <span class="nav-text truncate">Manual Maestro</span>
+            </button>
+            <button onclick="compartirPlataforma()" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium">
+                <i class="fa-solid fa-share-nodes text-green-400 text-base flex-shrink-0"></i> <span class="nav-text truncate">Compartir</span>
+            </button>
+            <button onclick="informarProblema()" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium">
+                <i class="fa-solid fa-triangle-exclamation text-rose-400 text-base flex-shrink-0"></i> <span class="nav-text truncate">Soporte</span>
+            </button>
         </nav>
     </aside>
 
     <!-- CONTENEDOR PRINCIPAL -->
     <main class="flex-1 flex flex-col h-full overflow-y-auto bg-slate-950 relative">
         
-        <!-- BARRA DE BÚSQUEDA SUPERIOR (ARRIBA DE LAS HISTORIAS) -->
+        <!-- BARRA SUPERIOR CON HISTORIAL (RETROCEDER/AVANZAR), BÚSQUEDA Y BOTÓN DE REELS DE IA -->
         <div class="bg-slate-950 border-b border-slate-900 px-6 py-3 sticky top-0 z-30 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <button onclick="history.back()" title="Retroceder" class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-arrow-left text-xs"></i></button>
+                <button onclick="history.forward()" title="Avanzar" class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-arrow-right text-xs"></i></button>
+            </div>
+
             <div class="flex-1 max-w-md relative">
                 <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-500 text-xs"></i>
-                <input type="text" id="searchInput" onkeyup="buscarEnPlataforma()" placeholder="Buscar usuarios, comunidades o temas virales..." class="w-full bg-slate-900 border border-slate-800 rounded-full pl-10 pr-4 py-2 text-xs text-slate-200 outline-none focus:border-purple-500 transition">
+                <input type="text" id="searchInput" onkeyup="buscarEnPlataforma()" placeholder="Buscar usuarios, comunidades o temas..." class="w-full bg-slate-900 border border-slate-800 rounded-full pl-10 pr-4 py-2 text-xs text-slate-200 outline-none focus:border-purple-500 transition">
             </div>
+
             <div class="flex items-center gap-3">
-                <span class="text-xs text-purple-400 font-bold" id="topNavUser">Modo Global</span>
+                <!-- Botón de Reels Generados por IA -->
+                <button onclick="abrirReelsIA()" class="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white px-3.5 py-2 rounded-full text-xs font-bold flex items-center gap-2 shadow-lg shadow-pink-900/40 transition">
+                    <i class="fa-solid fa-clapperboard"></i> Reels IA
+                </button>
+                <span class="text-xs text-purple-400 font-bold hidden md:inline" id="topNavUser">Modo Global</span>
             </div>
         </div>
 
-        <!-- TOPBAR DE HISTORIAS MASIVAS VIRALES -->
-        <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 p-4 z-20 shadow-md">
-            <div id="storiesContainer" class="max-w-6xl mx-auto flex gap-4 overflow-x-auto scrollbar-hide pb-1"></div>
+        <!-- TOPBAR DE HISTORIAS & BOTÓN PARA REINICIAR FEED -->
+        <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 p-4 z-20 shadow-md flex items-center gap-4">
+            <button onclick="reiniciarFeed()" title="Reiniciar Feed al Inicio" class="flex-shrink-0 w-12 h-40 bg-purple-900/30 border border-purple-500/40 rounded-2xl flex flex-col items-center justify-center text-purple-300 hover:bg-purple-900/50 transition cursor-pointer shadow-lg">
+                <i class="fa-solid fa-rotate-right text-lg mb-1 animate-spin-slow"></i>
+                <span class="text-[9px] font-bold text-center px-1">Reiniciar Feed</span>
+            </button>
+            <div id="storiesContainer" class="flex-1 flex gap-4 overflow-x-auto scrollbar-hide pb-1"></div>
         </header>
 
         <!-- CONTENIDO DINÁMICO -->
@@ -205,12 +233,11 @@
         </div>
     </main>
 
-    <!-- CHAT IA AMPLIADO (CON BOTÓN DE BORRAR HISTORIAL AQUÍ DENTRO) -->
+    <!-- CHAT IA AMPLIADO -->
     <div id="chatModal" class="fixed inset-y-0 right-0 w-full md:w-[600px] bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 z-50">
         <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950">
             <div class="flex items-center gap-3">
                 <span class="font-bold text-sm text-purple-400"><i class="fa-solid fa-robot"></i> Chat IA Multimodal Pro</span>
-                <!-- Botón de borrar historial reubicado aquí -->
                 <button onclick="borrarHistorialChat()" class="text-xs text-rose-400 hover:text-rose-300 bg-rose-500/10 px-2.5 py-1 rounded-lg border border-rose-500/20 transition"><i class="fa-solid fa-trash mr-1"></i> Borrar Chat</button>
             </div>
             <button onclick="cerrarChatIA()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -262,7 +289,6 @@
         window.addEventListener('DOMContentLoaded', () => {
             renderizarHistorias();
             renderizarFeed();
-            setInterval(() => { generarPostAutomaticoViral(); }, 12000);
         });
 
         function registrarUsuario(event) {
@@ -341,6 +367,16 @@
             else { vid.muted = true; icon.className = "fa-solid fa-volume-xmark"; }
         }
 
+        function reiniciarFeed() {
+            renderizarFeed();
+            alert("🔄 Feed reiniciado al inicio con éxito.");
+        }
+
+        function abrirReelsIA() {
+            alert("🎬 Abriendo sección de Reels generados por IA a máxima potencia...");
+            mostrarSeccion('feed');
+        }
+
         function renderizarFeed() {
             const container = document.getElementById('feedPostsContainer');
             container.innerHTML = '';
@@ -406,29 +442,9 @@
             renderizarFeed();
         }
 
-        function generarPostAutomaticoViral() {
-            const virales = [
-                { autor: "DeepAI Trend", texto: "Nuevos patrones generativos de inteligencia artificial en alta definición mundial.", media: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900" },
-                { autor: "Cripto Bot AI", texto: "Análisis predictivo de mercados globales con redes neuronales.", media: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=900" }
-            ];
-            const e = virales[Math.floor(Math.random() * virales.length)];
-            feedPosts.unshift({
-                id: Date.now(),
-                autor: e.autor,
-                tiempo: "En vivo global",
-                categoria: "Tendencia Mundial",
-                texto: e.texto,
-                media: e.media,
-                likes: Math.floor(Math.random() * 200) + 20,
-                comentarios: []
-            });
-            renderizarFeed();
-        }
-
         function buscarEnPlataforma() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             if(!query) return;
-            alert("Buscando en la red global: " + query);
         }
 
         function grabarAudioChat() {
@@ -440,7 +456,20 @@
 
         function toggleSidebar() {
             const s = document.getElementById('sidebar');
-            s.classList.toggle('w-72'); s.classList.toggle('w-16');
+            const texts = document.querySelectorAll('.nav-text');
+            const logo = document.getElementById('logoText');
+            
+            if(s.classList.contains('w-72')) {
+                s.classList.remove('w-72');
+                s.classList.add('w-20');
+                texts.forEach(t => t.classList.add('hidden'));
+                logo.classList.add('hidden');
+            } else {
+                s.classList.remove('w-20');
+                s.classList.add('w-72');
+                texts.forEach(t => t.classList.remove('hidden'));
+                logo.classList.remove('hidden');
+            }
         }
 
         function abrirChatIA() { document.getElementById('chatModal').classList.remove('translate-x-full'); }
