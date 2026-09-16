@@ -16,17 +16,19 @@ logger = logging.getLogger("DigitalBusinessIA-ProEnterprise")
 app = Flask(__name__)
 
 # ==========================================
-# CONFIGURACIÓN DE CREDENCIALES Y DISTRIBUCIÓN DE LLAVES (Anti-Saturación)
+# CONFIGURACIÓN DE CREDENCIALES Y DISTRIBUCIÓN DE LLAVES (Anti-Saturación Extrema)
 # ==========================================
-# Soportamos múltiples variables para balancear la carga entre diferentes servicios o cuentas
+# Ampliamos el pool de llaves para repartir la carga pesada entre múltiples variables de entorno independientes
 API_KEYS_POOL = [
     os.environ.get("GEMINI_CHAT_KEY"),
+    os.environ.get("GEMINI_CHAT_KEY_1"),
+    os.environ.get("GEMINI_CHAT_KEY_2"),
     os.environ.get("GEMINI_API_KEY"),
     os.environ.get("GEMINI_FEED_KEY"),
     os.environ.get("UNRESTRICTED_API_KEY")
 ]
 # Filtramos valores nulos o vacíos
-API_KEYS_POOL = [key for key in API_KEYS_POOL if key]
+API_KEYS_POOL = [key.strip() for key in API_KEYS_POOL if key and key.strip()]
 
 # Si hay llaves configuradas, inicializamos la principal por defecto
 PRIMARY_API_KEY = API_KEYS_POOL[0] if API_KEYS_POOL else None
@@ -36,7 +38,7 @@ os.makedirs(STATIC_DIR, exist_ok=True)
 
 if PRIMARY_API_KEY:
     genai.configure(api_key=PRIMARY_API_KEY)
-    logger.info(f"Sistema inicializado con {len(API_KEYS_POOL)} llave(s) API configuradas para balanceo de carga.")
+    logger.info(f"Sistema inicializado con {len(API_KEYS_POOL)} llave(s) API configuradas para balanceo de carga masivo.")
 else:
     logger.warning("ADVERTENCIA: No se detectaron llaves API de Gemini en las variables de entorno.")
 
@@ -57,7 +59,7 @@ def obtener_motor_inteligente(custom_key=None):
     if custom_key:
         genai.configure(api_key=custom_key)
     elif API_KEYS_POOL:
-        # Rotación inteligente simple para repartir el peso de las peticiones
+        # Rotación inteligente para repartir el peso de las peticiones entre todas las llaves disponibles
         import random
         genai.configure(api_key=random.choice(API_KEYS_POOL))
 
@@ -105,8 +107,8 @@ def api_generate():
         if not API_KEYS_POOL:
             return jsonify({"response": "⚠️ Error: Falta configurar las API Keys en el servidor de Render.", "success": False}), 500
 
-        # Usamos la llave destinada al chat principal o rotamos del pool
-        chat_key = os.environ.get("GEMINI_CHAT_KEY") or PRIMARY_API_KEY
+        # Usamos la llave destinada al chat principal o rotamos del pool ampliado
+        chat_key = os.environ.get("GEMINI_CHAT_KEY") or os.environ.get("GEMINI_CHAT_KEY_1") or PRIMARY_API_KEY
         model = obtener_motor_inteligente(custom_key=chat_key)
         
         prompt_completo = f"Actúa como un experto profesional en {tool_name}. Responde de forma detallada, creativa y estructurada:\n\n{prompt}"
@@ -231,7 +233,7 @@ def generar_imagen_json():
         is_adult = data.get('adultZone', False)
         
         if not prompt:
-            return jsonify({"error": "Describe la imagen o personaje que deseas crear."}), 400
+            return jsonify({"error": "Describe la imagen or personaje que deseas crear."}), 400
             
         suffix = ", highly detailed digital art, uncensored concept art" if is_adult else ""
         encoded_prompt = urllib.parse.quote(prompt + suffix)
