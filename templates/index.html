@@ -47,10 +47,24 @@
                 </button>
                 <div class="flex gap-2 pt-2">
                     <button type="button" onclick="entrarModoVisita()" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-slate-300 py-2.5 rounded-xl font-bold text-xs transition">Modo Visita (Chat)</button>
-                    <!-- BOTÓN DE CREADOR: SOLO APARECE SI ES LAPTOP/DESKTOP -->
                     <button type="button" id="btnAccesoCreador" onclick="accesoCreadorSecreto()" class="w-1/2 bg-purple-900/40 hover:bg-purple-900/60 text-purple-300 py-2.5 rounded-xl font-bold text-xs transition border border-purple-500/30 hidden">Acceso Creador</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE VERIFICACIÓN 18+ (NUEVO) -->
+    <div id="modalEdad18" class="fixed inset-0 bg-slate-950/90 z-50 hidden flex items-center justify-center p-4 backdrop-blur-md">
+        <div class="bg-slate-900 border border-rose-500/50 rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6 text-center">
+            <div class="w-16 h-16 rounded-2xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center mx-auto text-2xl font-bold text-rose-400">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h2 class="font-black text-2xl text-rose-400">Zona 18+ (Cómics y Arte Libre)</h2>
+            <p class="text-xs text-slate-300 leading-relaxed">Esta sección contiene herramientas de desarrollo de personajes, cómics y arte visual sin restricciones de filtros tradicionales. Debes ser mayor de edad para continuar.</p>
+            <div class="flex gap-3 pt-2">
+                <button onclick="cerrarModalEdad()" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-slate-300 py-3 rounded-xl font-bold text-xs transition">Salir</button>
+                <button onclick="confirmarMayorEdad()" class="w-1/2 bg-rose-600 hover:bg-rose-500 text-white py-3 rounded-xl font-bold text-xs shadow-lg transition">Soy mayor de 18 años</button>
+            </div>
         </div>
     </div>
 
@@ -65,7 +79,7 @@
             <div class="grid grid-cols-3 gap-2.5 max-h-60 overflow-y-auto pr-1">
                 <label class="flex items-center gap-2 bg-slate-950 border border-slate-800 p-2.5 rounded-xl cursor-pointer hover:border-purple-500 text-[11px] font-medium"><input type="checkbox" checked class="accent-purple-600"> Arte & 3D</label>
                 <label class="flex items-center gap-2 bg-slate-950 border border-slate-800 p-2.5 rounded-xl cursor-pointer hover:border-purple-500 text-[11px] font-medium"><input type="checkbox" checked class="accent-purple-600"> Negocios</label>
-                <label class="flex items-center gap-2 bg-slate-950 border border-slate-800 p-2.5 rounded-xl cursor-pointer hover:border-purple-500 text-[11px] font-medium"><input type="checkbox" checked class="accent-purple-600"> Moda</label>
+                <label class="flex items-center gap-2 bg-slate-950 border border-slate-800 p-2.5 rounded-xl cursor-pointer hover:border-purple-500 text-[11px] font-medium"><input type="checkbox" checked class="accent-purple-600"> Cómics & Ficción</label>
                 <label class="flex items-center gap-2 bg-slate-950 border border-slate-800 p-2.5 rounded-xl cursor-pointer hover:border-purple-500 text-[11px] font-medium"><input type="checkbox" checked class="accent-purple-600"> Programación</label>
                 <label class="flex items-center gap-2 bg-slate-950 border border-slate-800 p-2.5 rounded-xl cursor-pointer hover:border-purple-500 text-[11px] font-medium"><input type="checkbox" checked class="accent-purple-600"> Cripto & Web3</label>
                 <label class="flex items-center gap-2 bg-slate-950 border border-slate-800 p-2.5 rounded-xl cursor-pointer hover:border-purple-500 text-[11px] font-medium"><input type="checkbox" checked class="accent-purple-600"> Cine & VFX</label>
@@ -109,6 +123,10 @@
             </button>
             <button onclick="verificarPermisoCrear()" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium">
                 <i class="fa-solid fa-cloud-arrow-up text-emerald-400 text-base flex-shrink-0"></i> <span class="nav-text truncate">Publicar Creación IA</span>
+            </button>
+            <!-- BOTÓN ZONA 18+ EN EL MENÚ -->
+            <button onclick="pedirVerificacionEdad()" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-rose-300 hover:bg-rose-950/40 transition text-left font-medium border border-rose-500/20">
+                <i class="fa-solid fa-triangle-exclamation text-rose-400 text-base flex-shrink-0"></i> <span class="nav-text truncate">Zona 18+ (Cómics)</span>
             </button>
             <button onclick="mostrarSeccion('manual')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium">
                 <i class="fa-solid fa-book-open-reader text-pink-400 text-base flex-shrink-0"></i> <span class="nav-text truncate">Manual Maestro</span>
@@ -157,7 +175,7 @@
         <!-- CONTENIDO DINÁMICO -->
         <div id="mainContent" class="flex-1 p-6 max-w-3xl mx-auto w-full space-y-6">
             
-            <!-- VISTA 1: FEED GLOBAL -->
+            <!-- VISTA 1: FEED GLOBAL (CON BOTONES DE SALTO AL CHAT) -->
             <div id="view-feed" class="space-y-6">
                 <div class="bg-gradient-to-r from-purple-900/60 via-slate-900 to-pink-900/60 border border-purple-500/30 rounded-3xl p-6 shadow-2xl backdrop-blur flex items-center justify-between">
                     <div>
@@ -221,7 +239,29 @@
                 </div>
             </div>
 
-            <!-- VISTA 6: MANUAL -->
+            <!-- VISTA 6: ZONA 18+ (CÓMICS Y ARTE LIBRE) -->
+            <div id="view-adultos" class="hidden space-y-6">
+                <div class="bg-slate-900 border border-rose-500/40 rounded-3xl p-6 shadow-xl space-y-4">
+                    <h2 class="font-bold text-xl text-rose-400 flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation"></i> Zona 18+ / Cómics y Arte sin Filtros</h2>
+                    <p class="text-xs text-slate-400">Espacio libre para la conceptualización de personajes, novelas gráficas y arte visual avanzado.</p>
+                    <form action="/generar" method="POST" class="space-y-4">
+                        <input type="hidden" name="adultZone" value="true">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1">Prompt Artístico / Descripción del Personaje o Escena</label>
+                            <textarea name="prompt" required placeholder="Describe con detalle el concepto visual, atuendo, iluminación o estilo de cómic..." class="w-full bg-slate-950 border border-rose-500/30 rounded-xl p-3 text-xs text-slate-100 outline-none resize-none h-28 focus:border-rose-500"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-rose-600 to-pink-600 text-white py-3 rounded-xl font-bold text-xs shadow-lg shadow-rose-900/40">Generar Creación Gráfica Libre</button>
+                    </form>
+                    {% if imagen_url %}
+                    <div class="mt-4 text-center bg-slate-950 p-4 rounded-2xl border border-rose-500/30">
+                        <span class="text-xs font-bold text-rose-400">Resultado Generado:</span>
+                        <img src="{{ imagen_url }}" class="img-fluid rounded-xl border border-rose-500/50 mt-2 mx-auto max-h-96" alt="Arte 18+">
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- VISTA 7: MANUAL -->
             <div id="view-manual" class="hidden space-y-6 text-sm text-slate-300">
                 <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 space-y-6 shadow-2xl">
                     <h2 class="font-black text-2xl text-pink-400">Manual Maestro: Domina Nexus AI Pro</h2>
@@ -237,7 +277,6 @@
         <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950">
             <div class="flex items-center gap-3">
                 <span class="font-bold text-sm text-purple-400"><i class="fa-solid fa-robot"></i> Chat IA Pro</span>
-                <!-- Botón de Historial y Borrar Chat juntos -->
                 <div class="flex items-center gap-1.5">
                     <button onclick="verHistorialChat()" class="text-xs text-cyan-400 hover:text-cyan-300 bg-cyan-500/10 px-2 py-1 rounded-lg border border-cyan-500/20 transition"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Historial</button>
                     <button onclick="borrarHistorialChat()" class="text-xs text-rose-400 hover:text-rose-300 bg-rose-500/10 px-2 py-1 rounded-lg border border-rose-500/20 transition"><i class="fa-solid fa-trash mr-1"></i> Borrar</button>
@@ -278,13 +317,13 @@
         let historialChatArray = [];
 
         const historiasData = [
-            { titulo: "Cyber Art 3D", badge: "Video IA", url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-and-code-31910-large.mp4", poster: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300" },
-            { titulo: "Mundos Pixar", badge: "Animación", url: "https://assets.mixkit.co/videos/preview/mixkit-plexus-background-of-plexus-animation-31911-large.mp4", poster: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=300" },
-            { titulo: "Flujo de Caja", badge: "Negocios", url: "https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-man-working-on-a-financial-graph-42861-large.mp4", poster: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=300" }
+            { titulo: "Cyber Art 3D", badge: "Video IA", url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-and-code-31910-large.mp4", poster: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300", prompt: "Crea una estrategia para desarrollar arte cyberpunk 3D con iluminación neón." },
+            { titulo: "Mundos Pixar", badge: "Animación", url: "https://assets.mixkit.co/videos/preview/mixkit-plexus-background-of-plexus-animation-31911-large.mp4", poster: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=300", prompt: "Diseña un personaje animado en 3D con expresión carismática." },
+            { titulo: "Flujo de Caja", badge: "Negocios", url: "https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-man-working-on-a-financial-graph-42861-large.mp4", poster: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=300", prompt: "Estructura un modelo de flujo de caja optimizado para una startup." }
         ];
 
         let feedPosts = [
-            { id: 1, autor: "Nexus AI Core", tiempo: "Hace 1 min", categoria: "Arte 3D & VFX", texto: "¡Renderizado masivo de arquitectura futurista generado con el clúster multi-servidor de alta potencia!", media: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900", likes: 1420, comentarios: [] }
+            { id: 1, autor: "Nexus AI Core", tiempo: "Hace 1 min", categoria: "Arte 3D & VFX", texto: "¡Renderizado masivo de arquitectura futurista generado con el clúster multi-servidor de alta potencia!", media: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900", promptIdea: "Desarrolla el prompt avanzado y la arquitectura técnica para renderizar ciudades futuristas en 3D.", likes: 1420, comentarios: [] }
         ];
 
         let reelsData = [
@@ -298,7 +337,6 @@
             detectarDispositivoCreador();
         });
 
-        // VALIDAR SI ES LAPTOP/DESKTOP PARA MOSTRAR EL BOTÓN DE CREADOR EXCLUSIVAMENTE
         function detectarDispositivoCreador() {
             const esMovil = /Mobi|Android|iPhone/i.test(navigator.userAgent);
             if (!esMovil) {
@@ -334,6 +372,18 @@
             document.getElementById('onboardingModal').classList.add('hidden');
         }
 
+        // CONTROL DE ACCESO ZONA 18+
+        function pedirVerificacionEdad() {
+            document.getElementById('modalEdad18').classList.remove('hidden');
+        }
+        function cerrarModalEdad() {
+            document.getElementById('modalEdad18').classList.add('hidden');
+        }
+        function confirmarMayorEdad() {
+            cerrarModalEdad();
+            mostrarSeccion('adultos');
+        }
+
         function verificarPermisoCrear() {
             if(!usuarioActual.esCreador && usuarioActual.nombre === "Visitante") {
                 alert("⚠️ El Modo Visita solo permite utilizar el Chat de IA. Regístrate para publicar contenido.");
@@ -345,9 +395,9 @@
         function renderizarHistorias() {
             const container = document.getElementById('storiesContainer');
             container.innerHTML = '';
-            historiasData.forEach((h, index) => {
+            historiasData.forEach((h) => {
                 container.innerHTML += `
-                    <div class="story-ring flex-shrink-0 w-28 h-40 rounded-2xl p-2.5 flex flex-col justify-between cursor-pointer border-2 border-purple-400 hover:scale-105 transition shadow-lg relative overflow-hidden" onclick="usarFuncion('${h.titulo}')">
+                    <div class="story-ring flex-shrink-0 w-28 h-40 rounded-2xl p-2.5 flex flex-col justify-between cursor-pointer border-2 border-purple-400 hover:scale-105 transition shadow-lg relative overflow-hidden" onclick="desarrollarIdeaChat('${h.prompt}')">
                         <video src="${h.url}" poster="${h.poster}" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0"></video>
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 z-0"></div>
                         <span class="text-[9px] font-extrabold bg-purple-500 text-white px-2 py-0.5 rounded-full self-start z-10 shadow">${h.badge}</span>
@@ -396,6 +446,9 @@
                         </div>
                         <p class="text-sm text-slate-200 leading-relaxed">${post.texto}</p>
                         ${post.media ? `<div class="rounded-2xl overflow-hidden border border-slate-800 h-72 bg-cover bg-center shadow-inner" style="background-image: url('${post.media}');"></div>` : ''}
+                        <button onclick="desarrollarIdeaChat('${post.promptIdea || post.texto}')" class="w-full bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Desarrollar idea en el Chat IA
+                        </button>
                     </div>
                 `;
             });
@@ -411,6 +464,7 @@
                 categoria: "Aporte Global",
                 texto: texto,
                 media: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=900",
+                promptIdea: texto,
                 likes: 1,
                 comentarios: []
             });
@@ -432,8 +486,14 @@
         function abrirChatIA() { document.getElementById('chatModal').classList.remove('translate-x-full'); }
         function cerrarChatIA() { document.getElementById('chatModal').classList.add('translate-x-full'); }
 
+        // SALTO DIRECTO AL CHAT CON PROMPT PRECARGADO
+        async function desarrollarIdeaChat(promptTexto) {
+            abrirChatIA();
+            document.getElementById('messageInput').value = promptTexto;
+        }
+
         function mostrarSeccion(sec) {
-            ['feed', 'reels', 'comunidades', 'perfil', 'crear', 'manual'].forEach(s => {
+            ['feed', 'reels', 'comunidades', 'perfil', 'crear', 'adultos', 'manual'].forEach(s => {
                 document.getElementById('view-' + s).classList.add('hidden');
             });
             document.getElementById('view-' + sec).classList.remove('hidden');
