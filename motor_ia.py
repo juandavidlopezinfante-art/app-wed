@@ -5,7 +5,6 @@ import google.generativeai as genai
 
 logger = logging.getLogger("DigitalBusinessIA-Motor")
 
-# Pool avanzado de llaves API
 API_KEYS_POOL = [
     os.environ.get("GEMINI_CHAT_KEY"),
     os.environ.get("GEMINI_CHAT_KEY_1"),
@@ -28,13 +27,13 @@ generation_config = {
 }
 
 def obtener_motor_inteligente():
-    """Selecciona aleatoriamente una llave del pool para evitar saturación."""
+    """Selecciona aleatoriamente una llave del pool y usa el modelo vigente."""
     if API_KEYS_POOL:
         import random
         genai.configure(api_key=random.choice(API_KEYS_POOL))
     
-    # Usamos gemini-1.5-flash que es perfectamente compatible con google-generativeai==0.8.3
-    modelos_disponibles = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro']
+    # Usamos gemini-2.5-flash o gemini-pro que son los soportados por la API actual
+    modelos_disponibles = ['gemini-2.5-flash', 'gemini-pro']
     for nombre_modelo in modelos_disponibles:
         try:
             return genai.GenerativeModel(nombre_modelo, generation_config=generation_config)
