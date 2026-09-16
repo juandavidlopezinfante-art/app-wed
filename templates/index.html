@@ -182,7 +182,7 @@
         <div class="mb-3">
             <span class="text-info fw-bold small text-uppercase">🌟 Historias Pro & Tendencias de Hoy (Videos IA rotativos 24h)</span>
             <div class="stories-container" id="storiesBar">
-                <!-- Se cargan dinámicamente -->
+                <!-- Se cargan dinámicamente con los 10 módulos -->
             </div>
         </div>
 
@@ -566,19 +566,23 @@
 
     <!-- SCRIPT DE CONTROL Y FUNCIONALIDADES DE LA SIDEBAR Y TENDENCIAS -->
     <script>
-        // Banco amplio de videos de IA en movimiento para rotación diaria cada 24 horas
+        // Banco ampliado de videos de IA en movimiento conectados a cada uno de los 10 módulos principales
         const bancoVideosIA = [
             { titulo: "🚀 Crecimiento Express", badge: "Reels Pro", videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-and-code-31938-large.mp4", targetId: "promptGuiones", prompt: "Crea una estrategia express de retención para duplicar seguidores en Reels." },
             { titulo: "💸 Oferta Irresistible", badge: "Conversión", videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-futuristic-technology-interface-screen-31937-large.mp4", targetId: "promptCopys", prompt: "Redacta un anuncio de ventas con fórmula PAS para producto digital." },
             { titulo: "🎨 Generador de Imágenes", badge: "Multimedia", videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-hands-holding-a-smartphone-with-a-green-screen-42999-large.mp4", targetId: "promptImagenInput", prompt: "Mockup hiperrealista 3D de alta gama para campaña publicitaria digital." },
             { titulo: "📊 Control Financiero", badge: "Negocios", videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-background-animation-42981-large.mp4", targetId: "promptExcel", prompt: "Estructura un modelo financiero optimizado de flujo de caja y proyección de ventas." },
             { titulo: "🌍 Traductor Global", badge: "Multiidioma", videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-plexus-network-background-animation-43003-large.mp4", targetId: "promptTraductor", prompt: "Traduce y adapta este contenido comercial al mercado internacional." },
-            { titulo: "⚡ Marca Personal 3D", badge: "Branding", videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-and-code-31938-large.mp4", targetId: "promptTendencias", prompt: "Genera la estrategia visual y el prompt maestro para mockups de branding corporativo." }
+            { titulo: "⚡ Marca Personal 3D", badge: "Branding", videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-and-code-31938-large.mp4", targetId: "promptTendencias", prompt: "Genera la estrategia visual y el prompt maestro para mockups de branding corporativo." },
+            { titulo: "💼 Propuestas B2B", badge: "Empresarial", videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-futuristic-technology-interface-screen-31937-large.mp4", targetId: "promptB2B", prompt: "Redacta una propuesta comercial ejecutiva y persuasiva para servicios corporativos." },
+            { titulo: "🎬 Storyboard de Videos", badge: "Audiovisual", videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-hands-holding-a-smartphone-with-a-green-screen-42999-large.mp4", targetId: "promptVideo", prompt: "Estructura un storyboard cinematográfico escena por escena para un comercial en HD." },
+            { titulo: "📝 Redactor Legal", badge: "Word / NDA", videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-background-animation-42981-large.mp4", targetId: "promptWord", prompt: "Redacta un contrato corporativo blindado de prestación de servicios tecnológicos." },
+            { titulo: "💬 Chat Libre Inteligente", badge: "Asistencia IA", videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-plexus-network-background-animation-43003-large.mp4", targetId: "promptChat", prompt: "Asesórame con una lluvia de ideas innovadoras para escalar un negocio digital." }
         ];
 
-        // Función para cambiar de forma aleatoria cada 24 horas usando la fecha como semilla
+        // Función para rotar historias diariamente usando la fecha como semilla
         function obtenerHistoriasDiariasAleatorias() {
-            const hoy = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+            const hoy = new Date().toISOString().slice(0, 10);
             let semilla = 0;
             for (let i = 0; i < hoy.length; i++) {
                 semilla += hoy.charCodeAt(i);
@@ -588,12 +592,11 @@
                 const j = (semilla + i) % mezclado.length;
                 [mezclado[i], mezclado[j]] = [mezclado[j], mezclado[i]];
             }
-            return mezclado.slice(0, 4); // Devuelve 4 casillas con video rotativas al día
+            return mezclado.slice(0, 5); // Muestra 5 historias dinámicas con video superior cada día
         }
 
         // Cargar historiales almacenados al iniciar y mostrar su barra de herramientas si ya hay contenido guardado
         window.onload = function() {
-            // Renderizar Historias Pro arriba con VIDEOS EN MOVIMIENTO Y ROTACIÓN DIARIA
             const storiesBar = document.getElementById('storiesBar');
             if (storiesBar) {
                 storiesBar.innerHTML = '';
@@ -625,7 +628,6 @@
             });
         };
 
-        // Función para inyectar prompt de historia (NUEVO)
         function usarHistoria(targetId, promptText) {
             const el = document.getElementById(targetId);
             if (el) {
@@ -635,7 +637,6 @@
             }
         }
 
-        // Función del Buzón de Sugerencias (NUEVO)
         async function abrirBuzonSugerencias() {
             cerrarSidebar();
             const sugerencia = prompt("💡 Escribe tu sugerencia, comentario o idea de mejora para la app:");
