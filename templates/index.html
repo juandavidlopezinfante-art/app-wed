@@ -15,19 +15,48 @@
         .btn-primary { background-color: #2563eb; border: none; font-weight: 600; border-radius: 8px; }
         .btn-primary:hover { background-color: #1d4ed8; }
         
-        /* Historias Pro con Videos */
-        #storiesBar { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .story-card-video {
-            position: relative; height: 210px; border-radius: 16px; overflow: hidden; cursor: pointer;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.5); transition: 0.3s; display: flex; flex-direction: column;
-            justify-content: flex-end; padding: 12px; border: 1px solid rgba(56, 189, 248, 0.3); background: #000;
+        /* HISTORIAS PRO CON EFECTO NEÓN EN MOVIMIENTO (100% ESTABLE) */
+        .stories-container {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 10px 5px 20px 5px;
+            margin-bottom: 25px;
+            scrollbar-width: thin;
+            scrollbar-color: #38bdf8 #1e293b;
         }
-        .story-card-video video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; opacity: 0.7; }
-        .story-card-video:hover { transform: translateY(-5px); border-color: #38bdf8; box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4); }
-        .story-card-video::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(15,23,42,0.95) 15%, rgba(15,23,42,0.2) 70%, transparent 100%); z-index: 2; }
+        .story-card-neon {
+            position: relative;
+            min-width: 160px;
+            height: 200px;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 14px;
+            border: 2px solid rgba(56, 189, 248, 0.4);
+            background: linear-gradient(135deg, #1e293b, #0f172a, #2563eb);
+            background-size: 200% 200%;
+            animation: gradientMove 6s ease infinite;
+            flex-shrink: 0;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .story-card-neon:hover {
+            transform: translateY(-6px);
+            border-color: #38bdf8;
+            box-shadow: 0 12px 30px rgba(56, 189, 248, 0.6);
+        }
         .story-content { position: relative; z-index: 3; }
         .story-badge { font-size: 0.6rem; background: #38bdf8; color: #0f172a; padding: 2px 6px; border-radius: 4px; font-weight: 800; text-transform: uppercase; }
-        .story-title { color: #fff; font-size: 0.85rem; font-weight: bold; margin-top: 4px; line-height: 1.1; }
+        .story-title { color: #fff; font-size: 0.85rem; font-weight: bold; margin-top: 6px; line-height: 1.1; }
         .story-action { color: #38bdf8; font-size: 0.7rem; font-weight: 700; margin-top: 4px; }
 
         .chat-box { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(56, 189, 248, 0.25); height: 200px; overflow-y: auto; padding: 12px; border-radius: 8px; font-size: 0.85rem; margin-top: 10px; }
@@ -60,11 +89,11 @@
 
     <div class="container my-4">
         
-        <!-- HISTORIAS PRO SUPERIORES -->
-        <div class="mb-2 text-info fw-bold"><i class="fas fa-bolt me-1"></i> HISTORIAS PRO & TENDENCIAS DIARIAS</div>
-        <div id="storiesBar"></div>
+        <!-- HISTORIAS PRO SUPERIORES (10 CASILLAS) -->
+        <div class="mb-2 text-info fw-bold"><i class="fas fa-bolt me-1"></i> HISTORIAS PRO & TENDENCIAS DIARIAS (10 Módulos Interactivos)</div>
+        <div class="stories-container" id="storiesBar"></div>
 
-        <!-- MÓDULOS DE LA APLICACIÓN -->
+        <!-- LOS 10 MÓDULOS COMPLETOS DE LA APLICACIÓN -->
         <div class="row">
 
             <!-- 1. Guiones Virales -->
@@ -99,16 +128,16 @@
                 </div>
             </div>
 
-            <!-- 3. Imágenes IA (Pollinations Directo sin Errores 404) -->
+            <!-- 3. Imágenes IA (HD) -->
             <div class="col-md-6">
                 <div class="card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h5 class="m-0">🎨 Imágenes IA (Publicidad/Brand)</h5>
                         <button class="btn btn-sm btn-outline-info py-0" onclick="toggleManual('man-imagen')">Manual</button>
                     </div>
-                    <div id="man-imagen" class="manual-box">Describe tu mockup o recurso visual detalladamente.</div>
-                    <textarea id="promptImagen" class="form-control mb-2" rows="2" placeholder="Ej. Mockup de producto minimalista..."></textarea>
-                    <button class="btn btn-primary w-100" onclick="generarImagenDirecta()">Generar Recurso Visual</button>
+                    <div id="man-imagen" class="manual-box">Describe tu mockup en alta definición (ej: fotorrealista, 4k).</div>
+                    <textarea id="promptImagen" class="form-control mb-2" rows="2" placeholder="Ej. Retrato fotorrealista de Boruto Uzumaki adulto, estilo cinematográfico, 4k..."></textarea>
+                    <button class="btn btn-primary w-100" onclick="generarImagenAltaCalidad()">Generar Recurso Visual HD</button>
                     <div class="chat-box text-center" id="resultImagen">Historial de Imágenes...</div>
                 </div>
             </div>
@@ -157,25 +186,87 @@
                 </div>
             </div>
 
+            <!-- 7. Tendencias Virales -->
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="m-0">🔥 Tendencias Virales</h5>
+                        <button class="btn btn-sm btn-outline-info py-0" onclick="toggleManual('man-tendencias')">Manual</button>
+                    </div>
+                    <div id="man-tendencias" class="manual-box">Analiza el mercado digital y crea estrategias algorítmicas.</div>
+                    <textarea id="promptTendencias" class="form-control mb-2" rows="2" placeholder="Escribe tu nicho..."></textarea>
+                    <button class="btn btn-primary w-100" onclick="procesarIA('Tendencias Virales', 'promptTendencias', 'resultTendencias')">Generar Estrategia</button>
+                    <div class="chat-box" id="resultTendencias">Historial de Tendencias...</div>
+                </div>
+            </div>
+
+            <!-- 8. Propuestas B2B -->
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="m-0">💼 Propuestas y Cotizaciones B2B</h5>
+                        <button class="btn btn-sm btn-outline-info py-0" onclick="toggleManual('man-b2b')">Manual</button>
+                    </div>
+                    <div id="man-b2b" class="manual-box">Genera cotizaciones ejecutivas profesionales para empresas.</div>
+                    <textarea id="promptB2B" class="form-control mb-2" rows="2" placeholder="Detalle de servicios..."></textarea>
+                    <button class="btn btn-primary w-100" onclick="procesarIA('Propuestas B2B', 'promptB2B', 'resultB2B')">Generar Propuesta</button>
+                    <div class="chat-box" id="resultB2B">Historial Propuestas B2B...</div>
+                </div>
+            </div>
+
+            <!-- 9. Traductor Global -->
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="m-0">🌐 Traductor Global y Voces</h5>
+                        <button class="btn btn-sm btn-outline-info py-0" onclick="toggleManual('man-trad')">Manual</button>
+                    </div>
+                    <div id="man-trad" class="manual-box">Traducción comercial internacional adaptada al contexto.</div>
+                    <textarea id="promptTraductor" class="form-control mb-2" rows="2" placeholder="Texto a traducir..."></textarea>
+                    <button class="btn btn-primary w-100" onclick="procesarIA('Traductor IA', 'promptTraductor', 'resultTraductor')">Procesar Traducción</button>
+                    <div class="chat-box" id="resultTraductor">Historial de Traducción...</div>
+                </div>
+            </div>
+
+            <!-- 10. Chat Libre General -->
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="m-0">💬 Chat Libre General</h5>
+                        <button class="btn btn-sm btn-outline-info py-0" onclick="toggleManual('man-chat')">Manual</button>
+                    </div>
+                    <div id="man-chat" class="manual-box">Espacio de consulta abierta con IA para lluvia de ideas.</div>
+                    <textarea id="promptChat" class="form-control mb-2" rows="2" placeholder="Escribe tu consulta..."></textarea>
+                    <button class="btn btn-primary w-100" onclick="procesarIA('Chat Libre', 'promptChat', 'chatBoxResult')">Enviar a Chat</button>
+                    <div class="chat-box" id="chatBoxResult">Historial de Chat Libre...</div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script>
-        // Banco de videos para historias dinámicas
+        // Las 10 historias interactivas conectadas a cada casilla
         const historiasV2 = [
-            { titulo: "🚀 Crecimiento Express", badge: "Reels Pro", videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-and-code-31938-large.mp4", target: "promptGuiones", text: "Crea una estrategia de retención para duplicar seguidores en Reels." },
-            { titulo: "💸 Oferta Irresistible", badge: "Conversión", videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-futuristic-technology-interface-screen-31937-large.mp4", target: "promptCopys", text: "Redacta un anuncio de ventas con fórmula PAS para producto digital." },
-            { titulo: "🎨 Imágenes AI Pro", badge: "Multimedia", videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-hands-holding-a-smartphone-with-a-green-screen-42999-large.mp4", target: "promptImagen", text: "Mockup 3D hiperrealista para campaña publicitaria digital." },
-            { titulo: "📊 Flujo de Caja", badge: "Negocios", videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-background-animation-42981-large.mp4", target: "promptExcel", text: "Estructura un modelo financiero optimizado de ingresos y gastos." }
+            { titulo: "🚀 Crecimiento Express", badge: "Guiones", target: "promptGuiones", text: "Crea una estrategia de retención para duplicar seguidores en Reels." },
+            { titulo: "💸 Oferta Irresistible", badge: "Copys", target: "promptCopys", text: "Redacta un anuncio de ventas con fórmula PAS para producto digital." },
+            { titulo: "🎨 Imágenes AI Pro", badge: "Multimedia", target: "promptImagen", text: "Retrato fotorrealista 4k, iluminación cinematográfica de alta calidad." },
+            { titulo: "🎬 Storyboard HD", badge: "Videos", target: "promptVideo", text: "Estructura un storyboard cinematográfico escena por escena en HD." },
+            { titulo: "📊 Flujo de Caja", badge: "Finanzas", target: "promptExcel", text: "Estructura un modelo financiero optimizado de ingresos y gastos." },
+            { titulo: "📝 Redactor Legal", badge: "Word / NDA", target: "promptWord", text: "Redacta un contrato corporativo blindado de prestación de servicios." },
+            { titulo: "🔥 Tendencias Virales", badge: "Algoritmo", target: "promptTendencias", text: "Analiza tendencias digitales y crea estrategia viral orientada al algoritmo." },
+            { titulo: "💼 Propuestas B2B", badge: "Empresarial", target: "promptB2B", text: "Redacta una propuesta comercial o cotización B2B ejecutiva y persuasiva." },
+            { titulo: "🌐 Traductor Global", badge: "Multiidioma", target: "promptTraductor", text: "Traduce y adapta este contenido comercial al mercado internacional." },
+            { titulo: "💬 Chat Asistente", badge: "Consultas", target: "promptChat", text: "Asesórame con una lluvia de ideas innovadoras para escalar mi negocio." }
         ];
 
         window.onload = function() {
             const bar = document.getElementById('storiesBar');
             if(bar) {
+                bar.innerHTML = '';
                 historiasV2.forEach(s => {
                     bar.innerHTML += `
-                        <div class="story-card-video" onclick="usarHistoria('${s.target}', \`${s.text}\`)">
-                            <video autoplay muted loop playsinline><source src="${s.videoUrl}" type="video/mp4"></video>
+                        <div class="story-card-neon" onclick="usarHistoria('${s.target}', \`${s.text}\`)">
                             <div class="story-content">
                                 <span class="story-badge">${s.badge}</span>
                                 <div class="story-title">${s.titulo}</div>
@@ -185,7 +276,7 @@
                 });
             }
             // Cargar historiales guardados
-            ['resultGuiones', 'resultCopys', 'resultImagen', 'resultVideo', 'resultExcel', 'resultWord'].forEach(id => {
+            ['resultGuiones', 'resultCopys', 'resultImagen', 'resultVideo', 'resultExcel', 'resultWord', 'resultTendencias', 'resultB2B', 'resultTraductor', 'chatBoxResult'].forEach(id => {
                 const saved = localStorage.getItem(id);
                 if(saved) document.getElementById(id).innerHTML = saved;
             });
@@ -211,7 +302,6 @@
             document.getElementById(spanId).innerText = f ? `📎 ${f.name}` : '';
         }
 
-        // Función centralizada asíncrona robusta (Cero Errores 404)
         async function procesarIA(toolName, inputId, resultId) {
             const input = document.getElementById(inputId);
             const prompt = input.value.trim();
@@ -241,19 +331,22 @@
             box.scrollTop = box.scrollHeight;
         }
 
-        function generarImagenDirecta() {
-            const prompt = document.getElementById('promptImagen').value.trim();
+        function generarImagenAltaCalidad() {
+            const promptInput = document.getElementById('promptImagen');
+            const prompt = promptInput.value.trim();
             const box = document.getElementById('resultImagen');
             if(!prompt) { alert("Describe la imagen."); return; }
 
-            const encoded = encodeURIComponent(prompt);
+            const promptHD = `${prompt}, highly detailed, 4k resolution, cinematic lighting, photorealistic, sharp focus`;
+            const encoded = encodeURIComponent(promptHD);
             const imageUrl = `https://image.pollinations.ai/prompt/${encoded}?width=1024&height=1024&nologo=true`;
 
             box.innerHTML = `
-                <span class="text-success small fw-bold">¡Imagen generada con éxito!</span><br>
-                <img src="${imageUrl}" class="img-fluid rounded shadow mt-2" style="max-height: 150px;" alt="IA">
+                <span class="text-success small fw-bold">¡Imagen HD generada con éxito!</span><br>
+                <img src="${imageUrl}" class="img-fluid rounded shadow mt-2" style="max-height: 180px;" alt="IA HD">
             `;
             localStorage.setItem('resultImagen', box.innerHTML);
+            promptInput.value = '';
         }
     </script>
 </body>
