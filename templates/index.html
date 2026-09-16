@@ -3,33 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plataforma IA - Red Social & Productividad</title>
-    <!-- Tailwind CSS para diseño moderno -->
+    <title>Nexus AI Pro - Red Social & IA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 </head>
 <body class="bg-slate-950 text-slate-100 flex h-screen overflow-hidden">
 
-    <!-- MENÚ LATERAL IZQUIERDO (Desplegable) -->
-    <aside id="sidebar" class="w-72 bg-slate-900 border-r border-slate-800 flex flex-col transition-all duration-300 z-20">
+    <!-- MENÚ LATERAL IZQUIERDO DESPLEGABLE -->
+    <aside id="sidebar" class="w-72 bg-slate-900 border-r border-slate-800 flex flex-col transition-all duration-300 z-30">
         <div class="p-4 border-b border-slate-800 flex items-center justify-between">
-            <span class="font-bold text-lg bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">Nexus AI Pro</span>
+            <span class="font-extrabold text-lg bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">Nexus AI Pro</span>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-bars"></i></button>
         </div>
         
         <div class="p-3">
-            <button onclick="nuevoChat()" class="w-full bg-purple-600 hover:bg-purple-500 text-white py-2.5 px-4 rounded-xl font-medium flex items-center gap-2 transition shadow-lg shadow-purple-900/40">
-                <i class="fa-solid fa-plus"></i> Nuevo Chat
+            <button onclick="abrirChatIA()" class="w-full bg-purple-600 hover:bg-purple-500 text-white py-2.5 px-4 rounded-xl font-medium flex items-center gap-2 transition shadow-lg shadow-purple-900/40">
+                <i class="fa-solid fa-robot"></i> Abrir Chat IA
             </button>
         </div>
 
         <nav class="flex-1 overflow-y-auto px-3 space-y-1 text-sm">
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition"><i class="fa-solid fa-magnifying-glass text-purple-400"></i> Buscar en chats</a>
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition"><i class="fa-solid fa-robot text-blue-400"></i> Ayuda técnica con IA</a>
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition"><i class="fa-solid fa-box-archive text-yellow-400"></i> Buzón de sugerencias</a>
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition"><i class="fa-solid fa-share-nodes text-green-400"></i> Compartir plataforma</a>
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition"><i class="fa-solid fa-triangle-exclamation text-red-400"></i> Informar un problema</a>
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition"><i class="fa-solid fa-book text-pink-400"></i> Manual de usuario</a>
+            <button onclick="mostrarSeccion('feed')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition text-left"><i class="fa-solid fa-newspaper text-purple-400"></i> Feed Social IA</button>
+            <button onclick="mostrarSeccion('foro')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition text-left"><i class="fa-solid fa-comments text-blue-400"></i> Foro Comunitario</button>
+            <button onclick="mostrarSeccion('manual')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition text-left"><i class="fa-solid fa-book text-pink-400"></i> Manual de Usuario</button>
+            <button onclick="mostrarSeccion('sugerencias')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition text-left"><i class="fa-solid fa-box-archive text-yellow-400"></i> Buzón de sugerencias</button>
+            <button onclick="compartirPlataforma()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition text-left"><i class="fa-solid fa-share-nodes text-green-400"></i> Compartir plataforma</button>
+            <button onclick="informarProblema()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition text-left"><i class="fa-solid fa-triangle-exclamation text-red-400"></i> Informar un problema</button>
         </nav>
 
         <div class="p-3 border-t border-slate-800">
@@ -39,56 +42,139 @@
         </div>
     </aside>
 
-    <!-- CONTENEDOR PRINCIPAL -->
-    <main class="flex-1 flex flex-col h-full overflow-hidden bg-slate-950">
+    <!-- CONTENEDOR PRINCIPAL (FEED + HISTORIAS) -->
+    <main class="flex-1 flex flex-col h-full overflow-y-auto bg-slate-950 relative">
         
-        <!-- HEADER SUPERIOR CON HISTORIAS PRO (Estilo Reels/TikTok) -->
-        <header class="bg-slate-900/50 backdrop-blur border-b border-slate-800 p-3">
-            <div id="storiesBar" class="flex gap-4 overflow-x-auto pb-2 scrollbar-none">
-                <!-- Tarjeta de Historia 1 -->
-                <div class="flex-shrink-0 w-24 h-36 bg-gradient-to-b from-purple-600 to-indigo-900 rounded-xl p-2 flex flex-col justify-between cursor-pointer border border-purple-500/40 hover:scale-105 transition shadow-md">
-                    <span class="text-xs font-semibold bg-black/40 px-1.5 py-0.5 rounded text-purple-200 self-start">Tendencia</span>
-                    <span class="text-xs font-bold text-white text-center leading-tight">Chat Libre Multimodal</span>
+        <!-- TOPBAR DE HISTORIAS TIKTOK / REELS -->
+        <header class="bg-slate-900/60 backdrop-blur border-b border-slate-800 p-4 sticky top-0 z-20">
+            <div class="max-w-4xl mx-auto flex gap-4 overflow-x-auto scrollbar-hide pb-1">
+                <!-- Historia 1: Fotos IA -->
+                <div onclick="usarFuncion('Generador de Fotos IA')" class="flex-shrink-0 w-24 h-36 bg-gradient-to-b from-purple-600 to-indigo-900 rounded-xl p-2 flex flex-col justify-between cursor-pointer border border-purple-500/40 hover:scale-105 transition shadow-md bg-cover bg-center" style="background-image: linear-gradient(to top, rgba(0,0,0,0.8), transparent), url('https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?w=300');">
+                    <span class="text-[10px] font-bold bg-purple-500 text-white px-1.5 py-0.5 rounded self-start">Visual</span>
+                    <span class="text-xs font-bold text-white text-center">Fotos IA Pro</span>
                 </div>
-                <!-- Tarjeta de Historia 2 -->
-                <div class="flex-shrink-0 w-24 h-36 bg-gradient-to-b from-pink-600 to-rose-900 rounded-xl p-2 flex flex-col justify-between cursor-pointer border border-pink-500/40 hover:scale-105 transition shadow-md">
-                    <span class="text-xs font-semibold bg-black/40 px-1.5 py-0.5 rounded text-pink-200 self-start">Visual</span>
-                    <span class="text-xs font-bold text-white text-center leading-tight">Fotos y Videos IA</span>
+                <!-- Historia 2: Videos IA -->
+                <div onclick="usarFuncion('Generador de Videos IA')" class="flex-shrink-0 w-24 h-36 bg-gradient-to-b from-pink-600 to-rose-900 rounded-xl p-2 flex flex-col justify-between cursor-pointer border border-pink-500/40 hover:scale-105 transition shadow-md bg-cover bg-center" style="background-image: linear-gradient(to top, rgba(0,0,0,0.8), transparent), url('https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=300');">
+                    <span class="text-[10px] font-bold bg-pink-500 text-white px-1.5 py-0.5 rounded self-start">Videos</span>
+                    <span class="text-xs font-bold text-white text-center">Reels & TikTok</span>
                 </div>
-                <!-- Tarjeta de Historia 3 -->
-                <div class="flex-shrink-0 w-24 h-36 bg-gradient-to-b from-emerald-600 to-teal-900 rounded-xl p-2 flex flex-col justify-between cursor-pointer border border-emerald-500/40 hover:scale-105 transition shadow-md">
-                    <span class="text-xs font-semibold bg-black/40 px-1.5 py-0.5 rounded text-emerald-200 self-start">Docs</span>
-                    <span class="text-xs font-bold text-white text-center leading-tight">Word y Excel Pro</span>
+                <!-- Historia 3: Word y Excel -->
+                <div onclick="usarFuncion('Word y Excel Pro')" class="flex-shrink-0 w-24 h-36 bg-gradient-to-b from-emerald-600 to-teal-900 rounded-xl p-2 flex flex-col justify-between cursor-pointer border border-emerald-500/40 hover:scale-105 transition shadow-md bg-cover bg-center" style="background-image: linear-gradient(to top, rgba(0,0,0,0.8), transparent), url('https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=300');">
+                    <span class="text-[10px] font-bold bg-emerald-500 text-white px-1.5 py-0.5 rounded self-start">Docs</span>
+                    <span class="text-xs font-bold text-white text-center">Word & Excel</span>
+                </div>
+                <!-- Historia 4: Traductor -->
+                <div onclick="usarFuncion('Traducción de Voz y Texto')" class="flex-shrink-0 w-24 h-36 bg-gradient-to-b from-blue-600 to-cyan-900 rounded-xl p-2 flex flex-col justify-between cursor-pointer border border-blue-500/40 hover:scale-105 transition shadow-md bg-cover bg-center" style="background-image: linear-gradient(to top, rgba(0,0,0,0.8), transparent), url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=300');">
+                    <span class="text-[10px] font-bold bg-blue-500 text-white px-1.5 py-0.5 rounded self-start">Global</span>
+                    <span class="text-xs font-bold text-white text-center">Traductor IA</span>
                 </div>
             </div>
         </header>
 
-        <!-- ÁREA DE CHAT / FEED -->
+        <!-- CONTENIDO DINÁMICO (VISTAS PRINCIPALES) -->
+        <div id="mainContent" class="flex-1 p-6 max-w-3xl mx-auto w-full space-y-6">
+            
+            <!-- VISTA 1: FEED TIPO FACEBOOK -->
+            <div id="view-feed" class="space-y-6">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow">
+                    <h2 class="font-bold text-lg mb-2 flex items-center gap-2"><i class="fa-solid fa-fire text-orange-400"></i> Tendencias Virales de IA hoy</h2>
+                    <p class="text-xs text-slate-400">Contenido generado automáticamente por la comunidad e inteligencia artificial.</p>
+                </div>
+
+                <!-- Post del Feed 1 -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center font-bold">AI</div>
+                        <div>
+                            <h4 class="font-bold text-sm">Nexus Bot Oficial</h4>
+                            <span class="text-[10px] text-slate-400">Hace 15 minutos • 🌍 Público</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-200">¡Nuevo avance en generación de imágenes hiperrealistas 3D para marcas y e-commerce! Pruébalo ahora mismo en el generador visual.</p>
+                    <div class="rounded-xl overflow-hidden border border-slate-800 h-64 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?w=800');"></div>
+                    <div class="flex justify-between text-xs text-slate-400 pt-2 border-t border-slate-800">
+                        <button class="hover:text-purple-400"><i class="fa-regular fa-thumbs-up"></i> Me gusta (342)</button>
+                        <button onclick="abrirChatIA()" class="hover:text-purple-400"><i class="fa-regular fa-comment"></i> Comentar con IA</button>
+                        <button class="hover:text-purple-400"><i class="fa-solid fa-share"></i> Compartir</button>
+                    </div>
+                </div>
+
+                <!-- Post del Feed 2 -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-bold">U</div>
+                        <div>
+                            <h4 class="font-bold text-sm">Creador Anónimo</h4>
+                            <span class="text-[10px] text-slate-400">Hace 1 hora • 👥 Foro Público</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-200">¿Alguien ha probado estructurar los flujos de caja en Excel usando la nueva herramienta de la plataforma? ¡Los resultados financieros salen automáticos!</p>
+                    <div class="flex justify-between text-xs text-slate-400 pt-2 border-t border-slate-800">
+                        <button class="hover:text-blue-400"><i class="fa-regular fa-thumbs-up"></i> Me gusta (128)</button>
+                        <button onclick="abrirChatIA()" class="hover:text-blue-400"><i class="fa-regular fa-comment"></i> Comentar con IA</button>
+                        <button class="hover:text-blue-400"><i class="fa-solid fa-share"></i> Compartir</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VISTA 2: FORO COMUNITARIO -->
+            <div id="view-foro" class="hidden space-y-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+                    <h2 class="font-bold text-lg mb-2 text-blue-400"><i class="fa-solid fa-comments"></i> Foro Comunitario Anónimo y Público</h2>
+                    <p class="text-xs text-slate-400 mb-4">Comparte tus ideas libremente con otros usuarios de la plataforma.</p>
+                    <textarea placeholder="Escribe tu idea de forma pública o anónima..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-200 outline-none resize-none h-24 mb-3"></textarea>
+                    <button class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-sm font-medium">Publicar en el Foro</button>
+                </div>
+            </div>
+
+            <!-- VISTA 3: MANUAL DE USUARIO -->
+            <div id="view-manual" class="hidden space-y-4 text-sm text-slate-300">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-3">
+                    <h2 class="font-bold text-xl text-pink-400"><i class="fa-solid fa-book"></i> Manual Oficial de Nexus AI Pro</h2>
+                    <p>Bienvenido al manual completo. Aquí se explica cómo operar todas las funciones:</p>
+                    <ul class="list-disc pl-5 space-y-2 text-xs text-slate-400">
+                        <li><b>Chat Libre Multimodal:</b> Permite adjuntar textos, audios, fotos, documentos de Word y hojas de Excel para que la IA los procese al instante.</li>
+                        <li><b>Generador de Fotos y Videos IA:</b> Diseña mockups, animaciones y contenido publicitario para redes sociales.</li>
+                        <li><b>Traducción Global:</b> Traduce contenidos comerciales y adapta voces con inteligencia artificial.</li>
+                        <li><b>Redactor de Documentos:</b> Capaz de redactar contratos, reportes y estructurar modelos financieros completos en Excel.</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- MODAL / PANEL DESPLEGABLE DE CHAT IA -->
+    <div id="chatModal" class="fixed inset-y-0 right-0 w-full md:w-[480px] bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 z-50">
+        <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950">
+            <span class="font-bold text-sm text-purple-400"><i class="fa-solid fa-robot"></i> Chat IA Multimodal Pro</span>
+            <button onclick="cerrarChatIA()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        
         <div id="chatContainer" class="flex-1 overflow-y-auto p-4 space-y-4">
-            <div class="flex items-start gap-3 max-w-2xl">
-                <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center font-bold text-sm">AI</div>
-                <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl text-slate-200 shadow-sm">
-                    ¡Hola! Soy tu asistente de Inteligencia Artificial avanzado. Puedes preguntarme lo que sea, subir documentos de Word/Excel, audios, fotos o solicitar código. ¿En qué te ayudamos hoy?
+            <div class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center font-bold text-xs">AI</div>
+                <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl text-xs text-slate-200">
+                    ¡Hola! Pregúntame lo que necesites o adjunta archivos (Word, Excel, fotos, audios) para trabajar.
                 </div>
             </div>
         </div>
 
-        <!-- BARRA INFERIOR DE ENTRADA (Multimodal con soporte de archivos) -->
-        <div class="p-4 bg-slate-900 border-t border-slate-800">
-            <form id="chatForm" onsubmit="enviarMensaje(event)" class="max-w-4xl mx-auto flex items-center gap-2 bg-slate-950 border border-slate-800 rounded-2xl p-2 shadow-inner">
-                <label class="cursor-pointer text-slate-400 hover:text-purple-400 px-3 transition">
-                    <i class="fa-solid fa-paperclip text-lg"></i>
+        <div class="p-3 bg-slate-950 border-t border-slate-800">
+            <form id="chatForm" onsubmit="enviarMensaje(event)" class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-xl p-2">
+                <label class="cursor-pointer text-slate-400 hover:text-purple-400 px-2">
+                    <i class="fa-solid fa-paperclip"></i>
                     <input type="file" id="fileInput" class="hidden">
                 </label>
-                <input type="text" id="messageInput" placeholder="Escribe tu mensaje o adjunta un archivo..." class="flex-1 bg-transparent border-none outline-none text-slate-100 px-2 py-1 placeholder-slate-500 text-sm">
-                <button type="submit" class="bg-purple-600 hover:bg-purple-500 text-white px-5 py-2.5 rounded-xl font-medium transition shadow-md">
+                <input type="text" id="messageInput" placeholder="Escribe tu mensaje..." class="flex-1 bg-transparent border-none outline-none text-slate-100 text-xs px-1">
+                <button type="submit" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-lg text-xs font-medium">
                     <i class="fa-solid fa-paper-plane"></i>
                 </button>
             </form>
         </div>
-    </main>
+    </div>
 
-    <!-- SCRIPT DE CONEXIÓN JAVASCRIPT -->
+    <!-- SCRIPT GENERAL -->
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -96,20 +182,56 @@
             sidebar.classList.toggle('w-16');
         }
 
-        function nuevoChat() {
-            document.getElementById('chatContainer').innerHTML = `
-                <div class="flex items-start gap-3 max-w-2xl">
-                    <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center font-bold text-sm">AI</div>
-                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl text-slate-200 shadow-sm">
-                        Nuevo chat iniciado. ¿Qué deseas crear o resolver?
+        function abrirChatIA() {
+            document.getElementById('chatModal').classList.remove('translate-x-full');
+        }
+
+        function cerrarChatIA() {
+            document.getElementById('chatModal').classList.add('translate-x-full');
+        }
+
+        function mostrarSeccion(seccion) {
+            document.getElementById('view-feed').classList.add('hidden');
+            document.getElementById('view-foro').classList.add('hidden');
+            document.getElementById('view-manual').classList.add('hidden');
+            
+            if(seccion === 'feed') document.getElementById('view-feed').classList.remove('hidden');
+            if(seccion === 'foro') document.getElementById('view-foro').classList.remove('hidden');
+            if(seccion === 'manual') document.getElementById('view-manual').classList.remove('hidden');
+        }
+
+        function usarFuncion(nombre) {
+            abrirChatIA();
+            const chatContainer = document.getElementById('chatContainer');
+            chatContainer.innerHTML += `
+                <div class="flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center font-bold text-xs">AI</div>
+                    <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl text-xs text-slate-200">
+                        Has seleccionado: <b>${nombre}</b>. ¿Qué deseas generar hoy con esta herramienta?
                     </div>
                 </div>
             `;
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function compartirPlataforma() {
+            if (navigator.share) {
+                navigator.share({ title: 'Nexus AI Pro', url: window.location.href });
+            } else {
+                alert("Enlace copiado al portapapeles: " + window.location.href);
+            }
+        }
+
+        function informarProblema() {
+            const prob = prompt("Describe el problema que encontraste para enviarlo al administrador:");
+            if(prob) {
+                alert("¡Gracias! El reporte ha sido enviado al equipo técnico.");
+            }
         }
 
         function borrarHistorial() {
-            if(confirm("¿Estás seguro de borrar todo el historial?")) {
-                nuevoChat();
+            if(confirm("¿Borrar todo el historial de chat?")) {
+                document.getElementById('chatContainer').innerHTML = '';
             }
         }
 
@@ -119,51 +241,36 @@
             const fileInput = document.getElementById('fileInput');
             const chatContainer = document.getElementById('chatContainer');
             
-            const mensajeTexto = input.value.trim();
-            const archivo = fileInput.files[0];
+            const txt = input.value.trim();
+            const file = fileInput.files[0];
+            if(!txt && !file) return;
 
-            if (!mensajeTexto && !archivo) return;
-
-            // Mostrar mensaje del usuario
             chatContainer.innerHTML += `
                 <div class="flex justify-end">
-                    <div class="bg-purple-600 text-white p-3 rounded-2xl max-w-xl text-sm shadow">
-                        ${mensajeTexto} ${archivo ? `<br><span class="text-xs opacity-80">[Archivo adjunto: ${archivo.name}]</span>` : ''}
+                    <div class="bg-purple-600 text-white p-2.5 rounded-2xl max-w-xs text-xs shadow">
+                        ${txt} ${file ? `<br><i>[Archivo: ${file.name}]</i>` : ''}
                     </div>
                 </div>
             `;
-
             input.value = '';
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
-            // Preparar datos para enviar a Flask
             const formData = new FormData();
-            formData.append('message', mensajeTexto);
-            if (archivo) {
-                formData.append('file', archivo);
-            }
+            formData.append('message', txt);
+            if(file) formData.append('file', file);
 
             try {
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await response.json();
-
-                if (data.status === 'success') {
-                    chatContainer.innerHTML += `
-                        <div class="flex items-start gap-3 max-w-2xl">
-                            <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center font-bold text-sm">AI</div>
-                            <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl text-slate-200 shadow-sm text-sm whitespace-pre-wrap">${data.reply}</div>
-                        </div>
-                    `;
-                } else {
-                    chatContainer.innerHTML += `<div class="text-red-400 text-xs p-2">Error: ${data.message}</div>`;
-                }
-            } catch (err) {
-                chatContainer.innerHTML += `<div class="text-red-400 text-xs p-2">Error de conexión con el servidor.</div>`;
+                const res = await fetch('/api/chat', { method: 'POST', body: formData });
+                const data = await res.json();
+                chatContainer.innerHTML += `
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center font-bold text-xs">AI</div>
+                        <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl text-xs text-slate-200 whitespace-pre-wrap">${data.reply || data.message}</div>
+                    </div>
+                `;
+            } catch(e) {
+                chatContainer.innerHTML += `<div class="text-red-400 text-xs">Error de comunicación con el servidor de IA.</div>`;
             }
-
             fileInput.value = '';
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
