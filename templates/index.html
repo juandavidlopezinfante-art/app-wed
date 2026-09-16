@@ -250,7 +250,7 @@
             <div class="flex items-start gap-3">
                 <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center font-bold text-xs shadow">AI</div>
                 <div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200">
-                    ¡Hola! Conectado con el nuevo servidor de inteligencia artificial de alto rendimiento. Sube archivos, fotos o haz tus consultas.
+                    ¡Hola! Conectado con el clúster multi-servidor de alta velocidad. Sube archivos, fotos o haz tus consultas.
                 </div>
             </div>
         </div>
@@ -264,7 +264,7 @@
                 <button type="button" onclick="grabarAudioChat()" class="text-slate-400 hover:text-emerald-400 px-2" title="Nota de Voz">
                     <i class="fa-solid fa-microphone text-base"></i>
                 </button>
-                <input type="text" id="messageInput" placeholder="Escribe tu mensaje al nuevo servidor..." class="flex-1 bg-transparent border-none outline-none text-slate-100 text-xs px-1">
+                <input type="text" id="messageInput" placeholder="Escribe tu mensaje al clúster..." class="flex-1 bg-transparent border-none outline-none text-slate-100 text-xs px-1">
                 <button type="submit" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-5 py-2.5 rounded-xl font-bold text-xs">
                     <i class="fa-solid fa-paper-plane"></i>
                 </button>
@@ -278,17 +278,17 @@
         let historialChatArray = [];
 
         const historiasData = [
-            { titulo: "Cyber Art 3D", badge: "Video IA", url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-with-code-31910-large.mp4", poster: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300" },
+            { titulo: "Cyber Art 3D", badge: "Video IA", url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-and-code-31910-large.mp4", poster: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300" },
             { titulo: "Mundos Pixar", badge: "Animación", url: "https://assets.mixkit.co/videos/preview/mixkit-plexus-background-of-plexus-animation-31911-large.mp4", poster: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=300" },
             { titulo: "Flujo de Caja", badge: "Negocios", url: "https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-man-working-on-a-financial-graph-42861-large.mp4", poster: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=300" }
         ];
 
         let feedPosts = [
-            { id: 1, autor: "Nexus AI Core", tiempo: "Hace 1 min", categoria: "Arte 3D & VFX", texto: "¡Renderizado masivo de arquitectura futurista generado con el nuevo servidor de alta potencia!", media: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900", likes: 1420, comentarios: [] }
+            { id: 1, autor: "Nexus AI Core", tiempo: "Hace 1 min", categoria: "Arte 3D & VFX", texto: "¡Renderizado masivo de arquitectura futurista generado con el clúster multi-servidor de alta potencia!", media: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900", likes: 1420, comentarios: [] }
         ];
 
         let reelsData = [
-            { id: 1, autor: "DeepAI Generator", texto: "Reel generado por IA: Arquitectura cibernética.", url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-with-code-31910-large.mp4", likes: 3200 }
+            { id: 1, autor: "DeepAI Generator", texto: "Reel generado por IA: Arquitectura cibernética.", url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-and-code-31910-large.mp4", likes: 3200 }
         ];
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -485,17 +485,17 @@
             input.value = '';
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
-            const formData = new FormData();
-            formData.append('message', txt);
-            if(file) formData.append('file', file);
-
             try {
-                const res = await fetch('/api/chat', { method: 'POST', body: formData });
+                const res = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ toolName: 'Chat IA Pro', prompt: txt })
+                });
                 const data = await res.json();
-                chatContainer.innerHTML += `<div class="flex items-start gap-3"><div class="w-9 h-9 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-xs">AI</div><div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200 whitespace-pre-wrap">${data.reply}</div></div>`;
-                historialChatArray.push("IA: " + data.reply);
+                chatContainer.innerHTML += `<div class="flex items-start gap-3"><div class="w-9 h-9 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-xs">AI</div><div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200 whitespace-pre-wrap">${data.response}</div></div>`;
+                historialChatArray.push("IA: " + data.response);
             } catch(e) {
-                chatContainer.innerHTML += `<div class="text-rose-400 text-xs p-2">Error de comunicación con el nuevo servidor.</div>`;
+                chatContainer.innerHTML += `<div class="text-rose-400 text-xs p-2">Error de comunicación con el clúster.</div>`;
             }
             fileInput.value = '';
             chatContainer.scrollTop = chatContainer.scrollHeight;
