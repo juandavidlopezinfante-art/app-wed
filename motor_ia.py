@@ -27,13 +27,13 @@ generation_config = {
 }
 
 def obtener_motor_inteligente():
-    """Selecciona aleatoriamente una llave del pool y usa el modelo vigente."""
+    """Selecciona aleatoriamente una llave del pool y usa el modelo oficial vigente."""
     if API_KEYS_POOL:
         import random
         genai.configure(api_key=random.choice(API_KEYS_POOL))
     
-    # Usamos gemini-2.5-flash o gemini-pro que son los soportados por la API actual
-    modelos_disponibles = ['gemini-2.5-flash', 'gemini-pro']
+    # Usamos estrictamente el modelo actual exigido por la API de Google
+    modelos_disponibles = ['gemini-3.6-flash', 'gemini-pro']
     for nombre_modelo in modelos_disponibles:
         try:
             return genai.GenerativeModel(nombre_modelo, generation_config=generation_config)
