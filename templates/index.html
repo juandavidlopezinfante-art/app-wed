@@ -9,14 +9,11 @@
     <style>
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-        /* Animación suave para historias y elementos brillantes */
         @keyframes pulseGlow {
             0%, 100% { box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
             50% { box-shadow: 0 0 25px rgba(236, 72, 153, 0.8); }
         }
-        .story-ring {
-            animation: pulseGlow 3s infinite;
-        }
+        .story-ring { animation: pulseGlow 3s infinite; }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 flex h-screen overflow-hidden">
@@ -36,7 +33,7 @@
 
         <nav class="flex-1 overflow-y-auto px-3 space-y-1.5 text-sm scrollbar-hide">
             <button onclick="mostrarSeccion('feed')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium group"><i class="fa-solid fa-newspaper text-purple-400 group-hover:scale-110 transition"></i> Feed Social IA</button>
-            <button onclick="mostrarSeccion('foro')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium group"><i class="fa-solid fa-comments text-cyan-400 group-hover:scale-110 transition"></i> Foro Comunitario</button>
+            <button onclick="mostrarSeccion('crear')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium group"><i class="fa-solid fa-cloud-arrow-up text-cyan-400 group-hover:scale-110 transition"></i> Publicar Creación IA</button>
             <button onclick="mostrarSeccion('manual')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium group"><i class="fa-solid fa-book-open-reader text-pink-400 group-hover:scale-110 transition"></i> Manual Maestro IA</button>
             <button onclick="mostrarSeccion('sugerencias')" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium group"><i class="fa-solid fa-box-archive text-amber-400 group-hover:scale-110 transition"></i> Buzón de sugerencias</button>
             <button onclick="compartirPlataforma()" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-200 hover:bg-slate-800/80 transition text-left font-medium group"><i class="fa-solid fa-share-nodes text-emerald-400 group-hover:scale-110 transition"></i> Compartir plataforma</button>
@@ -50,132 +47,66 @@
         </div>
     </aside>
 
-    <!-- CONTENEDOR PRINCIPAL (FEED + HISTORIAS LLAMATIVAS) -->
+    <!-- CONTENEDOR PRINCIPAL -->
     <main class="flex-1 flex flex-col h-full overflow-y-auto bg-slate-950 relative">
         
-        <!-- TOPBAR DE HISTORIAS TIKTOK / REELS (MUCHAS Y VARIADAS) -->
+        <!-- TOPBAR DE HISTORIAS TIKTOK / REELS (CON VIDEOS Y BOTÓN DE AUDIO) -->
         <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 p-4 sticky top-0 z-20 shadow-md">
-            <div class="max-w-4xl mx-auto flex gap-4 overflow-x-auto scrollbar-hide pb-1">
-                <!-- Historia 1 -->
-                <div onclick="usarFuncion('Cyberpunk & Neon Concept')" class="story-ring flex-shrink-0 w-28 h-40 bg-gradient-to-b from-purple-600 to-indigo-950 rounded-2xl p-2.5 flex flex-col justify-between cursor-pointer border-2 border-purple-400 hover:scale-105 transition shadow-lg bg-cover bg-center relative overflow-hidden" style="background-image: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300');">
-                    <span class="text-[9px] font-extrabold bg-purple-500 text-white px-2 py-0.5 rounded-full self-start shadow">Trending</span>
-                    <span class="text-xs font-bold text-white text-center drop-shadow">Cyber Art 3D</span>
-                </div>
-                <!-- Historia 2 -->
-                <div onclick="usarFuncion('Cuentos y Animación Infantil')" class="story-ring flex-shrink-0 w-28 h-40 bg-gradient-to-b from-pink-600 to-rose-950 rounded-2xl p-2.5 flex flex-col justify-between cursor-pointer border-2 border-pink-400 hover:scale-105 transition shadow-lg bg-cover bg-center relative overflow-hidden" style="background-image: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1534447677768-be436bb09401?w=300');">
-                    <span class="text-[9px] font-extrabold bg-pink-500 text-white px-2 py-0.5 rounded-full self-start shadow">Estilo Pixar</span>
-                    <span class="text-xs font-bold text-white text-center drop-shadow">Mundos Mágicos</span>
-                </div>
-                <!-- Historia 3 -->
-                <div onclick="usarFuncion('Finanzas y Excel Automatizado')" class="story-ring flex-shrink-0 w-28 h-40 bg-gradient-to-b from-emerald-600 to-teal-950 rounded-2xl p-2.5 flex flex-col justify-between cursor-pointer border-2 border-emerald-400 hover:scale-105 transition shadow-lg bg-cover bg-center relative overflow-hidden" style="background-image: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=300');">
-                    <span class="text-[9px] font-extrabold bg-emerald-500 text-white px-2 py-0.5 rounded-full self-start shadow">Negocios</span>
-                    <span class="text-xs font-bold text-white text-center drop-shadow">Flujo de Caja</span>
-                </div>
-                <!-- Historia 4 -->
-                <div onclick="usarFuncion('Moda y E-commerce AI')" class="story-ring flex-shrink-0 w-28 h-40 bg-gradient-to-b from-amber-600 to-orange-950 rounded-2xl p-2.5 flex flex-col justify-between cursor-pointer border-2 border-amber-400 hover:scale-105 transition shadow-lg bg-cover bg-center relative overflow-hidden" style="background-image: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300');">
-                    <span class="text-[9px] font-extrabold bg-amber-500 text-white px-2 py-0.5 rounded-full self-start shadow">Heirs Fashion</span>
-                    <span class="text-xs font-bold text-white text-center drop-shadow">Ropa & Estilo</span>
-                </div>
-                <!-- Historia 5 -->
-                <div onclick="usarFuncion('Traducción Global y Voces')" class="story-ring flex-shrink-0 w-28 h-40 bg-gradient-to-b from-blue-600 to-cyan-950 rounded-2xl p-2.5 flex flex-col justify-between cursor-pointer border-2 border-cyan-400 hover:scale-105 transition shadow-lg bg-cover bg-center relative overflow-hidden" style="background-image: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=300');">
-                    <span class="text-[9px] font-extrabold bg-blue-500 text-white px-2 py-0.5 rounded-full self-start shadow">Global</span>
-                    <span class="text-xs font-bold text-white text-center drop-shadow">Voces IA</span>
-                </div>
-                <!-- Historia 6 -->
-                <div onclick="usarFuncion('Granizados & Bebidas Gourmet')" class="story-ring flex-shrink-0 w-28 h-40 bg-gradient-to-b from-rose-600 to-purple-950 rounded-2xl p-2.5 flex flex-col justify-between cursor-pointer border-2 border-rose-400 hover:scale-105 transition shadow-lg bg-cover bg-center relative overflow-hidden" style="background-image: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=300');">
-                    <span class="text-[9px] font-extrabold bg-rose-500 text-white px-2 py-0.5 rounded-full self-start shadow">Emprendimiento</span>
-                    <span class="text-xs font-bold text-white text-center drop-shadow">Granizados 24/7</span>
-                </div>
+            <div id="storiesContainer" class="max-w-5xl mx-auto flex gap-4 overflow-x-auto scrollbar-hide pb-1">
+                <!-- Las historias se generan dinámicamente con videos y control de audio -->
             </div>
         </header>
 
         <!-- CONTENIDO DINÁMICO -->
         <div id="mainContent" class="flex-1 p-6 max-w-3xl mx-auto w-full space-y-6">
             
-            <!-- VISTA 1: FEED SOCIAL LLENO DE COLOR Y PUBLICACIONES VIRALES -->
+            <!-- VISTA 1: FEED SOCIAL ESTILO FACEBOOK (CON ACTUALIZACIÓN AUTOMÁTICA) -->
             <div id="view-feed" class="space-y-6">
-                <div class="bg-gradient-to-r from-purple-900/60 via-slate-900 to-pink-900/60 border border-purple-500/30 rounded-3xl p-6 shadow-2xl backdrop-blur">
-                    <h2 class="font-black text-xl mb-1 flex items-center gap-2.5 bg-gradient-to-r from-amber-400 to-pink-400 bg-clip-text text-transparent">
-                        <i class="fa-solid fa-fire text-amber-400 animate-bounce"></i> Tendencias Virales de IA en Tiempo Real
-                    </h2>
-                    <p class="text-xs text-slate-300">Explora lo más impactante del mundo digital creado con inteligencia artificial y conéctate al instante.</p>
+                <div class="bg-gradient-to-r from-purple-900/60 via-slate-900 to-pink-900/60 border border-purple-500/30 rounded-3xl p-6 shadow-2xl backdrop-blur flex items-center justify-between">
+                    <div>
+                        <h2 class="font-black text-xl mb-1 flex items-center gap-2.5 bg-gradient-to-r from-amber-400 to-pink-400 bg-clip-text text-transparent">
+                            <i class="fa-solid fa-fire text-amber-400 animate-bounce"></i> Feed Social Viral en Tiempo Real
+                        </h2>
+                        <p class="text-xs text-slate-300">Contenido generado por IA y la comunidad. Se actualiza automáticamente.</p>
+                    </div>
+                    <span class="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-3 py-1.5 rounded-full text-xs font-bold animate-pulse">
+                        <i class="fa-solid fa-circle text-[8px]"></i> En vivo
+                    </span>
                 </div>
 
-                <!-- Post 1: Arte Visual 3D -->
-                <div class="bg-slate-900/90 border border-slate-800/80 rounded-3xl p-6 shadow-xl space-y-4 hover:border-purple-500/40 transition">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center font-bold text-white shadow-lg">AI</div>
-                            <div>
-                                <h4 class="font-bold text-sm text-slate-100">Nexus Visual Creator</h4>
-                                <span class="text-[11px] text-purple-400 font-medium">Hace 10 min • 🌍 Contenido Público</span>
-                            </div>
-                        </div>
-                        <span class="bg-purple-500/10 text-purple-400 text-xs font-bold px-3 py-1 rounded-full border border-purple-500/20">Arte Digital</span>
-                    </div>
-                    <p class="text-sm text-slate-200 leading-relaxed">¡Increíble concepto arquitectónico futurista renderizado con IA en segundos! ¿Te gustaría generar diseños hiperrealistas como este para tus proyectos? Pruébalo ahora mismo.</p>
-                    <div class="rounded-2xl overflow-hidden border border-slate-800 h-72 bg-cover bg-center shadow-inner hover:scale-[1.01] transition duration-300" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900');"></div>
-                    <div class="flex justify-between text-xs text-slate-400 pt-3 border-t border-slate-800/80 font-medium">
-                        <button onclick="this.classList.toggle('text-purple-400');" class="hover:text-purple-400 flex items-center gap-1.5 transition"><i class="fa-regular fa-thumbs-up text-base"></i> Me gusta (512)</button>
-                        <button onclick="abrirChatIA()" class="hover:text-purple-400 flex items-center gap-1.5 transition"><i class="fa-regular fa-comment text-base"></i> Comentar con IA</button>
-                        <button onclick="compartirPlataforma()" class="hover:text-purple-400 flex items-center gap-1.5 transition"><i class="fa-solid fa-share text-base"></i> Compartir</button>
-                    </div>
-                </div>
-
-                <!-- Post 2: Emprendimiento y Negocios -->
-                <div class="bg-slate-900/90 border border-slate-800/80 rounded-3xl p-6 shadow-xl space-y-4 hover:border-pink-500/40 transition">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-600 flex items-center justify-center font-bold text-white shadow-lg">NX</div>
-                            <div>
-                                <h4 class="font-bold text-sm text-slate-100">Business & Financial Pro</h4>
-                                <span class="text-[11px] text-emerald-400 font-medium">Hace 35 min • 📈 Negocios</span>
-                            </div>
-                        </div>
-                        <span class="bg-emerald-500/10 text-emerald-400 text-xs font-bold px-3 py-1 rounded-full border border-emerald-500/20">Finanzas Excel</span>
-                    </div>
-                    <p class="text-sm text-slate-200 leading-relaxed">Estructura flujos de caja automáticos y proyecciones de ventas profesionales sin tocar fórmulas complejas. Deja que la IA organice tu negocio.</p>
-                    <div class="rounded-2xl overflow-hidden border border-slate-800 h-72 bg-cover bg-center shadow-inner hover:scale-[1.01] transition duration-300" style="background-image: url('https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=900');"></div>
-                    <div class="flex justify-between text-xs text-slate-400 pt-3 border-t border-slate-800/80 font-medium">
-                        <button onclick="this.classList.toggle('text-emerald-400');" class="hover:text-emerald-400 flex items-center gap-1.5 transition"><i class="fa-regular fa-thumbs-up text-base"></i> Me gusta (384)</button>
-                        <button onclick="abrirChatIA()" class="hover:text-emerald-400 flex items-center gap-1.5 transition"><i class="fa-regular fa-comment text-base"></i> Comentar con IA</button>
-                        <button onclick="compartirPlataforma()" class="hover:text-emerald-400 flex items-center gap-1.5 transition"><i class="fa-solid fa-share text-base"></i> Compartir</button>
-                    </div>
-                </div>
-
-                <!-- Post 3: Estilo de Vida y Moda -->
-                <div class="bg-slate-900/90 border border-slate-800/80 rounded-3xl p-6 shadow-xl space-y-4 hover:border-amber-500/40 transition">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-600 to-rose-600 flex items-center justify-center font-bold text-white shadow-lg">HF</div>
-                            <div>
-                                <h4 class="font-bold text-sm text-slate-100">Heirs of Fashion Studio</h4>
-                                <span class="text-[11px] text-amber-400 font-medium">Hace 1 hora • 🎨 Branding</span>
-                            </div>
-                        </div>
-                        <span class="bg-amber-500/10 text-amber-400 text-xs font-bold px-3 py-1 rounded-full border border-amber-500/20">Moda & Estilo</span>
-                    </div>
-                    <p class="text-sm text-slate-200 leading-relaxed">Garments for Every Moment. Diseños versátiles y activewear optimizados mediante branding visual impulsado por inteligencia artificial.</p>
-                    <div class="rounded-2xl overflow-hidden border border-slate-800 h-72 bg-cover bg-center shadow-inner hover:scale-[1.01] transition duration-300" style="background-image: url('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900');"></div>
-                    <div class="flex justify-between text-xs text-slate-400 pt-3 border-t border-slate-800/80 font-medium">
-                        <button onclick="this.classList.toggle('text-amber-400');" class="hover:text-amber-400 flex items-center gap-1.5 transition"><i class="fa-regular fa-thumbs-up text-base"></i> Me gusta (720)</button>
-                        <button onclick="abrirChatIA()" class="hover:text-amber-400 flex items-center gap-1.5 transition"><i class="fa-regular fa-comment text-base"></i> Comentar con IA</button>
-                        <button onclick="compartirPlataforma()" class="hover:text-amber-400 flex items-center gap-1.5 transition"><i class="fa-solid fa-share text-base"></i> Compartir</button>
-                    </div>
+                <!-- CONTENEDOR DEL FEED DINÁMICO -->
+                <div id="feedPostsContainer" class="space-y-6">
+                    <!-- Posts inyectados por JS -->
                 </div>
             </div>
 
-            <!-- VISTA 2: FORO COMUNITARIO -->
-            <div id="view-foro" class="hidden space-y-4">
-                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
-                    <h2 class="font-bold text-xl mb-2 text-cyan-400 flex items-center gap-2"><i class="fa-solid fa-comments"></i> Foro Comunitario Anónimo y Público</h2>
-                    <p class="text-xs text-slate-400 mb-4 leading-relaxed">Comparte tus ideas, proyectos y estrategias libremente con otros usuarios de la plataforma en tiempo real.</p>
-                    <textarea placeholder="Escribe tu idea o debate de forma pública o anónima..." class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-4 text-sm text-slate-200 outline-none resize-none h-32 mb-3 focus:border-cyan-500 transition"></textarea>
-                    <button class="bg-cyan-600 hover:bg-cyan-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-cyan-900/30 transition">Publicar en el Foro</button>
+            <!-- VISTA 2: PUBLICAR CREACIONES DE IA O IDEAS PERSONALES -->
+            <div id="view-crear" class="hidden space-y-6">
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
+                    <h2 class="font-bold text-xl text-cyan-400 flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up"></i> Comparte tu Creación o Idea de IA</h2>
+                    <p class="text-xs text-slate-400 leading-relaxed">Sube tus imágenes generadas, videos o comparte tus prompts e ideas personales con toda la comunidad de la plataforma.</p>
+                    
+                    <form onsubmit="publicarContenidoUsuario(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1">Tu Nombre o Seudónimo</label>
+                            <input type="text" id="userNamePost" required placeholder="Ej. Creator Pro / Anónimo" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none focus:border-cyan-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1">Descripción o Prompt de tu Creación</label>
+                            <textarea id="userTextPost" required placeholder="Describe tu idea, prompt o logro con IA..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none resize-none h-28 focus:border-cyan-500"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1">Enlace de Imagen o Video Multimedia (Opcional)</label>
+                            <input type="url" id="userMediaPost" placeholder="https://images.unsplash.com/photo-..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none focus:border-cyan-500">
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white py-3 rounded-xl font-bold text-xs shadow-lg shadow-cyan-900/40 transition">
+                            Publicar en el Feed General
+                        </button>
+                    </form>
                 </div>
             </div>
 
-            <!-- VISTA 3: MANUAL MAESTRO DE IA (MUCHO MÁS INFORMATIVO Y PROFUNDO) -->
+            <!-- VISTA 3: MANUAL MAESTRO DE IA -->
             <div id="view-manual" class="hidden space-y-6 text-sm text-slate-300">
                 <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 space-y-6 shadow-2xl">
                     <div class="border-b border-slate-800 pb-4">
@@ -184,27 +115,10 @@
                         </h2>
                         <p class="text-xs text-slate-400 mt-1">Guía definitiva para dominar todas las herramientas avanzadas de la plataforma.</p>
                     </div>
-
-                    <div class="space-y-5">
-                        <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-5 space-y-2">
-                            <h3 class="font-bold text-purple-400 text-base flex items-center gap-2"><i class="fa-solid fa-robot"></i> 1. Chat Libre Multimodal Avanzado</h3>
-                            <p class="text-xs text-slate-300 leading-relaxed">El chat no es solo para texto. Puedes adjuntar cualquier archivo haciendo clic en el icono del clip (📎):</p>
-                            <ul class="list-disc pl-5 text-xs text-slate-400 space-y-1">
-                                <li><b>Documentos Word (.docx) y Excel (.xlsx):</b> Sube tus archivos para que la IA los analice, corrija redactando contratos o genere tablas de datos financieras completas.</li>
-                                <li><b>Audios y Notas de Voz:</b> Envía grabaciones para transcripción y síntesis inteligente.</li>
-                                <li><b>Fotografías e Imágenes:</b> Sube capturas de pantalla o diseños para obtener análisis visuales y sugerencias de código o branding.</li>
-                            </ul>
-                        </div>
-
-                        <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-5 space-y-2">
-                            <h3 class="font-bold text-pink-400 text-base flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles"></i> 2. Generación de Fotos, Videos y Prompts 3D</h3>
-                            <p class="text-xs text-slate-300 leading-relaxed">Utiliza las historias superiores para activar herramientas visuales. Escribe instrucciones detalladas especificando iluminación de estudio, estilos (como Cyberpunk o Pixar) y paletas de colores para obtener resultados profesionales de nivel publicitario.</p>
-                        </div>
-
-                        <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-5 space-y-2">
-                            <h3 class="font-bold text-emerald-400 text-base flex items-center gap-2"><i class="fa-solid fa-chart-line"></i> 3. Automatización de Negocios y Documentos</h3>
-                            <p class="text-xs text-slate-300 leading-relaxed">Pídele al chat que te redacte campañas estructuradas bajo la fórmula PAS (Problema-Agitación-Solución), planes de negocio para tiendas de ropa, o menús optimizados para emprendimientos de bebidas y comida.</p>
-                        </div>
+                    <div class="space-y-4 text-xs text-slate-300 leading-relaxed">
+                        <p><b>1. Chat Libre Multimodal:</b> Adjunta documentos de Word, hojas de Excel, audios o fotos mediante el botón de clip (📎) para que la IA los procese y construya contenido desde cero.</p>
+                        <p><b>2. Historias y Videos Interactivos:</b> Explora demostraciones en video en la parte superior con control independiente de audio.</p>
+                        <p><b>3. Feed Social Dinámico:</b> Publica tus propios resultados, da like, comenta e interactúa con contenido viral actualizado automáticamente en tiempo real.</p>
                     </div>
                 </div>
             </div>
@@ -212,7 +126,7 @@
         </div>
     </main>
 
-    <!-- MODAL / PANEL DESPLEGABLE DE CHAT IA (MÁS GRANDE Y CÓMODO) -->
+    <!-- MODAL / PANEL DE CHAT IA AMPLIADO -->
     <div id="chatModal" class="fixed inset-y-0 right-0 w-full md:w-[600px] bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 z-50">
         <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950">
             <div class="flex items-center gap-2.5">
@@ -226,7 +140,7 @@
             <div class="flex items-start gap-3">
                 <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center font-bold text-xs shadow">AI</div>
                 <div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200 leading-relaxed shadow-md">
-                    ¡Hola! Soy tu núcleo de inteligencia artificial avanzado. Puedes preguntarme lo que sea, subir documentos de Word/Excel, audios, fotos o solicitar código. ¡Estoy listo para trabajar contigo!
+                    ¡Hola! Soy tu núcleo de inteligencia artificial avanzado. Pregúntame lo que necesites o sube documentos de Word/Excel, audios y fotos.
                 </div>
             </div>
         </div>
@@ -245,29 +159,183 @@
         </div>
     </div>
 
-    <!-- SCRIPT GENERAL -->
+    <!-- SCRIPT GENERAL Y DINÁMICO -->
     <script>
+        // Catálogo de Historias con Videos reales y botón de Audio Mute/Unmute
+        const historiasData = [
+            { titulo: "Cyber Art 3D", badge: "Video IA", tipo: "video", url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-with-code-31910-large.mp4", poster: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300" },
+            { titulo: "Mundos Pixar", badge: "Animación", tipo: "imagen", url: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=300" },
+            { titulo: "Flujo de Caja", badge: "Negocios", tipo: "video", url: "https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-man-working-on-a-financial-graph-42861-large.mp4", poster: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=300" },
+            { titulo: "Heirs Fashion", badge: "Moda 3D", tipo: "imagen", url: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300" },
+            { titulo: "Voces Globales", badge: "Traductor", tipo: "video", url: "https://assets.mixkit.co/videos/preview/mixkit-futuristic-hologram-interface-of-a-world-map-41527-large.mp4", poster: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=300" },
+            { titulo: "Granizados 24/7", badge: "Emprende", tipo: "imagen", url: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=300" }
+        ];
+
+        // Base inicial del Feed Social Viral
+        let feedPosts = [
+            { id: 1, autor: "Nexus Visual AI", tiempo: "Hace 2 min", categoria: "Arte 3D", texto: "¡Nuevo render hiperrealista generado con IA en segundos para campañas de marketing!", media: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900", likes: 342, comentarios: [] },
+            { id: 2, autor: "Finanzas Pro Bot", tiempo: "Hace 8 min", categoria: "Excel & Finanzas", texto: "Modelo financiero automatizado de flujo de caja generado para nuevos emprendedores.", media: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=900", likes: 512, comentarios: [] }
+        ];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderizarHistorias();
+            renderizarFeed();
+            
+            // Simulación de actualización automática en tiempo real como Facebook (cada 15 segundos)
+            setInterval(() => {
+                generarPostAutomaticoViral();
+            }, 15000);
+        });
+
+        function renderizarHistorias() {
+            const container = document.getElementById('storiesContainer');
+            container.innerHTML = '';
+            historiasData.forEach((h, index) => {
+                let mediaHtml = '';
+                if(h.tipo === 'video') {
+                    mediaHtml = `
+                        <video id="story-vid-${index}" src="${h.url}" poster="${h.poster}" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0"></video>
+                        <button onclick="toggleAudioStory(event, 'story-vid-${index}')" class="absolute top-2 right-2 bg-black/60 text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px] z-10 hover:bg-black">
+                            <i id="icon-vid-${index}" class="fa-solid fa-volume-xmark"></i>
+                        </button>
+                    `;
+                } else {
+                    mediaHtml = `<div class="absolute inset-0 w-full h-full bg-cover bg-center z-0" style="background-image: url('${h.url}');"></div>`;
+                }
+
+                container.innerHTML += `
+                    <div class="story-ring flex-shrink-0 w-28 h-40 rounded-2xl p-2.5 flex flex-col justify-between cursor-pointer border-2 border-purple-400 hover:scale-105 transition shadow-lg relative overflow-hidden" onclick="usarFuncion('${h.titulo}')">
+                        ${mediaHtml}
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 z-0"></div>
+                        <span class="text-[9px] font-extrabold bg-purple-500 text-white px-2 py-0.5 rounded-full self-start z-10 shadow">${h.badge}</span>
+                        <span class="text-xs font-bold text-white text-center drop-shadow z-10">${h.titulo}</span>
+                    </div>
+                `;
+            });
+        }
+
+        function toggleAudioStory(event, videoId) {
+            event.stopPropagation();
+            const vid = document.getElementById(videoId);
+            const icon = event.currentTarget.querySelector('i');
+            if(vid.muted) {
+                vid.muted = false;
+                icon.className = "fa-solid fa-volume-high text-emerald-400";
+            } else {
+                vid.muted = true;
+                icon.className = "fa-solid fa-volume-xmark";
+            }
+        }
+
+        function renderizarFeed() {
+            const container = document.getElementById('feedPostsContainer');
+            container.innerHTML = '';
+            feedPosts.forEach(post => {
+                let comentariosHtml = post.comentarios.map(c => `<div class="bg-slate-950 p-2 rounded-xl text-xs text-slate-300 mt-1"><b>${c.usuario}:</b> ${c.texto}</div>`).join('');
+
+                container.innerHTML += `
+                    <div class="bg-slate-900/90 border border-slate-800/80 rounded-3xl p-6 shadow-xl space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center font-bold text-white shadow-lg">AI</div>
+                                <div>
+                                    <h4 class="font-bold text-sm text-slate-100">${post.autor}</h4>
+                                    <span class="text-[11px] text-purple-400 font-medium">${post.tiempo} • 🌍 ${post.categoria}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-200 leading-relaxed">${post.texto}</p>
+                        ${post.media ? `<div class="rounded-2xl overflow-hidden border border-slate-800 h-72 bg-cover bg-center shadow-inner" style="background-image: url('${post.media}');"></div>` : ''}
+                        
+                        <div class="flex justify-between text-xs text-slate-400 pt-3 border-t border-slate-800/80 font-medium">
+                            <button onclick="darLike(${post.id})" class="hover:text-purple-400 flex items-center gap-1.5 transition"><i class="fa-regular fa-thumbs-up text-base"></i> Me gusta (<span id="likes-${post.id}">${post.likes}</span>)</button>
+                            <button onclick="agregarComentarioPrompt(${post.id})" class="hover:text-purple-400 flex items-center gap-1.5 transition"><i class="fa-regular fa-comment text-base"></i> Comentar (${post.comentarios.length})</button>
+                            <button onclick="compartirPlataforma()" class="hover:text-purple-400 flex items-center gap-1.5 transition"><i class="fa-solid fa-share text-base"></i> Compartir</button>
+                        </div>
+                        <div id="comentarios-${post.id}" class="space-y-1">${comentariosHtml}</div>
+                    </div>
+                `;
+            });
+        }
+
+        function darLike(id) {
+            const post = feedPosts.find(p => p.id === id);
+            if(post) {
+                post.likes++;
+                document.getElementById(`likes-${id}`).innerText = post.likes;
+            }
+        }
+
+        function agregarComentarioPrompt(id) {
+            const com = prompt("Escribe tu comentario:");
+            if(com) {
+                const post = feedPosts.find(p => p.id === id);
+                if(post) {
+                    post.comentarios.push({ usuario: "Usuario", texto: com });
+                    renderizarFeed();
+                }
+            }
+        }
+
+        function publicarContenidoUsuario(event) {
+            event.preventDefault();
+            const autor = document.getElementById('userNamePost').value;
+            const texto = document.getElementById('userTextPost').value;
+            const media = document.getElementById('userMediaPost').value;
+
+            feedPosts.unshift({
+                id: Date.now(),
+                autor: autor,
+                tiempo: "Justo ahora",
+                categoria: "Comunidad / Creación IA",
+                texto: texto,
+                media: media || "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=900",
+                likes: 1,
+                comentarios: []
+            });
+
+            document.getElementById('userNamePost').value = '';
+            document.getElementById('userTextPost').value = '';
+            document.getElementById('userMediaPost').value = '';
+            mostrarSeccion('feed');
+            renderizarFeed();
+        }
+
+        function generarPostAutomaticoViral() {
+            const nuevosTemas = [
+                { autor: "Tendencias IA Bot", texto: "¡Nuevo avance en generación de video cinemático vertical con IA para redes sociales!", media: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=900" },
+                { autor: "Fashion AI Studio", texto: "Colección de activewear diseñada puramente con IA y algoritmos textiles.", media: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900" }
+            ];
+            const temaAleatorio = nuevosTemas[Math.floor(Math.random() * nuevosTemas.length)];
+            feedPosts.unshift({
+                id: Date.now(),
+                autor: temaAleatorio.autor,
+                tiempo: "Nuevo hace 1s",
+                categoria: "Viral automático",
+                texto: temaAleatorio.texto,
+                media: temaAleatorio.media,
+                likes: Math.floor(Math.random() * 50) + 10,
+                comentarios: []
+            });
+            renderizarFeed();
+        }
+
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('w-72');
             sidebar.classList.toggle('w-16');
         }
 
-        function abrirChatIA() {
-            document.getElementById('chatModal').classList.remove('translate-x-full');
-        }
-
-        function cerrarChatIA() {
-            document.getElementById('chatModal').classList.add('translate-x-full');
-        }
+        function abrirChatIA() { document.getElementById('chatModal').classList.remove('translate-x-full'); }
+        function cerrarChatIA() { document.getElementById('chatModal').classList.add('translate-x-full'); }
 
         function mostrarSeccion(seccion) {
             document.getElementById('view-feed').classList.add('hidden');
-            document.getElementById('view-foro').classList.add('hidden');
+            document.getElementById('view-crear').classList.add('hidden');
             document.getElementById('view-manual').classList.add('hidden');
             
             if(seccion === 'feed') document.getElementById('view-feed').classList.remove('hidden');
-            if(seccion === 'foro') document.getElementById('view-foro').classList.remove('hidden');
+            if(seccion === 'crear') document.getElementById('view-crear').classList.remove('hidden');
             if(seccion === 'manual') document.getElementById('view-manual').classList.remove('hidden');
         }
 
@@ -278,7 +346,7 @@
                 <div class="flex items-start gap-3">
                     <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center font-bold text-xs shadow">AI</div>
                     <div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200 shadow-md">
-                        Has seleccionado la herramienta: <b>${nombre}</b>. ¿Qué deseas generar o analizar hoy?
+                        Herramienta activada desde historia: <b>${nombre}</b>. ¿Qué deseas generar u optimizar?
                     </div>
                 </div>
             `;
@@ -286,24 +354,17 @@
         }
 
         function compartirPlataforma() {
-            if (navigator.share) {
-                navigator.share({ title: 'Nexus AI Pro', url: window.location.href });
-            } else {
-                alert("Enlace copiado al portapapeles: " + window.location.href);
-            }
+            if (navigator.share) { navigator.share({ title: 'Nexus AI Pro', url: window.location.href }); }
+            else { alert("Enlace copiado al portapapeles."); }
         }
 
         function informarProblema() {
-            const prob = prompt("Describe el problema que encontraste para enviarlo al administrador:");
-            if(prob) {
-                alert("¡Gracias! El reporte ha sido enviado al equipo técnico.");
-            }
+            const prob = prompt("Describe el problema encontrado:");
+            if(prob) { alert("¡Reporte enviado al administrador con éxito!"); }
         }
 
         function borrarHistorial() {
-            if(confirm("¿Deseas borrar todo el historial de chat?")) {
-                document.getElementById('chatContainer').innerHTML = '';
-            }
+            if(confirm("¿Deseas borrar todo el historial?")) { document.getElementById('chatContainer').innerHTML = ''; }
         }
 
         async function enviarMensaje(event) {
@@ -319,7 +380,7 @@
             chatContainer.innerHTML += `
                 <div class="flex justify-end">
                     <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-3 rounded-3xl max-w-sm text-xs shadow-md">
-                        ${txt} ${file ? `<br><i>[Archivo adjunto: ${file.name}]</i>` : ''}
+                        ${txt} ${file ? `<br><i>[Archivo: ${file.name}]</i>` : ''}
                     </div>
                 </div>
             `;
@@ -340,7 +401,7 @@
                     </div>
                 `;
             } catch(e) {
-                chatContainer.innerHTML += `<div class="text-rose-400 text-xs p-2">Error de comunicación con el servidor de IA.</div>`;
+                chatContainer.innerHTML += `<div class="text-rose-400 text-xs p-2">Error de comunicación con el servidor.</div>`;
             }
             fileInput.value = '';
             chatContainer.scrollTop = chatContainer.scrollHeight;
