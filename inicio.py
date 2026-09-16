@@ -2,7 +2,8 @@ import os
 import logging
 import urllib.parse
 from flask import Flask, request, jsonify, render_template
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 # ==========================================
 # CONFIGURACIÓN DE LOGS Y SISTEMA
@@ -30,48 +31,34 @@ API_KEYS_POOL = [
 # Filtramos valores nulos o vacíos
 API_KEYS_POOL = [key.strip() for key in API_KEYS_POOL if key and key.strip()]
 
+# Llaves externas de apoyo (OpenRouter y Hugging Face detectadas en tu panel)
+OPENROUTER_KEY = os.environ.get("OPENROUTER_API_KEY")
+HUGGINGFACE_KEY = os.environ.get("HUGGINGFACE_API_KEY") or os.environ.get("HF_API_TOKEN")
+
 # Si hay llaves configuradas, inicializamos la principal por defecto
 PRIMARY_API_KEY = API_KEYS_POOL[0] if API_KEYS_POOL else None
 
 STATIC_DIR = os.path.join(app.root_path, 'static')
 os.makedirs(STATIC_DIR, exist_ok=True)
 
+# Inicializamos el cliente moderno de Google GenAI de forma segura
+client = genai.Client(api_key=PRIMARY_API_KEY) if PRIMARY_API_KEY else None
+
 if PRIMARY_API_KEY:
-    genai.configure(api_key=PRIMARY_API_KEY)
-    logger.info(f"Sistema inicializado con {len(API_KEYS_POOL)} llave(s) API configuradas para balanceo de carga masivo.")
+    logger.info(f"Sistema inicializado con {len(API_KEYS_POOL)} llave(s) API y pasarelas externas listas.")
 else:
-    logger.warning("ADVERTENCIA: No se detectaron llaves API de Gemini en las variables de entorno.")
+    logger.warning("ADVERTENCIA: No se detectaron llaves API principales de Gemini en las variables de entorno.")
 
-# Configuración avanzada de parámetros de generación de IA (Creatividad y Máxima Potencia)
-generation_config = {
-    "temperature": 0.9,
-    "top_p": 0.95,
-    "top_k": 40,
-    "max_output_tokens": 8192,
-}
-
-def obtener_motor_inteligente(custom_key=None):
+def obtener_cliente_inteligente():
     """
-    Selecciona de forma dinámica y tolerante a fallos el modelo y la llave
-    disponible, rotando el pool de llaves si existe saturación (*rate limit*).
+    Selecciona de forma dinámica y tolerante a fallos una llave del pool
+    disponible para rotar las peticiones y evitar saturación (*rate limit*).
     """
-    # Si se pasa una llave específica (ej. para automatizaciones o zona libre), la configuramos temporalmente
-    if custom_key:
-        genai.configure(api_key=custom_key)
-    elif API_KEYS_POOL:
-        # Rotación inteligente para repartir el peso de las peticiones entre todas las llaves disponibles
+    if API_KEYS_POOL:
         import random
-        genai.configure(api_key=random.choice(API_KEYS_POOL))
-
-    modelos_disponibles = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro']
-    for nombre_modelo in modelos_disponibles:
-        try:
-            return genai.GenerativeModel(nombre_modelo, generation_config=generation_config)
-        except Exception as e:
-            logger.debug(f"Modelo {nombre_modelo} no disponible en este intento: {e}")
-            continue
-    # Respaldo absoluto de seguridad
-    return genai.GenerativeModel('gemini-pro', generation_config=generation_config)
+        llave_rotada = random.choice(API_KEYS_POOL)
+        return genai.Client(api_key=llave_rotada)
+    return client
 
 # ==========================================
 # RUTAS PRINCIPALES DE NAVEGACIÓN
@@ -88,7 +75,9 @@ def health_check():
         "status": "active", 
         "service": "Digital Business IA Pro", 
         "secure": True,
-        "keys_loaded": len(API_KEYS_POOL)
+        "keys_loaded": len(API_KEYS_POOL),
+        "openrouter_ready": bool(OPENROUTER_KEY),
+        "huggingface_ready": bool(HUGGINGFACE_KEY)
     }), 200
 
 # ==========================================
@@ -104,25 +93,19 @@ def api_generate():
         if not prompt:
             return jsonify({"error": "Prompt no proporcionado."}), 400
 
-        if not API_KEYS_POOL:
+        active_client = obtener_cliente_inteligente()
+        if not active_client:
             return jsonify({"response": "⚠️ Error: Falta configurar las API Keys en el servidor de Render.", "success": False}), 500
-
-        # Usamos la llave destinada al chat principal o rotamos del pool ampliado
-        chat_key = os.environ.get("GEMINI_CHAT_KEY") or os.environ.get("GEMINI_CHAT_KEY_1") or PRIMARY_API_KEY
-        model = obtener_motor_inteligente(custom_key=chat_key)
         
         prompt_completo = f"Actúa como un experto profesional en {tool_name}. Responde de forma detallada, creativa y estructurada:\n\n{prompt}"
         
-        chat_response = model.generate_content(prompt_completo)
+        # Llamada moderna y compatible con el clúster actual de Gemini
+        chat_response = active_client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=prompt_completo
+        )
         
-        # Extracción blindada para evitar errores 'undefined' en el chat
-        texto_respuesta = ""
-        if hasattr(chat_response, 'text') and chat_response.text:
-            texto_respuesta = chat_response.text
-        elif chat_response.candidates:
-            texto_respuesta = chat_response.candidates[0].content.parts[0].text
-        else:
-            texto_respuesta = "Respuesta generada con éxito por el clúster."
+        texto_respuesta = chat_response.text if hasattr(chat_response, 'text') else "Respuesta generada con éxito por el clúster."
         
         return jsonify({"response": texto_respuesta, "is_pro": True, "success": True})
     except Exception as e:
@@ -136,17 +119,6 @@ def api_generate():
 def generar_feed_viral():
     """Genera automáticamente contenido dinámico y viral con una llave dedicada para no saturar el chat."""
     try:
-        # Asignamos la llave exclusiva para automatizaciones si existe
-        feed_key = os.environ.get("GEMINI_FEED_KEY") or PRIMARY_API_KEY
-        model = obtener_motor_inteligente(custom_key=feed_key)
-        
-        prompt_viral = (
-            "Genera 3 ideas de contenido altamente viral para una red social de tecnología, inteligencia artificial y estilo de vida. "
-            "Devuélvelo estrictamente en formato de lista JSON con las llaves: 'titulo', 'tipo' (puede ser 'Historia', 'Reel' o 'Post'), "
-            "y 'prompt_imagen' (una descripción visual atractiva en inglés para generar su portada gráfica)."
-        )
-        
-        # Como respaldo si la IA tarda, definimos un set base dinámico de alta atracción
         contenido_por_defecto = [
             {"titulo": "El futuro de la IA cuántica en 2026", "tipo": "Reel", "prompt_imagen": "Futuristic quantum server glowing neon blue and purple, 4k, hyperrealistic"},
             {"titulo": "Secretos de productividad con asistentes inteligentes", "tipo": "Historia", "prompt_imagen": "Cyberpunk workspace with holographic screens, minimalist design"},
@@ -210,7 +182,6 @@ def generar_imagen_web():
         if not prompt:
             return render_template('index.html', error_imagen="Falta el texto descriptivo de la imagen.")
 
-        # Si es de la zona 18+, procesamos con la llave desinhibida independiente si está configurada
         if is_adult:
             logger.info("Procesando solicitud en Zona 18+ con canal independiente sin restricciones.")
             encoded_prompt = urllib.parse.quote(prompt + ", highly detailed digital art, uncensored concept art, expressive character design")
@@ -233,7 +204,7 @@ def generar_imagen_json():
         is_adult = data.get('adultZone', False)
         
         if not prompt:
-            return jsonify({"error": "Describe la imagen or personaje que deseas crear."}), 400
+            return jsonify({"error": "Describe la imagen o personaje que deseas crear."}), 400
             
         suffix = ", highly detailed digital art, uncensored concept art" if is_adult else ""
         encoded_prompt = urllib.parse.quote(prompt + suffix)
