@@ -5,8 +5,8 @@ from google.genai import types
 
 app = Flask(__name__)
 
-# Configuración de la API de Google Gemini (Asegúrate de tener tu variable de entorno GEMINI_API_KEY configurada en tu servidor)
-client = genai.Client()
+# Lee automáticamente la llave de API configurada en Render o en tu entorno local
+client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
 @app.route('/')
 def home():
@@ -15,28 +15,23 @@ def home():
 @app.route('/api/chat', methods=['POST'])
 def chat_con_ia():
     try:
-        # Recibir mensaje del usuario y archivos adjuntos si los hubiera
         user_message = request.form.get('message', '')
         file = request.files.get('file')
-        
         contents = [user_message]
         
-        # Si el usuario adjunta un archivo (imagen, documento, audio, etc.)
         if file:
             file_bytes = file.read()
-            # Subimos/procesamos el archivo de forma temporal para que la IA lo lea
             uploaded_file = client.files.upload(
                 file=file_bytes,
                 config=types.UploadFileConfig(mime_type=file.mimetype)
             )
             contents.append(uploaded_file)
 
-        # Usamos el modelo más potente y rápido de Gemini para responder
         response = client.models.generate_content(
             model='gemini-2.5-flash',
             contents=contents,
             config=types.GenerateContentConfig(
-                system_instruction="Eres el núcleo de inteligencia artificial de una plataforma social y de productividad avanzada. Ayuda al usuario con código, redacción de documentos Word/Excel, análisis de archivos y generación de ideas creativas con un tono profesional y dinámico."
+                system_instruction="Eres el núcleo de inteligencia artificial de una plataforma social y de productividad avanzada."
             )
         )
 
