@@ -342,7 +342,7 @@ const container = document.getElementById('storiesContainer');
 if(!container) return;
 container.innerHTML = '';
 historiasData.forEach((h) => {
-container.innerHTML += ⁠<div class="story-ring flex-shrink-0 w-24 h-36 rounded-2xl p-2 flex flex-col justify-between cursor-pointer border-2 border-purple-400 relative overflow-hidden shadow-lg" onclick="abrirChatIA()"> <video src="${h.url}" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0"></video> <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 z-0"></div> <span class="text-[8px] font-extrabold bg-purple-500 text-white px-1.5 py-0.5 rounded-full z-10">${h.badge}</span> <span class="text-[10px] font-bold text-white text-center z-10">${h.titulo}</span> </div>⁠;
+container.innerHTML += `<div class="story-ring flex-shrink-0 w-24 h-36 rounded-2xl p-2 flex flex-col justify-between cursor-pointer border-2 border-purple-400 relative overflow-hidden shadow-lg" onclick="abrirChatIA()"> <video src="${h.url}" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0"></video> <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 z-0"></div> <span class="text-[8px] font-extrabold bg-purple-500 text-white px-1.5 py-0.5 rounded-full z-10">${h.badge}</span> <span class="text-[10px] font-bold text-white text-center z-10">${h.titulo}</span> </div>`;
 });
 }
 function renderizarFeed() {
@@ -350,7 +350,7 @@ const container = document.getElementById('feedPostsContainer');
 if(!container) return;
 container.innerHTML = '';
 feedPosts.forEach(post => {
-container.innerHTML += ⁠<div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4"> <div class="flex items-center gap-3"> <div class="w-10 h-10 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-white text-xs">AI</div> <div> <h4 class="font-bold text-sm text-slate-100">${post.autor}</h4> <span class="text-[10px] text-purple-400">${post.tiempo} • 🌍 ${post.categoria}</span> </div> </div> <p class="text-sm text-slate-200">${post.texto}</p> ${post.media ?⁠<div class="rounded-2xl overflow-hidden border border-slate-800 h-64 bg-cover bg-center" style="background-image: url('${post.media}');"></div>⁠: ''} <div class="flex items-center gap-4 text-xs text-slate-400 pt-2 border-t border-slate-800"> <span><i class="fa-solid fa-heart text-pink-500"></i> ${post.likes} Me gusta</span> <button onclick="abrirChatIA()" class="text-purple-400 font-bold"><i class="fa-solid fa-comment mr-1"></i> Discutir en Chat</button> </div> </div>⁠;
+container.innerHTML += `<div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4"> <div class="flex items-center gap-3"> <div class="w-10 h-10 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-white text-xs">AI</div> <div> <h4 class="font-bold text-sm text-slate-100">${post.autor}</h4> <span class="text-[10px] text-purple-400">${post.tiempo} • 🌍 ${post.categoria}</span> </div> </div> <p class="text-sm text-slate-200">${post.texto}</p> ${post.media ? `<div class="rounded-2xl overflow-hidden border border-slate-800 h-64 bg-cover bg-center" style="background-image: url('${post.media}');"></div>` : ''} <div class="flex items-center gap-4 text-xs text-slate-400 pt-2 border-t border-slate-800"> <span><i class="fa-solid fa-heart text-pink-500"></i> ${post.likes} Me gusta</span> <button onclick="abrirChatIA()" class="text-purple-400 font-bold"><i class="fa-solid fa-comment mr-1"></i> Discutir en Chat</button> </div> </div>`;
 });
 }
 function renderizarReels() {
@@ -358,11 +358,11 @@ const container = document.getElementById('reelsContainer');
 if(!container) return;
 container.innerHTML = '';
 reelsData.forEach(r => {
-container.innerHTML += ⁠<div class="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-xl p-3 space-y-2"> <video src="${r.url}" autoplay muted loop playsinline class="w-full h-56 object-cover rounded-xl"></video> <span class="font-bold text-purple-400 text-xs">@${r.autor}</span> <p class="text-xs text-slate-300">${r.texto}</p> </div>⁠;
+container.innerHTML += `<div class="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-xl p-3 space-y-2"> <video src="${r.url}" autoplay muted loop playsinline class="w-full h-56 object-cover rounded-xl"></video> <span class="font-bold text-purple-400 text-xs">@${r.autor}</span> <p class="text-xs text-slate-300">${r.texto}</p> </div>`;
 });
 }
 function iniciarNuevoChat() {
-document.getElementById('chatContainer').innerHTML = ⁠<div class="flex items-start gap-3"><div class="w-9 h-9 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-xs text-white">AI</div><div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200">Nueva sesión iniciada. ¿En qué te ayudo?</div></div>⁠;
+document.getElementById('chatContainer').innerHTML = `<div class="flex items-start gap-3"><div class="w-9 h-9 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-xs text-white">AI</div><div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200">Nueva sesión iniciada. ¿En qué te ayudo?</div></div>`;
 abrirChatIA();
 }
 function buscarEnChats() {
@@ -380,7 +380,7 @@ if(sug) alert("¡Gracias! Tu sugerencia ha sido registrada para la próxima actu
 function informarProblemaCorreo() {
 const prob = prompt("🚨 Informar un Problema: Describe el fallo técnico. Se enviará directamente al correo del administrador:");
 if(prob) {
-window.location.href = ⁠mailto:juandavidlopezinfante@gmail.com?subject=Reporte de Error en Nexus AI&body=${encodeURIComponent(prob)}⁠;
+window.location.href = `mailto:juandavidlopezinfante@gmail.com?subject=Reporte de Error en Nexus AI&body=${encodeURIComponent(prob)}`;
 }
 }
 function borrarHistorialTotal() {
@@ -394,7 +394,7 @@ document.getElementById('adultWarningBox').classList.add('hidden');
 document.getElementById('adultContentContainer').classList.remove('hidden');
 }
 function suscribirsePlan(plan) {
-alert(⁠🎉 Suscripción al plan "${plan}" procesada aplicando el 15% de descuento.⁠);
+alert(`🎉 Suscripción al plan "${plan}" procesada aplicando el 15% de descuento.`);
 }
 function compartirPlataforma() {
 if(navigator.share) {
@@ -425,7 +425,7 @@ alert("🚀 ¡Tendencia publicada con éxito al Feed Mundial!");
 function mostrarArchivoSeleccionado(input) {
 const ind = document.getElementById('fileIndicator');
 if(input.files && input.files[0]) {
-ind.innerText = ⁠📎 Archivo listo: ${input.files[0].name}⁠;
+ind.innerText = `📎 Archivo listo: ${input.files[0].name}`;
 ind.classList.remove('hidden');
 }
 }
@@ -446,11 +446,11 @@ if(target) target.classList.remove('hidden');
 }
 function escapeHtml(value) {
 return String(value ?? '').replace(/[&<>"']/g, (character) => ({
-'&': '&',
-'<': '<',
-'>': '>',
-'"': '"',
-"'": '''
+'&': '&amp;',
+'<': '&lt;',
+'>': '&gt;',
+'"': '&quot;',
+"'": '&#039;'
 }[character]));
 }
 async function readApiResponse(response) {
@@ -475,7 +475,7 @@ const txt = input.value.trim();
 if (!txt) {
 return;
 }
-chatContainer.innerHTML += ⁠<div class="flex justify-end"> <div class="bg-purple-600 text-white p-3 rounded-3xl max-w-sm text-xs"> ${escapeHtml(txt)} </div> </div>⁠;
+chatContainer.innerHTML += `<div class="flex justify-end"> <div class="bg-purple-600 text-white p-3 rounded-3xl max-w-sm text-xs"> ${escapeHtml(txt)} </div> </div>`;
 input.value = '';
 chatContainer.scrollTop = chatContainer.scrollHeight;
 try {
@@ -493,7 +493,7 @@ const data = result.data;
 if (!response.ok || data.success === false) {
 const errorMessage =
 data.error ||
-⁠El servidor respondió con código ${response.status}.⁠;
+`El servidor respondió con código ${response.status}.`;
 throw new Error(errorMessage);
 }
 const reply = data.reply || data.response;
@@ -513,7 +513,7 @@ ${escapeHtml(reply)}
 </div>
 `;
 } catch (error) {
-chatContainer.innerHTML += ⁠<div class="text-rose-400 text-xs p-2"> ${escapeHtml( error.message || 'Error de enlace con el servidor.' )} </div>⁠;
+chatContainer.innerHTML += `<div class="text-rose-400 text-xs p-2"> ${escapeHtml( error.message || 'Error de enlace con el servidor.' )} </div>`;
 }
 chatContainer.scrollTop = chatContainer.scrollHeight;
 }
