@@ -1,4 +1,3 @@
-```python
 import logging
 import os
 import uuid
@@ -126,4 +125,3 @@ def api_generate() -> Tuple[Response, int]:
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
-```
