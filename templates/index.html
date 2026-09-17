@@ -1,553 +1,522 @@
 <!DOCTYPE html>
 <html lang="es" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus AI Pro Enterprise - Red Social & IA Global</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: { 50: '#f5f3ff', 500: '#8b5cf6', 600: '#7c3aed', 900: '#4c1d95', 950: '#2e1065' }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.4); }
-            50% { box-shadow: 0 0 40px rgba(236, 72, 153, 0.8); }
-        }
-        .story-ring { animation: pulseGlow 2.5s infinite; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexus AI Pro Enterprise - Red Social & IA Global</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script>
+tailwind.config = {
+darkMode: 'class',
+theme: {
+extend: {
+colors: {
+brand: { 50: '#f5f3ff', 500: '#8b5cf6', 600: '#7c3aed', 900: '#4c1d95', 950: '#2e1065' }
+}
+}
+}
+}
+</script>
+<style>
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+@keyframes pulseGlow {
+0%, 100% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.4); }
+50% { box-shadow: 0 0 40px rgba(236, 72, 153, 0.8); }
+}
+.story-ring { animation: pulseGlow 2.5s infinite; }
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(10px); }
+to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+</style>
 </head>
 <body class="bg-slate-950 text-slate-100 flex h-screen overflow-hidden font-sans antialiased">
-
-    <!-- ========================================== -->
-    <!-- 1. MODAL DE REGISTRO / ACCESO GLOBAL       -->
-    <!-- ========================================== -->
-    <div id="authModal" class="fixed inset-0 bg-slate-950/95 z-50 flex items-center justify-center p-4 backdrop-blur-xl">
-        <div class="bg-slate-900 border border-purple-500/40 rounded-3xl max-w-lg w-full p-8 shadow-2xl space-y-6 animate-fade-in">
-            <div class="text-center space-y-3">
-                <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-purple-600 via-pink-600 to-amber-500 flex items-center justify-center mx-auto text-2xl font-bold shadow-lg shadow-purple-900/50 text-white">
-                    <i class="fa-solid fa-globe"></i>
-                </div>
-                <h2 class="font-black text-2xl bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300 bg-clip-text text-transparent">Nexus AI Pro Enterprise</h2>
-                <p class="text-xs text-slate-300">Regístrate con tu correo, celular o ingresa de forma libre para usar la IA.</p>
-            </div>
-            
-            <form onsubmit="registrarUsuario(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Correo Electrónico o Teléfono Celular</label>
-                    <input type="text" id="authInput" required placeholder="tu@correo.com o +52 123 456 7890" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none focus:border-purple-500 transition">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Nombre de Usuario / Alias Global</label>
-                    <input type="text" id="authUsername" required placeholder="Ej. CyberCreator" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none focus:border-purple-500 transition">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Contraseña</label>
-                    <input type="password" id="authPassword" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none focus:border-purple-500 transition">
-                </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white py-3.5 rounded-xl font-bold text-xs shadow-lg shadow-purple-900/40 transition">
-                    Crear Cuenta & Activar Perfil
-                </button>
-                <div class="flex gap-2 pt-2">
-                    <button type="button" onclick="entrarModoVisita()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 py-2.5 rounded-xl font-bold text-xs transition">Acceso Libre / Visitante</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- 2. MENÚ LATERAL RETRÁCTIL (SIDEBAR)        -->
-    <!-- ========================================== -->
-    <aside id="sidebar" class="w-72 bg-slate-900 border-r border-slate-800 flex flex-col transition-all duration-300 z-30 shadow-2xl">
-        <div class="p-4 border-b border-slate-800 flex items-center justify-between">
-            <span class="font-extrabold text-base bg-gradient-to-r from-purple-400 via-pink-500 to-amber-400 bg-clip-text text-transparent truncate">Nexus AI Pro</span>
-            <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-bars text-lg"></i></button>
-        </div>
-        
-        <div class="p-3">
-            <button onclick="iniciarNuevoChat()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white py-3 px-3 rounded-xl font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-purple-900/50">
-                <i class="fa-solid fa-plus text-lg"></i> <span class="text-xs">Nuevo Chat / Sesión</span>
-            </button>
-        </div>
-
-        <div class="px-3 pb-2">
-            <div class="relative">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-[10px]"></i>
-                <input type="text" id="searchChatsInput" onkeyup="buscarEnChats()" placeholder="Buscar en los chats..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-2 text-[11px] text-slate-200 outline-none">
-            </div>
-        </div>
-
-        <nav class="flex-1 overflow-y-auto px-3 space-y-1.5 text-xs scrollbar-hide">
-            <button onclick="mostrarSeccion('feed')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
-                <i class="fa-solid fa-newspaper text-purple-400 text-sm"></i> Feed Viral Global
-            </button>
-            <button onclick="mostrarSeccion('reels')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
-                <i class="fa-solid fa-clapperboard text-pink-400 text-sm"></i> Reels Demostración IA
-            </button>
-            <button onclick="mostrarSeccion('herramientas')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
-                <i class="fa-solid fa-wand-magic-sparkles text-amber-400 text-sm"></i> Herramientas Pro (Word, Excel)
-            </button>
-            <button onclick="mostrarSeccion('suscripciones')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
-                <i class="fa-solid fa-crown text-amber-400 text-sm"></i> Suscripciones & 15% Desc.
-            </button>
-            <button onclick="mostrarSeccion('adultos')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-rose-300 hover:bg-rose-950/40 transition font-medium text-left border border-rose-500/20">
-                <i class="fa-solid fa-triangle-exclamation text-rose-500 text-sm"></i> Contenido 18+ (VIP)
-            </button>
-            <button onclick="mostrarSeccion('manual')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
-                <i class="fa-solid fa-book-open-reader text-cyan-400 text-sm"></i> Manual de Uso Completo
-            </button>
-            <button onclick="mostrarAyudaTecnica()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
-                <i class="fa-solid fa-headset text-amber-400 text-sm"></i> Ayuda Técnica con IA
-            </button>
-            <button onclick="abrirBuzonSugerencias()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
-                <i class="fa-solid fa-envelope-open-text text-emerald-400 text-sm"></i> Buzón de Sugerencias
-            </button>
-            <button onclick="compartirPlataforma()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
-                <i class="fa-solid fa-share-nodes text-green-400 text-sm"></i> Compartir Plataforma
-            </button>
-            <button onclick="informarProblemaCorreo()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
-                <i class="fa-solid fa-bug text-rose-400 text-sm"></i> Informar un Problema (Correo)
-            </button>
-            <button onclick="borrarHistorialTotal()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-rose-400 hover:bg-rose-950/30 transition font-medium text-left">
-                <i class="fa-solid fa-trash text-rose-500 text-sm"></i> Borrar Todo el Historial
-            </button>
-        </nav>
-    </aside>
-
-    <!-- ========================================== -->
-    <!-- 3. CONTENEDOR PRINCIPAL                    -->
-    <!-- ========================================== -->
-    <main class="flex-1 flex flex-col h-full overflow-y-auto bg-slate-950 relative">
-        
-        <!-- BARRA SUPERIOR -->
-        <div class="bg-slate-950 border-b border-slate-900 px-6 py-3 sticky top-0 z-30 flex items-center justify-between gap-4 backdrop-blur-md bg-opacity-90">
-            <div class="flex items-center gap-2">
-                <button onclick="history.back()" class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-arrow-left text-xs"></i></button>
-                <button onclick="history.forward()" class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-arrow-right text-xs"></i></button>
-            </div>
-
-            <div class="flex-1 max-w-md relative">
-                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-500 text-xs"></i>
-                <input type="text" id="globalSearchInput" onkeyup="filtrarContenidoFeed()" placeholder="Buscar publicaciones, herramientas o funciones..." class="w-full bg-slate-900 border border-slate-800 rounded-full pl-10 pr-4 py-2 text-xs text-slate-200 outline-none focus:border-purple-500 transition">
-            </div>
-
-            <div class="flex items-center gap-3">
-                <button onclick="abrirChatIA()" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3.5 py-2 rounded-full text-xs font-bold flex items-center gap-2 shadow-lg transition">
-                    <i class="fa-solid fa-robot"></i> Abrir Chat IA
-                </button>
-                <span class="text-xs text-purple-400 font-bold hidden md:inline" id="topNavUser">Modo Global</span>
-            </div>
-        </div>
-
-        <!-- ========================================== -->
-        <!-- 4. HISTORIAS SUPERIORES ESTILO TIKTOK      -->
-        <!-- ========================================== -->
-        <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 p-4 z-20 shadow-md flex items-center gap-4">
-            <div class="flex flex-col items-center justify-center flex-shrink-0">
-                <button onclick="abrirChatIA()" class="story-ring w-14 h-14 rounded-full bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center text-white text-lg shadow-lg cursor-pointer">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i>
-                </button>
-                <span class="text-[10px] font-bold text-slate-300 mt-1">Demostradores</span>
-            </div>
-            <div id="storiesContainer" class="flex-1 flex gap-4 overflow-x-auto scrollbar-hide pb-1"></div>
-        </header>
-
-        <!-- ========================================== -->
-        <!-- 5. SECCIONES DINÁMICAS                     -->
-        <!-- ========================================== -->
-        <div id="mainContent" class="flex-1 p-6 max-w-3xl mx-auto w-full space-y-6">
-            
-            <!-- VISTA: FEED TIPO FACEBOOK -->
-            <div id="view-feed" class="space-y-6">
-                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-2xl bg-purple-600 flex items-center justify-center text-white font-bold text-xs" id="postBoxInitial">U</div>
-                        <input type="text" onclick="mostrarSeccion('crear')" placeholder="¿Qué quieres compartir o generar hoy con la IA?" readonly class="flex-1 bg-slate-950 border border-slate-800 rounded-full px-4 py-2.5 text-xs text-slate-400 cursor-pointer hover:border-purple-500 transition">
-                    </div>
-                </div>
-                <div id="feedPostsContainer" class="space-y-6"></div>
-            </div>
-
-            <!-- VISTA: REELS DEMOSTRACIÓN -->
-            <div id="view-reels" class="hidden space-y-6">
-                <h2 class="font-bold text-xl text-pink-400 flex items-center gap-2"><i class="fa-solid fa-clapperboard"></i> Reels de Demostración de IA</h2>
-                <div id="reelsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-            </div>
-
-            <!-- VISTA: HERRAMIENTAS PRO (WORD, EXCEL, TRADUCCIÓN) -->
-            <div id="view-herramientas" class="hidden space-y-6">
-                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
-                    <h2 class="font-bold text-xl text-amber-400 flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles"></i> Herramientas Avanzadas de IA</h2>
-                    <p class="text-xs text-slate-400">Genera documentos de Word, hojas de cálculo en Excel y traducciones multimedia automáticas.</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                        <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-2">
-                            <h4 class="font-bold text-sm text-purple-300">📄 Redactor Word & Excel</h4>
-                            <p class="text-xs text-slate-400">Crea informes financieros, tablas de datos y documentos ejecutivos desde cero.</p>
-                            <button onclick="abrirChatIA()" class="text-xs bg-purple-600 text-white px-3 py-1.5 rounded-xl font-bold">Usar en Chat</button>
-                        </div>
-                        <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-2">
-                            <h4 class="font-bold text-sm text-pink-300">🎙️ Traducción de Voz & Video</h4>
-                            <p class="text-xs text-slate-400">Traduce contenidos audiovisuales con voces sintéticas ultrarrealistas generadas por IA.</p>
-                            <button onclick="abrirChatIA()" class="text-xs bg-pink-600 text-white px-3 py-1.5 rounded-xl font-bold">Usar en Chat</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VISTA: SUSCRIPCIONES Y 15% DE DESCUENTO -->
-            <div id="view-suscripciones" class="hidden space-y-6">
-                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-xl space-y-6">
-                    <div class="text-center space-y-2">
-                        <span class="bg-amber-500/10 border border-amber-500/30 text-amber-400 px-3 py-1 rounded-full text-xs font-bold">Monetización Global</span>
-                        <h2 class="font-black text-2xl text-amber-300">Suscripciones de Usuarios & 15% de Descuento</h2>
-                        <p class="text-xs text-slate-400">Desbloquea todo el potencial de la IA con el descuento especial aplicado.</p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="bg-slate-950 border border-slate-800 p-6 rounded-2xl space-y-4">
-                            <h3 class="font-bold text-sm text-purple-300">🚀 Creator Pro</h3>
-                            <p class="text-2xl font-black text-white">$9.99 <span class="text-xs text-slate-400">/ mes</span></p>
-                            <p class="text-xs text-slate-400">Acceso prioritario a Claude 3.5 Sonnet y herramientas de documentos.</p>
-                            <button onclick="suscribirsePlan('Creator Pro')" class="w-full bg-purple-600 text-white py-2 rounded-xl font-bold text-xs">Suscribirse</button>
-                        </div>
-                        <div class="bg-slate-950 border border-amber-500/40 p-6 rounded-2xl space-y-4 relative overflow-hidden shadow-lg">
-                            <div class="absolute top-2 right-2 bg-amber-500 text-slate-950 text-[9px] font-black px-2 py-0.5 rounded-full">¡15% OFF ACTIVO!</div>
-                            <h3 class="font-bold text-sm text-amber-400">👑 Enterprise VIP (18+)</h3>
-                            <p class="text-2xl font-black text-white"><span class="line-through text-slate-500 text-sm">$29.99</span> $25.49 <span class="text-xs text-amber-400">/ mes (15% desc.)</span></p>
-                            <p class="text-xs text-slate-400">Acceso total sin restricciones, zona 18+ y prioridad máxima en el clúster.</p>
-                            <button onclick="suscribirsePlan('Enterprise VIP')" class="w-full bg-gradient-to-r from-amber-500 to-pink-600 text-slate-950 py-2 rounded-xl font-bold text-xs">Obtener con Descuento</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VISTA: CONTENIDO ADULTO 18+ -->
-            <div id="view-adultos" class="hidden space-y-6">
-                <div class="bg-slate-900 border border-rose-500/40 rounded-3xl p-8 shadow-2xl space-y-6">
-                    <h2 class="font-black text-xl text-rose-400"><i class="fa-solid fa-triangle-exclamation mr-2"></i> Zona Exclusiva Mayores de 18+ (VIP)</h2>
-                    <div id="adultWarningBox" class="bg-slate-950 border border-rose-500/30 p-6 rounded-2xl text-center space-y-4">
-                        <p class="text-xs text-slate-300">Este espacio contiene material adulto generado por IA. Debes confirmar tu mayoría de edad.</p>
-                        <button onclick="verificarEdad18()" class="bg-rose-600 text-white px-6 py-3 rounded-xl font-bold text-xs">Tengo 18 años o más - Ingresar</button>
-                    </div>
-                    <div id="adultContentContainer" class="hidden space-y-4">
-                        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-3">
-                            <span class="font-bold text-rose-400 text-xs">🔥 Colección Privada Exclusiva VIP</span>
-                            <div class="rounded-xl overflow-hidden h-64 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900');"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VISTA: MANUAL DE USO COMPLETO -->
-            <div id="view-manual" class="hidden space-y-6 text-slate-300">
-                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-6 text-xs leading-relaxed">
-                    <h2 class="font-black text-xl text-cyan-300"><i class="fa-solid fa-book-open-reader mr-2"></i> Manual de Uso de Toda la Aplicación</h2>
-                    <div class="space-y-4">
-                        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-1">
-                            <h3 class="font-bold text-purple-300 text-sm">1. Chat Libre & Multimodal</h3>
-                            <p class="text-slate-400">Puedes enviar textos, audios, fotos y documentos de Word y Excel. El motor procesará todo de inmediato.</p>
-                        </div>
-                        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-1">
-                            <h3 class="font-bold text-pink-300 text-sm">2. Generadores de Fotos, Videos y Documentos</h3>
-                            <p class="text-slate-400">Crea contenido visual o redacta documentos profesionales desde cero indicándole las referencias que necesites.</p>
-                        </div>
-                        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-1">
-                            <h3 class="font-bold text-amber-300 text-sm">3. Menú Lateral y Funciones de Soporte</h3>
-                            <p class="text-slate-400">Utiliza el buscador de chats, la ayuda técnica con IA, el buzón de sugerencias o informa cualquier problema técnico que llegará directo a tu correo de administrador.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VISTA: PUBLICAR EN EL FEED -->
-            <div id="view-crear" class="hidden space-y-6">
-                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
-                    <h2 class="font-bold text-xl text-emerald-400 flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up"></i> Publicar Tendencia en el Feed Mundial</h2>
-                    <form onsubmit="publicarTendenciaUsuario(event)" class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-300 mb-1">Categoría</label>
-                            <input type="text" id="postCategory" value="Arte & IA Generativa" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-300 mb-1">Contenido / Prompt</label>
-                            <textarea id="postText" required placeholder="Describe tu descubrimiento de IA..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none resize-none h-28"></textarea>
-                        </div>
-                        <button type="submit" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold text-xs">Publicar al Feed Mundial</button>
-                    </form>
-                </div>
-            </div>
-
-        </div>
-    </main>
-
-    <!-- ========================================== -->
-    <!-- 6. CHAT DE IA MULTIMODAL AMPLIADO          -->
-    <!-- ========================================== -->
-    <div id="chatModal" class="fixed inset-y-0 right-0 w-full md:w-[650px] bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 z-50">
-        <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950">
-            <div class="flex items-center gap-3">
-                <span class="font-bold text-sm text-purple-400"><i class="fa-solid fa-robot"></i> Chat Multimodal Pro (Claude 3.5)</span>
-            </div>
-            <button onclick="cerrarChatIA()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-        </div>
-        
-        <div id="chatContainer" class="flex-1 overflow-y-auto p-5 space-y-4">
-            <div class="flex items-start gap-3">
-                <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center font-bold text-xs text-white">AI</div>
-                <div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200">¡Hola! Envía texto, audios, fotos o documentos Word/Excel para procesarlos al instante.</div>
-            </div>
-        </div>
-
-        <div class="p-4 bg-slate-950 border-t border-slate-800 space-y-2">
-            <form onsubmit="enviarMensajeIA(event)" class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-2xl p-2">
-                <label class="cursor-pointer text-slate-400 hover:text-purple-400 px-2">
-                    <i class="fa-solid fa-paperclip text-sm"></i>
-                    <input type="file" id="chatFileInput" class="hidden" onchange="mostrarArchivoSeleccionado(this)">
-                </label>
-                <input type="text" id="messageInput" placeholder="Escribe tu mensaje o adjunta un archivo..." class="flex-1 bg-transparent border-none outline-none text-slate-100 text-xs px-2">
-                <button type="submit" class="bg-purple-600 text-white px-4 py-2 rounded-xl font-bold text-xs"><i class="fa-solid fa-paper-plane"></i></button>
-            </form>
-            <div id="fileIndicator" class="text-[10px] text-emerald-400 px-2 hidden"></div>
-        </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- 7. SCRIPT DE LÓGICA Y FUNCIONALIDADES      -->
-    <!-- ========================================== -->
-    <script>
-        let usuarioActual = { nombre: "Visitante Global", contacto: "visita@nexus.ai" };
-
-        const historiasData = [
-            { titulo: "Chat Libre Pro", badge: "Demostración", url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-with-code-31910-large.mp4" },
-            { titulo: "Generador Fotos 4K", badge: "FLUX IA", url: "https://assets.mixkit.co/videos/preview/mixkit-plexus-background-of-plexus-animation-31911-large.mp4" },
-            { titulo: "Word & Excel AI", badge: "Documentos", url: "https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-man-working-on-a-financial-graph-42861-large.mp4" }
-        ];
-
-        let feedPosts = JSON.parse(localStorage.getItem('nexus_feed_db')) || [
-            { autor: "NeuralAI Trends", tiempo: "Hace 2 min", categoria: "Chat & Código", texto: "🔥 Nuevo benchmark en procesamiento de documentos Word y hojas de cálculo con IA generativa.", media: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900", likes: 1420 }
-        ];
-
-        const reelsData = [
-            { autor: "DeepAI Generator", texto: "Demostración de traducción de voz y texto con avatares de IA.", url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-with-code-31910-large.mp4", likes: 3100 }
-        ];
-
-        window.addEventListener('DOMContentLoaded', () => {
-            renderizarHistorias();
-            renderizarFeed();
-            renderizarReels();
-        });
-
-        function registrarUsuario(event) {
-            event.preventDefault();
-            usuarioActual = { nombre: document.getElementById('authUsername').value, contacto: document.getElementById('authInput').value };
-            aplicarDatosUsuario();
-        }
-
-        function entrarModoVisita() {
-            usuarioActual = { nombre: "Visitante Libre", contacto: "visita@nexus.ai" };
-            aplicarDatosUsuario();
-        }
-
-        function aplicarDatosUsuario() {
-            document.getElementById('topNavUser').innerText = usuarioActual.nombre;
-            document.getElementById('postBoxInitial').innerText = usuarioActual.nombre.charAt(0).toUpperCase();
-            document.getElementById('authModal').classList.add('hidden');
-        }
-
-        function renderizarHistorias() {
-            const container = document.getElementById('storiesContainer');
-            if(!container) return;
-            container.innerHTML = '';
-            historiasData.forEach((h) => {
-                container.innerHTML += `
-                    <div class="story-ring flex-shrink-0 w-24 h-36 rounded-2xl p-2 flex flex-col justify-between cursor-pointer border-2 border-purple-400 relative overflow-hidden shadow-lg" onclick="abrirChatIA()">
-                        <video src="${h.url}" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0"></video>
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 z-0"></div>
-                        <span class="text-[8px] font-extrabold bg-purple-500 text-white px-1.5 py-0.5 rounded-full z-10">${h.badge}</span>
-                        <span class="text-[10px] font-bold text-white text-center z-10">${h.titulo}</span>
-                    </div>
-                `;
-            });
-        }
-
-        function renderizarFeed() {
-            const container = document.getElementById('feedPostsContainer');
-            if(!container) return;
-            container.innerHTML = '';
-            feedPosts.forEach(post => {
-                container.innerHTML += `
-                    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-white text-xs">AI</div>
-                            <div>
-                                <h4 class="font-bold text-sm text-slate-100">${post.autor}</h4>
-                                <span class="text-[10px] text-purple-400">${post.tiempo} • 🌍 ${post.categoria}</span>
-                            </div>
-                        </div>
-                        <p class="text-sm text-slate-200">${post.texto}</p>
-                        ${post.media ? `<div class="rounded-2xl overflow-hidden border border-slate-800 h-64 bg-cover bg-center" style="background-image: url('${post.media}');"></div>` : ''}
-                        <div class="flex items-center gap-4 text-xs text-slate-400 pt-2 border-t border-slate-800">
-                            <span><i class="fa-solid fa-heart text-pink-500"></i> ${post.likes} Me gusta</span>
-                            <button onclick="abrirChatIA()" class="text-purple-400 font-bold"><i class="fa-solid fa-comment mr-1"></i> Discutir en Chat</button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function renderizarReels() {
-            const container = document.getElementById('reelsContainer');
-            if(!container) return;
-            container.innerHTML = '';
-            reelsData.forEach(r => {
-                container.innerHTML += `
-                    <div class="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-xl p-3 space-y-2">
-                        <video src="${r.url}" autoplay muted loop playsinline class="w-full h-56 object-cover rounded-xl"></video>
-                        <span class="font-bold text-purple-400 text-xs">@${r.autor}</span>
-                        <p class="text-xs text-slate-300">${r.texto}</p>
-                    </div>
-                `;
-            });
-        }
-
-        function iniciarNuevoChat() {
-            document.getElementById('chatContainer').innerHTML = `<div class="flex items-start gap-3"><div class="w-9 h-9 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-xs text-white">AI</div><div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200">Nueva sesión iniciada. ¿En qué te ayudo?</div></div>`;
-            abrirChatIA();
-        }
-
-        function buscarEnChats() {
-            const q = document.getElementById('searchChatsInput').value.toLowerCase();
-            if(q.length > 2) abrirChatIA();
-        }
-
-        function mostrarAyudaTecnica() {
-            alert("🤖 Asistente de Ayuda Técnica IA: Escribe tu consulta en el chat y el sistema te guiará paso a paso.");
-            abrirChatIA();
-        }
-
-        function abrirBuzonSugerencias() {
-            const sug = prompt("📬 Buzón de Sugerencias: Escribe tu idea para mejorar la plataforma:");
-            if(sug) alert("¡Gracias! Tu sugerencia ha sido registrada para la próxima actualización.");
-        }
-
-        function informarProblemaCorreo() {
-            const prob = prompt("🚨 Informar un Problema: Describe el fallo técnico. Se enviará directamente al correo del administrador:");
-            if(prob) {
-                window.location.href = `mailto:juandavidlopezinfante@gmail.com?subject=Reporte de Error en Nexus AI&body=${encodeURIComponent(prob)}`;
-            }
-        }
-
-        function borrarHistorialTotal() {
-            if(confirm("¿Seguro que deseas borrar todo el historial de chats y publicaciones locales?")) {
-                localStorage.clear();
-                location.reload();
-            }
-        }
-
-        function verificarEdad18() {
-            document.getElementById('adultWarningBox').classList.add('hidden');
-            document.getElementById('adultContentContainer').classList.remove('hidden');
-        }
-
-        function suscribirsePlan(plan) {
-            alert(`🎉 Suscripción al plan "${plan}" procesada aplicando el 15% de descuento.`);
-        }
-
-        function compartirPlataforma() {
-            if(navigator.share) {
-                navigator.share({ title: 'Nexus AI Pro', url: window.location.href });
-            } else {
-                alert("¡Enlace copiado al portapapeles!");
-            }
-        }
-
-        function publicarTendenciaUsuario(event) {
-            event.preventDefault();
-            const texto = document.getElementById('postText').value.trim();
-            const cat = document.getElementById('postCategory').value.trim();
-            if(!texto) return;
-
-            feedPosts.unshift({
-                autor: usuarioActual.nombre,
-                tiempo: "Justo ahora",
-                categoria: cat,
-                texto: texto,
-                media: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=900",
-                likes: 1
-            });
-
-            localStorage.setItem('nexus_feed_db', JSON.stringify(feedPosts));
-            document.getElementById('postText').value = '';
-            mostrarSeccion('feed');
-            renderizarFeed();
-            alert("🚀 ¡Tendencia publicada con éxito al Feed Mundial!");
-        }
-
-        function mostrarArchivoSeleccionado(input) {
-            const ind = document.getElementById('fileIndicator');
-            if(input.files && input.files[0]) {
-                ind.innerText = `📎 Archivo listo: ${input.files[0].name}`;
-                ind.classList.remove('hidden');
-            }
-        }
-
-        function toggleSidebar() {
-            const s = document.getElementById('sidebar');
-            s.classList.toggle('w-72');
-            s.classList.toggle('w-20');
-        }
-
-        function abrirChatIA() { document.getElementById('chatModal').classList.remove('translate-x-full'); }
-        function cerrarChatIA() { document.getElementById('chatModal').classList.add('translate-x-full'); }
-
-        function mostrarSeccion(sec) {
-            ['feed', 'reels', 'herramientas', 'suscripciones', 'adultos', 'manual', 'crear'].forEach(s => {
-                const el = document.getElementById('view-' + s);
-                if(el) el.classList.add('hidden');
-            });
-            const target = document.getElementById('view-' + sec);
-            if(target) target.classList.remove('hidden');
-        }
-
-        async function enviarMensajeIA(event) {
-            event.preventDefault();
-            const input = document.getElementById('messageInput');
-            const chatContainer = document.getElementById('chatContainer');
-            const txt = input.value.trim();
-            if(!txt) return;
-
-            chatContainer.innerHTML += `<div class="flex justify-end"><div class="bg-purple-600 text-white p-3 rounded-3xl max-w-sm text-xs">${txt}</div></div>`;
-            input.value = '';
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-
-            try {
-                const res = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: txt })
-                });
-                const data = await res.json();
-                chatContainer.innerHTML += `<div class="flex items-start gap-3"><div class="w-9 h-9 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-xs text-white">AI</div><div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200 whitespace-pre-wrap">${data.reply || data.message}</div></div>`;
-            } catch(e) {
-                chatContainer.innerHTML += `<div class="text-rose-400 text-xs p-2">Error de enlace con el servidor.</div>`;
-            }
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-    </script>
+<!-- ========================================== -->
+<!-- 1. MODAL DE REGISTRO / ACCESO GLOBAL       -->
+<!-- ========================================== -->
+<div id="authModal" class="fixed inset-0 bg-slate-950/95 z-50 flex items-center justify-center p-4 backdrop-blur-xl">
+<div class="bg-slate-900 border border-purple-500/40 rounded-3xl max-w-lg w-full p-8 shadow-2xl space-y-6 animate-fade-in">
+<div class="text-center space-y-3">
+<div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-purple-600 via-pink-600 to-amber-500 flex items-center justify-center mx-auto text-2xl font-bold shadow-lg shadow-purple-900/50 text-white">
+<i class="fa-solid fa-globe"></i>
+</div>
+<h2 class="font-black text-2xl bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300 bg-clip-text text-transparent">Nexus AI Pro Enterprise</h2>
+<p class="text-xs text-slate-300">Regístrate con tu correo, celular o ingresa de forma libre para usar la IA.</p>
+</div>
+<form onsubmit="registrarUsuario(event)" class="space-y-4">
+<div>
+<label class="block text-xs font-bold text-slate-300 mb-1">Correo Electrónico o Teléfono Celular</label>
+<input type="text" id="authInput" required placeholder="tu@correo.com o +52 123 456 7890" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none focus:border-purple-500 transition">
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-300 mb-1">Nombre de Usuario / Alias Global</label>
+<input type="text" id="authUsername" required placeholder="Ej. CyberCreator" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none focus:border-purple-500 transition">
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-300 mb-1">Contraseña</label>
+<input type="password" id="authPassword" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none focus:border-purple-500 transition">
+</div>
+<button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white py-3.5 rounded-xl font-bold text-xs shadow-lg shadow-purple-900/40 transition">
+Crear Cuenta & Activar Perfil
+</button>
+<div class="flex gap-2 pt-2">
+<button type="button" onclick="entrarModoVisita()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 py-2.5 rounded-xl font-bold text-xs transition">Acceso Libre / Visitante</button>
+</div>
+</form>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- 2. MENÚ LATERAL RETRÁCTIL (SIDEBAR)        -->
+<!-- ========================================== -->
+<aside id="sidebar" class="w-72 bg-slate-900 border-r border-slate-800 flex flex-col transition-all duration-300 z-30 shadow-2xl">
+<div class="p-4 border-b border-slate-800 flex items-center justify-between">
+<span class="font-extrabold text-base bg-gradient-to-r from-purple-400 via-pink-500 to-amber-400 bg-clip-text text-transparent truncate">Nexus AI Pro</span>
+<button onclick="toggleSidebar()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-bars text-lg"></i></button>
+</div>
+<div class="p-3">
+<button onclick="iniciarNuevoChat()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white py-3 px-3 rounded-xl font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-purple-900/50">
+<i class="fa-solid fa-plus text-lg"></i> <span class="text-xs">Nuevo Chat / Sesión</span>
+</button>
+</div>
+<div class="px-3 pb-2">
+<div class="relative">
+<i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-[10px]"></i>
+<input type="text" id="searchChatsInput" onkeyup="buscarEnChats()" placeholder="Buscar en los chats..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-2 text-[11px] text-slate-200 outline-none">
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto px-3 space-y-1.5 text-xs scrollbar-hide">
+<button onclick="mostrarSeccion('feed')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
+<i class="fa-solid fa-newspaper text-purple-400 text-sm"></i> Feed Viral Global
+</button>
+<button onclick="mostrarSeccion('reels')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
+<i class="fa-solid fa-clapperboard text-pink-400 text-sm"></i> Reels Demostración IA
+</button>
+<button onclick="mostrarSeccion('herramientas')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
+<i class="fa-solid fa-wand-magic-sparkles text-amber-400 text-sm"></i> Herramientas Pro (Word, Excel)
+</button>
+<button onclick="mostrarSeccion('suscripciones')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
+<i class="fa-solid fa-crown text-amber-400 text-sm"></i> Suscripciones & 15% Desc.
+</button>
+<button onclick="mostrarSeccion('adultos')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-rose-300 hover:bg-rose-950/40 transition font-medium text-left border border-rose-500/20">
+<i class="fa-solid fa-triangle-exclamation text-rose-500 text-sm"></i> Contenido 18+ (VIP)
+</button>
+<button onclick="mostrarSeccion('manual')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
+<i class="fa-solid fa-book-open-reader text-cyan-400 text-sm"></i> Manual de Uso Completo
+</button>
+<button onclick="mostrarAyudaTecnica()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
+<i class="fa-solid fa-headset text-amber-400 text-sm"></i> Ayuda Técnica con IA
+</button>
+<button onclick="abrirBuzonSugerencias()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
+<i class="fa-solid fa-envelope-open-text text-emerald-400 text-sm"></i> Buzón de Sugerencias
+</button>
+<button onclick="compartirPlataforma()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
+<i class="fa-solid fa-share-nodes text-green-400 text-sm"></i> Compartir Plataforma
+</button>
+<button onclick="informarProblemaCorreo()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
+<i class="fa-solid fa-bug text-rose-400 text-sm"></i> Informar un Problema (Correo)
+</button>
+<button onclick="borrarHistorialTotal()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-rose-400 hover:bg-rose-950/30 transition font-medium text-left">
+<i class="fa-solid fa-trash text-rose-500 text-sm"></i> Borrar Todo el Historial
+</button>
+</nav>
+</aside>
+<!-- ========================================== -->
+<!-- 3. CONTENEDOR PRINCIPAL                    -->
+<!-- ========================================== -->
+<main class="flex-1 flex flex-col h-full overflow-y-auto bg-slate-950 relative">
+<!-- BARRA SUPERIOR -->
+<div class="bg-slate-950 border-b border-slate-900 px-6 py-3 sticky top-0 z-30 flex items-center justify-between gap-4 backdrop-blur-md bg-opacity-90">
+<div class="flex items-center gap-2">
+<button onclick="history.back()" class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-arrow-left text-xs"></i></button>
+<button onclick="history.forward()" class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-arrow-right text-xs"></i></button>
+</div>
+<div class="flex-1 max-w-md relative">
+<i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-500 text-xs"></i>
+<input type="text" id="globalSearchInput" onkeyup="filtrarContenidoFeed()" placeholder="Buscar publicaciones, herramientas o funciones..." class="w-full bg-slate-900 border border-slate-800 rounded-full pl-10 pr-4 py-2 text-xs text-slate-200 outline-none focus:border-purple-500 transition">
+</div>
+<div class="flex items-center gap-3">
+<button onclick="abrirChatIA()" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3.5 py-2 rounded-full text-xs font-bold flex items-center gap-2 shadow-lg transition">
+<i class="fa-solid fa-robot"></i> Abrir Chat IA
+</button>
+<span class="text-xs text-purple-400 font-bold hidden md:inline" id="topNavUser">Modo Global</span>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- 4. HISTORIAS SUPERIORES ESTILO TIKTOK      -->
+<!-- ========================================== -->
+<header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 p-4 z-20 shadow-md flex items-center gap-4">
+<div class="flex flex-col items-center justify-center flex-shrink-0">
+<button onclick="abrirChatIA()" class="story-ring w-14 h-14 rounded-full bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center text-white text-lg shadow-lg cursor-pointer">
+<i class="fa-solid fa-wand-magic-sparkles"></i>
+</button>
+<span class="text-[10px] font-bold text-slate-300 mt-1">Demostradores</span>
+</div>
+<div id="storiesContainer" class="flex-1 flex gap-4 overflow-x-auto scrollbar-hide pb-1"></div>
+</header>
+<!-- ========================================== -->
+<!-- 5. SECCIONES DINÁMICAS                     -->
+<!-- ========================================== -->
+<div id="mainContent" class="flex-1 p-6 max-w-3xl mx-auto w-full space-y-6">
+<!-- VISTA: FEED TIPO FACEBOOK -->
+<div id="view-feed" class="space-y-6">
+<div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-2xl bg-purple-600 flex items-center justify-center text-white font-bold text-xs" id="postBoxInitial">U</div>
+<input type="text" onclick="mostrarSeccion('crear')" placeholder="¿Qué quieres compartir o generar hoy con la IA?" readonly class="flex-1 bg-slate-950 border border-slate-800 rounded-full px-4 py-2.5 text-xs text-slate-400 cursor-pointer hover:border-purple-500 transition">
+</div>
+</div>
+<div id="feedPostsContainer" class="space-y-6"></div>
+</div>
+<!-- VISTA: REELS DEMOSTRACIÓN -->
+<div id="view-reels" class="hidden space-y-6">
+<h2 class="font-bold text-xl text-pink-400 flex items-center gap-2"><i class="fa-solid fa-clapperboard"></i> Reels de Demostración de IA</h2>
+<div id="reelsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+</div>
+<!-- VISTA: HERRAMIENTAS PRO (WORD, EXCEL, TRADUCCIÓN) -->
+<div id="view-herramientas" class="hidden space-y-6">
+<div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
+<h2 class="font-bold text-xl text-amber-400 flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles"></i> Herramientas Avanzadas de IA</h2>
+<p class="text-xs text-slate-400">Genera documentos de Word, hojas de cálculo en Excel y traducciones multimedia automáticas.</p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+<div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-2">
+<h4 class="font-bold text-sm text-purple-300">📄 Redactor Word & Excel</h4>
+<p class="text-xs text-slate-400">Crea informes financieros, tablas de datos y documentos ejecutivos desde cero.</p>
+<button onclick="abrirChatIA()" class="text-xs bg-purple-600 text-white px-3 py-1.5 rounded-xl font-bold">Usar en Chat</button>
+</div>
+<div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-2">
+<h4 class="font-bold text-sm text-pink-300">🎙️ Traducción de Voz & Video</h4>
+<p class="text-xs text-slate-400">Traduce contenidos audiovisuales con voces sintéticas ultrarrealistas generadas por IA.</p>
+<button onclick="abrirChatIA()" class="text-xs bg-pink-600 text-white px-3 py-1.5 rounded-xl font-bold">Usar en Chat</button>
+</div>
+</div>
+</div>
+</div>
+<!-- VISTA: SUSCRIPCIONES Y 15% DE DESCUENTO -->
+<div id="view-suscripciones" class="hidden space-y-6">
+<div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-xl space-y-6">
+<div class="text-center space-y-2">
+<span class="bg-amber-500/10 border border-amber-500/30 text-amber-400 px-3 py-1 rounded-full text-xs font-bold">Monetización Global</span>
+<h2 class="font-black text-2xl text-amber-300">Suscripciones de Usuarios & 15% de Descuento</h2>
+<p class="text-xs text-slate-400">Desbloquea todo el potencial de la IA con el descuento especial aplicado.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-slate-950 border border-slate-800 p-6 rounded-2xl space-y-4">
+<h3 class="font-bold text-sm text-purple-300">🚀 Creator Pro</h3>
+<p class="text-2xl font-black text-white">$9.99 <span class="text-xs text-slate-400">/ mes</span></p>
+<p class="text-xs text-slate-400">Acceso prioritario a Claude 3.5 Sonnet y herramientas de documentos.</p>
+<button onclick="suscribirsePlan('Creator Pro')" class="w-full bg-purple-600 text-white py-2 rounded-xl font-bold text-xs">Suscribirse</button>
+</div>
+<div class="bg-slate-950 border border-amber-500/40 p-6 rounded-2xl space-y-4 relative overflow-hidden shadow-lg">
+<div class="absolute top-2 right-2 bg-amber-500 text-slate-950 text-[9px] font-black px-2 py-0.5 rounded-full">¡15% OFF ACTIVO!</div>
+<h3 class="font-bold text-sm text-amber-400">👑 Enterprise VIP (18+)</h3>
+<p class="text-2xl font-black text-white"><span class="line-through text-slate-500 text-sm">$29.99</span> $25.49 <span class="text-xs text-amber-400">/ mes (15% desc.)</span></p>
+<p class="text-xs text-slate-400">Acceso total sin restricciones, zona 18+ y prioridad máxima en el clúster.</p>
+<button onclick="suscribirsePlan('Enterprise VIP')" class="w-full bg-gradient-to-r from-amber-500 to-pink-600 text-slate-950 py-2 rounded-xl font-bold text-xs">Obtener con Descuento</button>
+</div>
+</div>
+</div>
+</div>
+<!-- VISTA: CONTENIDO ADULTO 18+ -->
+<div id="view-adultos" class="hidden space-y-6">
+<div class="bg-slate-900 border border-rose-500/40 rounded-3xl p-8 shadow-2xl space-y-6">
+<h2 class="font-black text-xl text-rose-400"><i class="fa-solid fa-triangle-exclamation mr-2"></i> Zona Exclusiva Mayores de 18+ (VIP)</h2>
+<div id="adultWarningBox" class="bg-slate-950 border border-rose-500/30 p-6 rounded-2xl text-center space-y-4">
+<p class="text-xs text-slate-300">Este espacio contiene material adulto generado por IA. Debes confirmar tu mayoría de edad.</p>
+<button onclick="verificarEdad18()" class="bg-rose-600 text-white px-6 py-3 rounded-xl font-bold text-xs">Tengo 18 años o más - Ingresar</button>
+</div>
+<div id="adultContentContainer" class="hidden space-y-4">
+<div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-3">
+<span class="font-bold text-rose-400 text-xs">🔥 Colección Privada Exclusiva VIP</span>
+<div class="rounded-xl overflow-hidden h-64 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900');"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- VISTA: MANUAL DE USO COMPLETO -->
+<div id="view-manual" class="hidden space-y-6 text-slate-300">
+<div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-6 text-xs leading-relaxed">
+<h2 class="font-black text-xl text-cyan-300"><i class="fa-solid fa-book-open-reader mr-2"></i> Manual de Uso de Toda la Aplicación</h2>
+<div class="space-y-4">
+<div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-1">
+<h3 class="font-bold text-purple-300 text-sm">1. Chat Libre & Multimodal</h3>
+<p class="text-slate-400">Puedes enviar textos, audios, fotos y documentos de Word y Excel. El motor procesará todo de inmediato.</p>
+</div>
+<div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-1">
+<h3 class="font-bold text-pink-300 text-sm">2. Generadores de Fotos, Videos y Documentos</h3>
+<p class="text-slate-400">Crea contenido visual o redacta documentos profesionales desde cero indicándole las referencias que necesites.</p>
+</div>
+<div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-1">
+<h3 class="font-bold text-amber-300 text-sm">3. Menú Lateral y Funciones de Soporte</h3>
+<p class="text-slate-400">Utiliza el buscador de chats, la ayuda técnica con IA, el buzón de sugerencias o informa cualquier problema técnico que llegará directo a tu correo de administrador.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- VISTA: PUBLICAR EN EL FEED -->
+<div id="view-crear" class="hidden space-y-6">
+<div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
+<h2 class="font-bold text-xl text-emerald-400 flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up"></i> Publicar Tendencia en el Feed Mundial</h2>
+<form onsubmit="publicarTendenciaUsuario(event)" class="space-y-4">
+<div>
+<label class="block text-xs font-bold text-slate-300 mb-1">Categoría</label>
+<input type="text" id="postCategory" value="Arte & IA Generativa" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none">
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-300 mb-1">Contenido / Prompt</label>
+<textarea id="postText" required placeholder="Describe tu descubrimiento de IA..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none resize-none h-28"></textarea>
+</div>
+<button type="submit" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold text-xs">Publicar al Feed Mundial</button>
+</form>
+</div>
+</div>
+</div>
+</main>
+<!-- ========================================== -->
+<!-- 6. CHAT DE IA MULTIMODAL AMPLIADO          -->
+<!-- ========================================== -->
+<div id="chatModal" class="fixed inset-y-0 right-0 w-full md:w-[650px] bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 z-50">
+<div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950">
+<div class="flex items-center gap-3">
+<span class="font-bold text-sm text-purple-400"><i class="fa-solid fa-robot"></i> Chat Multimodal Pro (Claude 3.5)</span>
+</div>
+<button onclick="cerrarChatIA()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+</div>
+<div id="chatContainer" class="flex-1 overflow-y-auto p-5 space-y-4">
+<div class="flex items-start gap-3">
+<div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center font-bold text-xs text-white">AI</div>
+<div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200">¡Hola! Envía texto, audios, fotos o documentos Word/Excel para procesarlos al instante.</div>
+</div>
+</div>
+<div class="p-4 bg-slate-950 border-t border-slate-800 space-y-2">
+<form onsubmit="enviarMensajeIA(event)" class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-2xl p-2">
+<label class="cursor-pointer text-slate-400 hover:text-purple-400 px-2">
+<i class="fa-solid fa-paperclip text-sm"></i>
+<input type="file" id="chatFileInput" class="hidden" onchange="mostrarArchivoSeleccionado(this)">
+</label>
+<input type="text" id="messageInput" placeholder="Escribe tu mensaje o adjunta un archivo..." class="flex-1 bg-transparent border-none outline-none text-slate-100 text-xs px-2">
+<button type="submit" class="bg-purple-600 text-white px-4 py-2 rounded-xl font-bold text-xs"><i class="fa-solid fa-paper-plane"></i></button>
+</form>
+<div id="fileIndicator" class="text-[10px] text-emerald-400 px-2 hidden"></div>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- 7. SCRIPT DE LÓGICA Y FUNCIONALIDADES      -->
+<!-- ========================================== -->
+<script>
+let usuarioActual = { nombre: "Visitante Global", contacto: "visita@nexus.ai" };
+const historiasData = [
+{ titulo: "Chat Libre Pro", badge: "Demostración", url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-with-code-31910-large.mp4" },
+{ titulo: "Generador Fotos 4K", badge: "FLUX IA", url: "https://assets.mixkit.co/videos/preview/mixkit-plexus-background-of-plexus-animation-31911-large.mp4" },
+{ titulo: "Word & Excel AI", badge: "Documentos", url: "https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-man-working-on-a-financial-graph-42861-large.mp4" }
+];
+let feedPosts = JSON.parse(localStorage.getItem('nexus_feed_db')) || [
+{ autor: "NeuralAI Trends", tiempo: "Hace 2 min", categoria: "Chat & Código", texto: "🔥 Nuevo benchmark en procesamiento de documentos Word y hojas de cálculo con IA generativa.", media: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900", likes: 1420 }
+];
+const reelsData = [
+{ autor: "DeepAI Generator", texto: "Demostración de traducción de voz y texto con avatares de IA.", url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-with-code-31910-large.mp4", likes: 3100 }
+];
+window.addEventListener('DOMContentLoaded', () => {
+renderizarHistorias();
+renderizarFeed();
+renderizarReels();
+});
+function registrarUsuario(event) {
+event.preventDefault();
+usuarioActual = { nombre: document.getElementById('authUsername').value, contacto: document.getElementById('authInput').value };
+aplicarDatosUsuario();
+}
+function entrarModoVisita() {
+usuarioActual = { nombre: "Visitante Libre", contacto: "visita@nexus.ai" };
+aplicarDatosUsuario();
+}
+function aplicarDatosUsuario() {
+document.getElementById('topNavUser').innerText = usuarioActual.nombre;
+document.getElementById('postBoxInitial').innerText = usuarioActual.nombre.charAt(0).toUpperCase();
+document.getElementById('authModal').classList.add('hidden');
+}
+function renderizarHistorias() {
+const container = document.getElementById('storiesContainer');
+if(!container) return;
+container.innerHTML = '';
+historiasData.forEach((h) => {
+container.innerHTML += ⁠<div class="story-ring flex-shrink-0 w-24 h-36 rounded-2xl p-2 flex flex-col justify-between cursor-pointer border-2 border-purple-400 relative overflow-hidden shadow-lg" onclick="abrirChatIA()"> <video src="${h.url}" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0"></video> <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 z-0"></div> <span class="text-[8px] font-extrabold bg-purple-500 text-white px-1.5 py-0.5 rounded-full z-10">${h.badge}</span> <span class="text-[10px] font-bold text-white text-center z-10">${h.titulo}</span> </div>⁠;
+});
+}
+function renderizarFeed() {
+const container = document.getElementById('feedPostsContainer');
+if(!container) return;
+container.innerHTML = '';
+feedPosts.forEach(post => {
+container.innerHTML += ⁠<div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4"> <div class="flex items-center gap-3"> <div class="w-10 h-10 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-white text-xs">AI</div> <div> <h4 class="font-bold text-sm text-slate-100">${post.autor}</h4> <span class="text-[10px] text-purple-400">${post.tiempo} • 🌍 ${post.categoria}</span> </div> </div> <p class="text-sm text-slate-200">${post.texto}</p> ${post.media ?⁠<div class="rounded-2xl overflow-hidden border border-slate-800 h-64 bg-cover bg-center" style="background-image: url('${post.media}');"></div>⁠: ''} <div class="flex items-center gap-4 text-xs text-slate-400 pt-2 border-t border-slate-800"> <span><i class="fa-solid fa-heart text-pink-500"></i> ${post.likes} Me gusta</span> <button onclick="abrirChatIA()" class="text-purple-400 font-bold"><i class="fa-solid fa-comment mr-1"></i> Discutir en Chat</button> </div> </div>⁠;
+});
+}
+function renderizarReels() {
+const container = document.getElementById('reelsContainer');
+if(!container) return;
+container.innerHTML = '';
+reelsData.forEach(r => {
+container.innerHTML += ⁠<div class="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-xl p-3 space-y-2"> <video src="${r.url}" autoplay muted loop playsinline class="w-full h-56 object-cover rounded-xl"></video> <span class="font-bold text-purple-400 text-xs">@${r.autor}</span> <p class="text-xs text-slate-300">${r.texto}</p> </div>⁠;
+});
+}
+function iniciarNuevoChat() {
+document.getElementById('chatContainer').innerHTML = ⁠<div class="flex items-start gap-3"><div class="w-9 h-9 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-xs text-white">AI</div><div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200">Nueva sesión iniciada. ¿En qué te ayudo?</div></div>⁠;
+abrirChatIA();
+}
+function buscarEnChats() {
+const q = document.getElementById('searchChatsInput').value.toLowerCase();
+if(q.length > 2) abrirChatIA();
+}
+function mostrarAyudaTecnica() {
+alert("🤖 Asistente de Ayuda Técnica IA: Escribe tu consulta en el chat y el sistema te guiará paso a paso.");
+abrirChatIA();
+}
+function abrirBuzonSugerencias() {
+const sug = prompt("📬 Buzón de Sugerencias: Escribe tu idea para mejorar la plataforma:");
+if(sug) alert("¡Gracias! Tu sugerencia ha sido registrada para la próxima actualización.");
+}
+function informarProblemaCorreo() {
+const prob = prompt("🚨 Informar un Problema: Describe el fallo técnico. Se enviará directamente al correo del administrador:");
+if(prob) {
+window.location.href = ⁠mailto:juandavidlopezinfante@gmail.com?subject=Reporte de Error en Nexus AI&body=${encodeURIComponent(prob)}⁠;
+}
+}
+function borrarHistorialTotal() {
+if(confirm("¿Seguro que deseas borrar todo el historial de chats y publicaciones locales?")) {
+localStorage.clear();
+location.reload();
+}
+}
+function verificarEdad18() {
+document.getElementById('adultWarningBox').classList.add('hidden');
+document.getElementById('adultContentContainer').classList.remove('hidden');
+}
+function suscribirsePlan(plan) {
+alert(⁠🎉 Suscripción al plan "${plan}" procesada aplicando el 15% de descuento.⁠);
+}
+function compartirPlataforma() {
+if(navigator.share) {
+navigator.share({ title: 'Nexus AI Pro', url: window.location.href });
+} else {
+alert("¡Enlace copiado al portapapeles!");
+}
+}
+function publicarTendenciaUsuario(event) {
+event.preventDefault();
+const texto = document.getElementById('postText').value.trim();
+const cat = document.getElementById('postCategory').value.trim();
+if(!texto) return;
+feedPosts.unshift({
+autor: usuarioActual.nombre,
+tiempo: "Justo ahora",
+categoria: cat,
+texto: texto,
+media: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=900",
+likes: 1
+});
+localStorage.setItem('nexus_feed_db', JSON.stringify(feedPosts));
+document.getElementById('postText').value = '';
+mostrarSeccion('feed');
+renderizarFeed();
+alert("🚀 ¡Tendencia publicada con éxito al Feed Mundial!");
+}
+function mostrarArchivoSeleccionado(input) {
+const ind = document.getElementById('fileIndicator');
+if(input.files && input.files[0]) {
+ind.innerText = ⁠📎 Archivo listo: ${input.files[0].name}⁠;
+ind.classList.remove('hidden');
+}
+}
+function toggleSidebar() {
+const s = document.getElementById('sidebar');
+s.classList.toggle('w-72');
+s.classList.toggle('w-20');
+}
+function abrirChatIA() { document.getElementById('chatModal').classList.remove('translate-x-full'); }
+function cerrarChatIA() { document.getElementById('chatModal').classList.add('translate-x-full'); }
+function mostrarSeccion(sec) {
+['feed', 'reels', 'herramientas', 'suscripciones', 'adultos', 'manual', 'crear'].forEach(s => {
+const el = document.getElementById('view-' + s);
+if(el) el.classList.add('hidden');
+});
+const target = document.getElementById('view-' + sec);
+if(target) target.classList.remove('hidden');
+}
+function escapeHtml(value) {
+return String(value ?? '').replace(/[&<>"']/g, (character) => ({
+'&': '&',
+'<': '<',
+'>': '>',
+'"': '"',
+"'": '''
+}[character]));
+}
+async function readApiResponse(response) {
+const raw = await response.text();
+try {
+return {
+data: raw ? JSON.parse(raw) : {},
+raw
+};
+} catch {
+return {
+data: {},
+raw
+};
+}
+}
+async function enviarMensajeIA(event) {
+event.preventDefault();
+const input = document.getElementById('messageInput');
+const chatContainer = document.getElementById('chatContainer');
+const txt = input.value.trim();
+if (!txt) {
+return;
+}
+chatContainer.innerHTML += ⁠<div class="flex justify-end"> <div class="bg-purple-600 text-white p-3 rounded-3xl max-w-sm text-xs"> ${escapeHtml(txt)} </div> </div>⁠;
+input.value = '';
+chatContainer.scrollTop = chatContainer.scrollHeight;
+try {
+const response = await fetch('/api/chat', {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json'
+},
+body: JSON.stringify({
+message: txt
+})
+});
+const result = await readApiResponse(response);
+const data = result.data;
+if (!response.ok || data.success === false) {
+const errorMessage =
+data.error ||
+⁠El servidor respondió con código ${response.status}.⁠;
+throw new Error(errorMessage);
+}
+const reply = data.reply || data.response;
+if (!reply) {
+throw new Error(
+'El servidor no devolvió una respuesta.'
+);
+}
+chatContainer.innerHTML += `
+<div class="flex items-start gap-3">
+<div class="w-9 h-9 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-xs text-white">
+AI
+</div>
+<div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200 whitespace-pre-wrap">
+${escapeHtml(reply)}
+</div>
+</div>
+`;
+} catch (error) {
+chatContainer.innerHTML += ⁠<div class="text-rose-400 text-xs p-2"> ${escapeHtml( error.message || 'Error de enlace con el servidor.' )} </div>⁠;
+}
+chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+</script>
 </body>
 </html>
