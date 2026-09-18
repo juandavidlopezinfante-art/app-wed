@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import re
 import sqlite3
 import threading
 import time
@@ -33,6 +34,7 @@ OPENROUTER_URL = os.environ.get(
     "https://openrouter.ai/api/v1/chat/completions",
 )
 DEFAULT_MODEL = os.environ.get("OPENROUTER_MODEL", "openrouter/free")
+IMAGE_MODEL = os.getenv("OPENROUTER_IMAGE_MODEL", "google/gemini-2.5-flash-image")
 SYSTEM_PROMPT = (
     "Eres el núcleo de inteligencia artificial central de Nexus AI Pro Enterprise. "
     "Responde de forma profesional, estructurada, experta y útil "
@@ -391,6 +393,77 @@ def get_prompt(data: dict[str, Any]) -> tuple[str | None, str | None]:
     return prompt, None
 
 
+def is_image_request(prompt: str, tool_name: str = "") -> bool:
+    text = f"{tool_name} {prompt}".lower()
+    return bool(re.search(r"\b(imagen|imagenes|image|genera.*dibujo|genera.*foto|ilustraci[oó]n|retrato)\b", text))
+
+
+def extract_image_outputs(response_data: dict[str, Any]) -> list[dict[str, Any]]:
+    images = []
+    choices = response_data.get("choices") or []
+    if not choices or not isinstance(choices[0], dict):
+        return images
+    message = choices[0].get("message") or {}
+    for item in message.get("images") or []:
+        if isinstance(item, dict):
+            image_url = item.get("image_url") or item.get("url")
+            if isinstance(image_url, dict):
+                image_url = image_url.get("url")
+            if isinstance(image_url, str) and image_url:
+                images.append({"url": image_url, "type": "image"})
+    content = message.get("content")
+    if isinstance(content, list):
+        for item in content:
+            if not isinstance(item, dict):
+                continue
+            image_url = item.get("image_url") or item.get("url")
+            if isinstance(image_url, dict):
+                image_url = image_url.get("url")
+            if isinstance(image_url, str) and image_url.startswith(("http://", "https://", "data:image/")):
+                images.append({"url": image_url, "type": "image"})
+    unique = []
+    seen = set()
+    for image in images:
+        if image["url"] not in seen:
+            unique.append(image)
+            seen.add(image["url"])
+    return unique
+
+
+def call_openrouter_image(prompt: str, request_id: str):
+    api_key = (os.getenv("OPENROUTER_API_KEY") or "").strip()
+    if not api_key or api_key.startswith(("PEGA_AQUI_", "tu_")):
+        return None, error_response("OPENROUTER_API_KEY no está configurada.", 503, request_id)
+    payload = {
+        "model": IMAGE_MODEL,
+        "messages": [{"role": "user", "content": prompt}],
+        "modalities": ["text", "image"],
+        "max_tokens": int(os.getenv("OPENROUTER_MAX_TOKENS", "1500")),
+    }
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "HTTP-Referer": os.getenv("APP_URL", "http://localhost:5000"),
+        "X-Title": "Nexus AI Pro Enterprise",
+        "Content-Type": "application/json",
+    }
+    try:
+        response = requests.post(OPENROUTER_URL, headers=headers, json=payload, timeout=OPENROUTER_TIMEOUT)
+    except requests.RequestException:
+        logger.exception("Fallo en generación de imagen. request_id=%s", request_id)
+        return None, error_response("No fue posible contactar el generador de imágenes.", 502, request_id)
+    if response.status_code != 200:
+        logger.error("Generación multimedia fallida: status=%s request_id=%s body=%s", response.status_code, request_id, response.text[:500])
+        return None, error_response("El modelo multimedia no pudo generar la imagen. Verifica modelo, permisos y créditos.", 502, request_id)
+    try:
+        response_data = response.json()
+    except ValueError:
+        return None, error_response("El proveedor devolvió una respuesta multimedia inválida.", 502, request_id)
+    images = extract_image_outputs(response_data)
+    if not images:
+        return None, error_response("El modelo configurado no devolvió una imagen real.", 502, request_id)
+    return {"images": images, "provider": "openrouter", "model": IMAGE_MODEL}, None
+
+
 def call_openrouter(messages: list[dict[str, str]], request_id: str):
     api_key = (os.getenv("OPENROUTER_API_KEY") or "").strip()
     if (
@@ -684,7 +757,7 @@ def api_chat():
         request_id,
     )
     if provider_error:
-        content = generate_local_fallback_response("Chat General", prompt)
+        return provider_error
 
     guardar_interaccion(request_id, "Chat General", prompt, content)
     save_ai_message("user", prompt)
@@ -743,6 +816,22 @@ def api_generate():
 
     tool_name = str(data.get("toolName") or "Asistente General").strip() or "Asistente General"
 
+    if is_image_request(prompt, tool_name):
+        image_result, image_error = call_openrouter_image(prompt, request_id)
+        if image_error:
+            return image_error
+        save_ai_message("user", prompt)
+        save_ai_message("assistant", json.dumps(image_result, ensure_ascii=False))
+        return jsonify({
+            "success": True,
+            "type": "image",
+            "response": "Imagen generada por OpenRouter.",
+            "images": image_result["images"],
+            "provider": image_result["provider"],
+            "model": image_result["model"],
+            "requestId": request_id,
+        }), 200
+
     content, provider_error = call_openrouter(
         [
             {"role": "system", "content": SYSTEM_PROMPT},
@@ -751,7 +840,7 @@ def api_generate():
         request_id,
     )
     if provider_error:
-        content = generate_local_fallback_response(tool_name, prompt)
+        return provider_error
 
     guardar_interaccion(request_id, tool_name, prompt, content)
     save_ai_message("user", prompt)
