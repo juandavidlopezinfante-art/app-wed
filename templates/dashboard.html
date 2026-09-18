@@ -495,7 +495,11 @@ function displayApiError(response, data) {
 if (data && data.error) {
 return data.error;
 }
+<<<<<<< HEAD
 return El servidor respondió con código ${response.status}.;
+=======
+return ⁠El servidor respondió con código ${response.status}.⁠;
+>>>>>>> 2ee94137af6c45c3fbc13df60309912e507c384f
 }
 async function runUniversalTool(id, toolName) {
 const prompt = document
@@ -563,7 +567,11 @@ headers: {
 },
 body: JSON.stringify({
 toolName: 'Soporte Técnico IA',
+<<<<<<< HEAD
 prompt: Tipo: ${currentSupportType}. Mensaje: ${text}
+=======
+prompt: ⁠Tipo: ${currentSupportType}. Mensaje: ${text}⁠
+>>>>>>> 2ee94137af6c45c3fbc13df60309912e507c384f
 })
 });
 const result = await readApiResponse(response);
@@ -585,4 +593,8 @@ error.message ||
 }
 </script>
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> 2ee94137af6c45c3fbc13df60309912e507c384f
