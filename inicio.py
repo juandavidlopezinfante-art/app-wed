@@ -101,7 +101,8 @@ OPENROUTER_URL = os.environ.get(
     "https://openrouter.ai/api/v1/chat/completions",
 )
 
-DEFAULT_MODEL = "mistralai/mistral-7b-instruct:free"
+# Cambiado a un modelo más estable para evitar errores 502 de saturación gratuita
+DEFAULT_MODEL = os.environ.get("OPENROUTER_MODEL", "google/gemini-flash-1.5")
 
 SYSTEM_PROMPT = (
     "Eres el núcleo de inteligencia artificial central de Nexus AI Pro Enterprise. "
