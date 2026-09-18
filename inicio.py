@@ -1,10 +1,53 @@
 import logging
 import os
+import sqlite3
 import uuid
 from typing import Any
 
 import requests
 from flask import Flask, jsonify, render_template, request
+
+# ==========================================
+# CONFIGURACIÓN DE BASE DE DATOS (SQLite)
+# ==========================================
+DB_NAME = "ecosistema_privado.db"
+
+def inicializar_base_datos():
+    """Crea la base de datos y la tabla de interacciones si no existen."""
+    try:
+        conexion = sqlite3.connect(DB_NAME)
+        cursor = conexion.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS interacciones (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                request_id TEXT NOT NULL,
+                tool_name TEXT NOT NULL,
+                prompt TEXT NOT NULL,
+                respuesta TEXT NOT NULL,
+                fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+        conexion.commit()
+        conexion.close()
+    except Exception as e:
+        print(f"Error al inicializar la base de datos: {e}")
+
+# Inicializamos la BD al arrancar el script
+inicializar_base_datos()
+
+def guardar_interaccion(request_id: str, tool_name: str, prompt: str, respuesta: str):
+    """Guarda cada prompt y respuesta exitosa de forma privada."""
+    try:
+        conexion = sqlite3.connect(DB_NAME)
+        cursor = conexion.cursor()
+        cursor.execute('''
+            INSERT INTO interacciones (request_id, tool_name, prompt, respuesta)
+            VALUES (?, ?, ?, ?)
+        ''', (request_id, tool_name, prompt, respuesta))
+        conexion.commit()
+        conexion.close()
+    except Exception as e:
+        print(f"Error al guardar en la base de datos: {e}")
 
 
 logging.basicConfig(
@@ -303,6 +346,9 @@ def api_chat():
     if provider_error:
         return provider_error
 
+    # Guardamos la interacción de forma limpia en SQLite
+    guardar_interaccion(request_id, "Chat General", prompt, content)
+
     return jsonify(
         {
             "success": True,
@@ -359,6 +405,9 @@ def api_generate():
 
     if provider_error:
         return provider_error
+
+    # Guardamos la interacción de las herramientas en SQLite
+    guardar_interaccion(request_id, tool_name, prompt, content)
 
     return jsonify(
         {
