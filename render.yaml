@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: nexus-ai-pro-enterprise
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn inicio:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        sync: false
+      - key: DB_NAME
+        value: ecosistema_privado.db
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_MODEL
+        value: google/gemini-flash-1.5
+      - key: OPENROUTER_URL
+        value: https://openrouter.ai/api/v1/chat/completions
+      - key: APP_URL
+        value: https://nexus-ai-pro-enterprise.onrender.com
+      - key: OPENROUTER_TIMEOUT
+        value: "35"
+      - key: OPENROUTER_MAX_TOKENS
+        value: "1500"
+      - key: LOG_LEVEL
+        value: "INFO"
