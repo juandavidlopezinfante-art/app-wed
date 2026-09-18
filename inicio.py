@@ -13,10 +13,12 @@ from flask import Flask, jsonify, render_template, request
 DB_NAME = "ecosistema_privado.db"
 
 def inicializar_base_datos():
-    """Crea la base de datos y la tabla de interacciones si no existen."""
+    """Crea la base de datos y todas las tablas necesarias si no existen."""
     try:
         conexion = sqlite3.connect(DB_NAME)
         cursor = conexion.cursor()
+        
+        # Tabla de interacciones del chat (ya la tenías)
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS interacciones (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -27,6 +29,41 @@ def inicializar_base_datos():
                 fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         ''')
+        
+        # Tabla de perfiles de usuario
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS usuarios (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE NOT NULL,
+                bio TEXT,
+                avatar TEXT,
+                fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+
+        # Tabla de publicaciones y feed (incluyendo contenido de bots)
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS posts (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                author TEXT NOT NULL,
+                content TEXT NOT NULL,
+                media_url TEXT,
+                is_bot INTEGER DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+
+        # Tabla de foros privados y suscripciones (con el 15% de comisión)
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS foros_privados (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                creator TEXT NOT NULL,
+                title TEXT NOT NULL,
+                price REAL NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+
         conexion.commit()
         conexion.close()
     except Exception as e:
@@ -85,7 +122,6 @@ def error_response(message: str, status_code: int, request_id: str):
     """
     Todas las respuestas de error tienen el mismo formato JSON.
     """
-
     return (
         jsonify(
             {
@@ -110,7 +146,6 @@ def call_openrouter(
             "OPENROUTER_API_KEY no está configurada. request_id=%s",
             request_id,
         )
-
         return None, error_response(
             "El servicio de inteligencia artificial no está configurado en el servidor.",
             503,
@@ -156,7 +191,6 @@ def call_openrouter(
             "Timeout de OpenRouter. request_id=%s",
             request_id,
         )
-
         return None, error_response(
             "El proveedor de IA tardó demasiado en responder. Inténtalo de nuevo.",
             504,
@@ -168,7 +202,6 @@ def call_openrouter(
             "Error de red con OpenRouter. request_id=%s",
             request_id,
         )
-
         return None, error_response(
             "No fue posible comunicarse con el proveedor de IA.",
             502,
@@ -184,39 +217,24 @@ def call_openrouter(
         )
 
         if response.status_code == 429:
-            message = (
-                "El proveedor de IA está temporalmente saturado. "
-                "Espera unos segundos e inténtalo de nuevo."
-            )
+            message = "El proveedor de IA está temporalmente saturado. Espera unos segundos e inténtalo de nuevo."
             status_code = 429
-
         elif response.status_code in (401, 403):
-            message = (
-                "El proveedor de IA rechazó la configuración del servidor."
-            )
+            message = "El proveedor de IA rechazó la configuración del servidor."
             status_code = 502
-
         else:
-            message = (
-                "El proveedor de IA no pudo procesar la solicitud."
-            )
+            message = "El proveedor de IA no pudo procesar la solicitud."
             status_code = 502
 
-        return None, error_response(
-            message,
-            status_code,
-            request_id,
-        )
+        return None, error_response(message, status_code, request_id)
 
     try:
         response_data = response.json()
-
     except ValueError:
         logger.error(
             "OpenRouter devolvió JSON inválido. request_id=%s",
             request_id,
         )
-
         return None, error_response(
             "El proveedor de IA devolvió una respuesta inválida.",
             502,
@@ -238,7 +256,6 @@ def call_openrouter(
             "OpenRouter devolvió choices vacío. request_id=%s",
             request_id,
         )
-
         return None, error_response(
             "El proveedor de IA no devolvió contenido.",
             502,
@@ -246,7 +263,6 @@ def call_openrouter(
         )
 
     message = choices[0].get("message")
-
     content = (
         message.get("content")
         if isinstance(message, dict)
@@ -258,7 +274,6 @@ def call_openrouter(
             "OpenRouter no devolvió contenido. request_id=%s",
             request_id,
         )
-
         return None, error_response(
             "El proveedor de IA no devolvió contenido.",
             502,
@@ -317,28 +332,16 @@ def health():
 @app.route("/api/chat", methods=["POST"])
 def api_chat():
     request_id = uuid.uuid4().hex
-
     data = request.get_json(silent=True) or {}
 
     prompt, validation_error = get_prompt(data)
-
     if validation_error:
-        return error_response(
-            validation_error,
-            400,
-            request_id,
-        )
+        return error_response(validation_error, 400, request_id)
 
     content, provider_error = call_openrouter(
         [
-            {
-                "role": "system",
-                "content": SYSTEM_PROMPT,
-            },
-            {
-                "role": "user",
-                "content": prompt,
-            },
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": prompt},
         ],
         request_id,
     )
@@ -346,7 +349,6 @@ def api_chat():
     if provider_error:
         return provider_error
 
-    # Guardamos la interacción de forma limpia en SQLite
     guardar_interaccion(request_id, "Chat General", prompt, content)
 
     return jsonify(
@@ -361,44 +363,22 @@ def api_chat():
 @app.route("/api/generate", methods=["POST"])
 def api_generate():
     request_id = uuid.uuid4().hex
-
     data = request.get_json(silent=True) or {}
 
     prompt, validation_error = get_prompt(data)
-
     if validation_error:
-        return error_response(
-            validation_error,
-            400,
-            request_id,
-        )
+        return error_response(validation_error, 400, request_id)
 
-    tool_name = data.get(
-        "toolName",
-        "Asistente General",
-    )
-
+    tool_name = data.get("toolName", "Asistente General")
     if not isinstance(tool_name, str):
         tool_name = "Asistente General"
 
-    tool_name = tool_name.strip()[:120]
-
-    if not tool_name:
-        tool_name = "Asistente General"
+    tool_name = tool_name.strip()[:120] or "Asistente General"
 
     content, provider_error = call_openrouter(
         [
-            {
-                "role": "system",
-                "content": SYSTEM_PROMPT,
-            },
-            {
-                "role": "user",
-                "content": (
-                    f"Módulo activo: {tool_name}\n"
-                    f"Solicitud: {prompt}"
-                ),
-            },
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": f"Módulo activo: {tool_name}\nSolicitud: {prompt}"},
         ],
         request_id,
     )
@@ -406,7 +386,6 @@ def api_generate():
     if provider_error:
         return provider_error
 
-    # Guardamos la interacción de las herramientas en SQLite
     guardar_interaccion(request_id, tool_name, prompt, content)
 
     return jsonify(
@@ -418,12 +397,80 @@ def api_generate():
     ), 200
 
 
-if __name__ == "__main__":
-    port = int(
-        os.environ.get("PORT", "5000")
+# ==========================================
+# NUEVAS RUTAS PARA BOTS, FOROS E HISTORIAS
+# ==========================================
+
+@app.route("/api/bot/generar-feed", methods=["POST"])
+def generar_feed_bot():
+    """Bot inteligente que crea publicaciones automáticas para mantener vivo el feed."""
+    request_id = uuid.uuid4().hex
+    prompt_bot = "Genera una publicación corta, atractiva y moderna sobre tecnología, inteligencia artificial o tips de productividad para una red social, incluyendo hashtags."
+    
+    content, provider_error = call_openrouter(
+        [
+            {"role": "system", "content": "Eres un bot autónomo creador de contenido viral y tecnológico."},
+            {"role": "user", "content": prompt_bot}
+        ],
+        request_id
     )
 
-    app.run(
-        host="0.0.0.0",
-        port=port,
-    )
+    if provider_error:
+        return provider_error
+
+    try:
+        conexion = sqlite3.connect(DB_NAME)
+        cursor = conexion.cursor()
+        cursor.execute("INSERT INTO posts (author, content, is_bot) VALUES (?, ?, ?)", ("NexusBot_AI", content, 1))
+        conexion.commit()
+        conexion.close()
+    except Exception as e:
+        logger.error(f"Error guardando post de bot: {e}")
+
+    return jsonify({"success": True, "bot_post": content, "requestId": request_id}), 200
+
+
+@app.route("/api/foros/crear", methods=["POST"])
+def crear_foro_privado():
+    """Permite a los usuarios crear foros privados definiendo su precio de suscripción."""
+    data = request.get_json(silent=True) or {}
+    creator = data.get("creator", "").strip()
+    title = data.get("title", "").strip()
+    try:
+        price = float(data.get("price", 0.0))
+    except ValueError:
+        price = 0.0
+
+    if not creator or not title or price <= 0:
+        return jsonify({"success": False, "error": "Datos incompletos o precio inválido."}), 400
+
+    # Cálculo automático de la comisión del 15% para la plataforma
+    comision_plataforma = round(price * 0.15, 2)
+    ganancia_neta_creador = round(price - comision_plataforma, 2)
+
+    try:
+        conexion = sqlite3.connect(DB_NAME)
+        cursor = conexion.cursor()
+        cursor.execute(
+            "INSERT INTO foros_privados (creator, title, price) VALUES (?, ?, ?)",
+            (creator, title, price)
+        )
+        conexion.commit()
+        conexion.close()
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+    return jsonify({
+        "success": True,
+        "message": "Foro privado creado con éxito.",
+        "subscriptionDetails": {
+            "creatorPrice": price,
+            "platformFee15Percent": comision_plataforma,
+            "creatorNetEarnings": ganancia_neta_creador
+        }
+    }), 200
+
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", "5000"))
+    app.run(host="0.0.0.0", port=port)
