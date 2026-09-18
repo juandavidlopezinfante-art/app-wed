@@ -7,7 +7,8 @@ from typing import Any
 
 import requests
 from dotenv import load_dotenv
-from flask import Flask, jsonify, redirect, render_template, request, session, url_for
+from flask import Flask, jsonify, redirect, render_template, request, send_from_directory, session, url_for
+from werkzeug.utils import secure_filename
 
 BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(BASE_DIR / ".env")
@@ -35,6 +36,14 @@ SYSTEM_PROMPT = (
 )
 MAX_PROMPT_LENGTH = int(os.environ.get("MAX_PROMPT_LENGTH", "12000"))
 OPENROUTER_TIMEOUT = float(os.environ.get("OPENROUTER_TIMEOUT", "35"))
+UPLOAD_DIR = BASE_DIR / "uploads"
+UPLOAD_DIR.mkdir(exist_ok=True)
+MAX_UPLOAD_BYTES = int(os.environ.get("MAX_UPLOAD_BYTES", str(25 * 1024 * 1024)))
+ALLOWED_UPLOAD_EXTENSIONS = {
+    ".jpg", ".jpeg", ".png", ".gif", ".webp", ".mp4", ".webm", ".mov",
+    ".mp3", ".wav", ".m4a", ".pdf", ".doc", ".docx", ".xls", ".xlsx",
+    ".txt", ".csv",
+}
 
 
 def get_db_connection():
@@ -84,6 +93,20 @@ def ensure_interacciones_columns():
                 conn.execute(
                     f"ALTER TABLE interacciones ADD COLUMN {column_name} {column_def}"
                 )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def ensure_ai_chat_columns():
+    conn = get_db_connection()
+    try:
+        existing = {row[1] for row in conn.execute("PRAGMA table_info(ai_chat_messages)").fetchall()}
+        if "session_token" not in existing:
+            conn.execute("ALTER TABLE ai_chat_messages ADD COLUMN session_token TEXT")
+        file_columns = {row[1] for row in conn.execute("PRAGMA table_info(ai_files)").fetchall()}
+        if "session_token" not in file_columns:
+            conn.execute("ALTER TABLE ai_files ADD COLUMN session_token TEXT")
         conn.commit()
     finally:
         conn.close()
@@ -213,6 +236,50 @@ def init_db():
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """),
+        ("ai_chat_messages", """
+            CREATE TABLE IF NOT EXISTS ai_chat_messages (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                session_token TEXT,
+                role TEXT NOT NULL,
+                content TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """),
+        ("ai_files", """
+            CREATE TABLE IF NOT EXISTS ai_files (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                session_token TEXT,
+                message_id INTEGER,
+                original_name TEXT NOT NULL,
+                stored_name TEXT NOT NULL UNIQUE,
+                mime_type TEXT,
+                size_bytes INTEGER NOT NULL DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """),
+        ("age_consents", """
+            CREATE TABLE IF NOT EXISTS age_consents (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                session_token TEXT NOT NULL UNIQUE,
+                confirmed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """),
+        ("channel_subscriptions", """
+            CREATE TABLE IF NOT EXISTS channel_subscriptions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                channel_id INTEGER NOT NULL,
+                subscriber_id INTEGER,
+                guest_token TEXT,
+                price REAL NOT NULL,
+                commission_rate REAL NOT NULL,
+                platform_fee REAL NOT NULL,
+                creator_earnings REAL NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """),
     ]
 
     for _, ddl in tables:
@@ -221,6 +288,7 @@ def init_db():
     conn.commit()
     conn.close()
     ensure_interacciones_columns()
+    ensure_ai_chat_columns()
 
 
 init_db()
@@ -534,10 +602,12 @@ def api_register():
 
 @app.route("/api/guest-login", methods=["POST"])
 def api_guest_login():
+    guest_token = session.get("guest_token") or uuid.uuid4().hex
     session["user_id"] = None
     session["user_email"] = "guest@nexus.local"
     session["user_name"] = "Invitado"
     session["is_guest"] = True
+    session["guest_token"] = guest_token
     return jsonify(
         {
             "success": True,
@@ -566,7 +636,50 @@ def api_chat():
         content = generate_local_fallback_response("Chat General", prompt)
 
     guardar_interaccion(request_id, "Chat General", prompt, content)
+    save_ai_message("user", prompt)
+    save_ai_message("assistant", content)
     return jsonify({"success": True, "reply": content, "requestId": request_id}), 200
+
+
+def current_session_token():
+    if session.get("is_guest"):
+        return session.get("guest_token")
+    return f"user:{session.get('user_id')}" if session.get("user_id") else None
+
+
+def has_age_consent():
+    token = current_session_token()
+    if not token:
+        return False
+    conn = get_db_connection()
+    consent = conn.execute(
+        "SELECT 1 FROM age_consents WHERE session_token = ? LIMIT 1", (token,)
+    ).fetchone()
+    conn.close()
+    return consent is not None
+
+
+@app.route("/api/age/status", methods=["GET"])
+def api_age_status():
+    return jsonify({"success": True, "confirmed": has_age_consent()}), 200
+
+
+@app.route("/api/age/verify", methods=["POST"])
+def api_age_verify():
+    if not session.get("user_email"):
+        return jsonify({"success": False, "error": "Debes iniciar sesión o entrar como invitado."}), 401
+    data = request.get_json(silent=True) or {}
+    if data.get("confirmed") is not True:
+        return jsonify({"success": False, "error": "Debes confirmar que tienes 18 años o más."}), 400
+    token = current_session_token()
+    conn = get_db_connection()
+    conn.execute(
+        "INSERT OR IGNORE INTO age_consents (user_id, session_token) VALUES (?, ?)",
+        (session.get("user_id"), token),
+    )
+    conn.commit()
+    conn.close()
+    return jsonify({"success": True, "confirmed": True}), 200
 
 
 @app.route("/api/generate", methods=["POST"])
@@ -590,7 +703,84 @@ def api_generate():
         content = generate_local_fallback_response(tool_name, prompt)
 
     guardar_interaccion(request_id, tool_name, prompt, content)
+    save_ai_message("user", prompt)
+    save_ai_message("assistant", content)
     return jsonify({"success": True, "response": content, "requestId": request_id}), 200
+
+
+def save_ai_message(role: str, content: str):
+    try:
+        conn = get_db_connection()
+        conn.execute(
+            "INSERT INTO ai_chat_messages (user_id, session_token, role, content) "
+            "VALUES (?, ?, ?, ?)",
+            (session.get("user_id"), session.get("guest_token"), role, content),
+        )
+        conn.commit()
+        conn.close()
+    except Exception as exc:
+        logger.exception("Error guardando mensaje de IA: %s", exc)
+
+
+@app.route("/api/ai/history", methods=["GET"])
+def api_ai_history():
+    conn = get_db_connection()
+    messages = conn.execute(
+        "SELECT id, role, content, created_at FROM ai_chat_messages "
+        "WHERE (user_id IS ? AND session_token IS ?) OR "
+        "(user_id = ? AND session_token IS NULL) ORDER BY id DESC LIMIT 100",
+        (session.get("user_id"), session.get("guest_token"), session.get("user_id")),
+    ).fetchall()
+    files = conn.execute(
+        "SELECT id, original_name, stored_name, mime_type, size_bytes, created_at "
+        "FROM ai_files WHERE (user_id = ? AND session_token IS NULL) OR "
+        "(user_id IS NULL AND session_token IS ?) ORDER BY id DESC LIMIT 100",
+        (session.get("user_id"), session.get("guest_token")),
+    ).fetchall()
+    conn.close()
+    return jsonify({
+        "success": True,
+        "messages": [dict(item) for item in reversed(messages)],
+        "files": [dict(item) for item in files],
+    }), 200
+
+
+@app.route("/api/ai/files", methods=["POST"])
+def api_ai_files():
+    if not session.get("user_email"):
+        return jsonify({"success": False, "error": "Debes iniciar sesión."}), 401
+    uploaded = request.files.get("file")
+    if uploaded is None or not uploaded.filename:
+        return jsonify({"success": False, "error": "Selecciona un archivo."}), 400
+    extension = Path(uploaded.filename).suffix.lower()
+    if extension not in ALLOWED_UPLOAD_EXTENSIONS:
+        return jsonify({"success": False, "error": "Tipo de archivo no permitido."}), 400
+    uploaded.seek(0, os.SEEK_END)
+    size_bytes = uploaded.tell()
+    uploaded.seek(0)
+    if size_bytes > MAX_UPLOAD_BYTES:
+        return jsonify({"success": False, "error": "El archivo supera el límite permitido."}), 413
+    stored_name = f"{uuid.uuid4().hex}{extension}"
+    uploaded.save(UPLOAD_DIR / stored_name)
+    conn = get_db_connection()
+    conn.execute(
+        "INSERT INTO ai_files (user_id, session_token, original_name, stored_name, mime_type, size_bytes) "
+        "VALUES (?, ?, ?, ?, ?, ?)",
+        (session.get("user_id"), session.get("guest_token"), secure_filename(uploaded.filename), stored_name, uploaded.mimetype, size_bytes),
+    )
+    conn.commit()
+    conn.close()
+    return jsonify({"success": True, "file": {
+        "name": secure_filename(uploaded.filename),
+        "url": url_for("uploaded_file", filename=stored_name),
+        "mime_type": uploaded.mimetype,
+        "size_bytes": size_bytes,
+    }}), 201
+
+
+@app.route("/uploads/<path:filename>")
+def uploaded_file(filename):
+    return send_from_directory(UPLOAD_DIR, filename)
 
 
 @app.route("/api/bot/generar-feed", methods=["POST"])
@@ -691,6 +881,52 @@ def api_feed():
             ],
         }
     )
+
+
+@app.route("/api/reels", methods=["GET"])
+def api_reels():
+    conn = get_db_connection()
+    reels = conn.execute(
+        "SELECT reels.*, COALESCE(usuarios.username, 'Creador') AS author "
+        "FROM reels LEFT JOIN usuarios ON usuarios.id = reels.user_id "
+        "ORDER BY reels.created_at DESC LIMIT 30"
+    ).fetchall()
+    conn.close()
+    return jsonify({"success": True, "reels": [dict(item) for item in reels]}), 200
+
+
+@app.route("/api/stories", methods=["GET"])
+def api_stories():
+    conn = get_db_connection()
+    stories = conn.execute(
+        "SELECT stories.*, COALESCE(usuarios.username, 'Comunidad') AS author "
+        "FROM stories LEFT JOIN usuarios ON usuarios.id = stories.user_id "
+        "ORDER BY stories.created_at DESC LIMIT 30"
+    ).fetchall()
+    conn.close()
+    return jsonify({"success": True, "stories": [dict(item) for item in stories]}), 200
+
+
+@app.route("/api/channels", methods=["GET"])
+def api_channels():
+    conn = get_db_connection()
+    channels = conn.execute(
+        "SELECT channels.*, COALESCE(usuarios.username, 'Creador') AS creator_name "
+        "FROM channels LEFT JOIN usuarios ON usuarios.id = channels.creator_id "
+        "ORDER BY channels.created_at DESC LIMIT 50"
+    ).fetchall()
+    conn.close()
+    return jsonify({"success": True, "channels": [dict(item) for item in channels]}), 200
+
+
+def require_adult_access():
+    if not has_age_consent():
+        return jsonify({
+            "success": False,
+            "error": "Confirma que tienes 18 años o más para acceder a esta zona.",
+            "requiresAgeConfirmation": True,
+        }), 403
+    return None
 
 
 def require_login_json():
@@ -840,25 +1076,86 @@ def api_channels_create():
     if login_error:
         return login_error
 
+    if not session.get("user_id"):
+        return jsonify({"success": False, "error": "Solo usuarios registrados pueden crear canales."}), 403
+
     data = request.get_json(silent=True) or {}
     name = (data.get("name") or "").strip()
     description = (data.get("description") or "").strip()
-    if not name:
-        return jsonify({"success": False, "error": "El nombre del canal es obligatorio."}), 400
+    is_private = bool(data.get("is_private"))
+    is_adult = bool(data.get("is_adult"))
+    try:
+        monthly_price = round(float(data.get("monthly_price", 0)), 2)
+    except (TypeError, ValueError):
+        monthly_price = 0
+    if not name or monthly_price < 0:
+        return jsonify({"success": False, "error": "Nombre o precio inválido."}), 400
+    if is_adult:
+        age_error = require_adult_access()
+        if age_error:
+            return age_error
+        is_private = True
+    if is_private and monthly_price <= 0:
+        return jsonify({"success": False, "error": "Un canal privado debe tener un precio mensual mayor que cero."}), 400
 
     creator_id = session.get("user_id")
-    if not creator_id:
-        creator_id = 1
 
     conn = get_db_connection()
     conn.execute(
-        "INSERT INTO channels (creator_id, name, description) VALUES (?, ?, ?)",
-        (creator_id, name, description or ""),
+        "INSERT INTO channels (creator_id, name, description, is_private, is_adult, monthly_price) "
+        "VALUES (?, ?, ?, ?, ?, ?)",
+        (creator_id, name, description or "", int(is_private), int(is_adult), monthly_price),
     )
     conn.commit()
     conn.close()
 
-    return jsonify({"success": True, "message": "Canal creado correctamente."}), 201
+    return jsonify({
+        "success": True,
+        "message": "Canal creado correctamente.",
+        "channel": {
+            "name": name,
+            "is_private": is_private,
+            "is_adult": is_adult,
+            "monthly_price": monthly_price,
+            "commission_rate": 0.18 if is_adult else (0.15 if is_private else 0),
+        },
+    }), 201
+
+
+@app.route("/api/channels/<int:channel_id>/subscribe", methods=["POST"])
+def api_channel_subscribe(channel_id):
+    if not session.get("user_email"):
+        return jsonify({"success": False, "error": "Debes iniciar sesión para suscribirte."}), 401
+    conn = get_db_connection()
+    channel = conn.execute("SELECT * FROM channels WHERE id = ?", (channel_id,)).fetchone()
+    if channel is None:
+        conn.close()
+        return jsonify({"success": False, "error": "Canal no encontrado."}), 404
+    if channel["is_adult"]:
+        age_error = require_adult_access()
+        if age_error:
+            conn.close()
+            return age_error
+    price = float(channel["monthly_price"] or 0)
+    if price <= 0:
+        conn.close()
+        return jsonify({"success": True, "message": "El canal público no requiere suscripción."}), 200
+    rate = 0.18 if channel["is_adult"] else 0.15
+    fee = round(price * rate, 2)
+    earnings = round(price - fee, 2)
+    conn.execute(
+        "INSERT INTO channel_subscriptions "
+        "(channel_id, subscriber_id, guest_token, price, commission_rate, platform_fee, creator_earnings) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?)",
+        (channel_id, session.get("user_id"), session.get("guest_token"), price, rate, fee, earnings),
+    )
+    conn.commit()
+    conn.close()
+    return jsonify({
+        "success": True,
+        "message": "Suscripción registrada.",
+        "subscription": {"price": price, "platform_fee": fee, "creator_earnings": earnings},
+    }), 201
 
 
 @app.route("/api/reaction", methods=["POST"])
