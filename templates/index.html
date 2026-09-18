@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -15,36 +15,35 @@
       --text-muted: #94a3b8;
       --border: #334155;
       --danger: #ef4444;
+      --white: #ffffff;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(139, 92, 246, 0.15), transparent 25%),
-        radial-gradient(circle at bottom right, rgba(16, 185, 129, 0.12), transparent 30%),
+        radial-gradient(circle at top left, rgba(139, 92, 246, 0.18), transparent 25%),
+        radial-gradient(circle at bottom right, rgba(16, 185, 129, 0.14), transparent 30%),
         var(--bg-dark);
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 32px;
+      padding: 30px;
     }
 
     .login-shell {
-      width: min(1100px, 100%);
+      width: min(1120px, 100%);
       background: rgba(15, 23, 42, 0.8);
       border: 1px solid var(--border);
       border-radius: 24px;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
-      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.45);
       backdrop-filter: blur(10px);
     }
 
@@ -56,13 +55,13 @@
 
     .brand-badge {
       display: inline-block;
-      background: rgba(16, 185, 129, 0.12);
+      background: rgba(16,185,129,0.12);
       color: var(--accent);
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      border: 1px solid rgba(16,185,129,0.25);
       padding: 8px 12px;
       border-radius: 999px;
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       margin-bottom: 18px;
@@ -71,8 +70,8 @@
     h1 {
       margin: 0 0 18px;
       font-size: clamp(2.4rem, 4vw, 4rem);
-      line-height: 1.08;
       letter-spacing: -0.04em;
+      line-height: 1.05;
     }
 
     .brand-panel p {
@@ -85,9 +84,9 @@
 
     .feature-list {
       display: grid;
-      grid-template-columns: repeat(2, minmax(200px, 1fr));
+      grid-template-columns: repeat(2, minmax(190px, 1fr));
       gap: 18px;
-      margin-top: 22px;
+      margin-top: 24px;
     }
 
     .feature {
@@ -97,21 +96,11 @@
       padding: 18px 16px;
     }
 
-    .feature strong {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--text-main);
-      font-size: 0.95rem;
-    }
-
-    .feature span {
-      color: var(--text-muted);
-      font-size: 0.82rem;
-      line-height: 1.5;
-    }
+    .feature strong { display: block; margin-bottom: 8px; }
+    .feature span { color: var(--text-muted); font-size: 0.82rem; line-height: 1.5; }
 
     .login-panel {
-      background: rgba(17, 24, 39, 0.9);
+      background: rgba(17,24,39,0.92);
       padding: 32px 28px;
       display: flex;
       align-items: center;
@@ -120,19 +109,30 @@
 
     .login-box {
       width: 100%;
-      max-width: 360px;
+      max-width: 380px;
     }
 
-    .login-box h2 {
-      margin: 0 0 10px;
-      font-size: 2rem;
-      letter-spacing: -0.03em;
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
     }
 
-    .login-box p {
-      margin: 0 0 22px;
-      color: var(--text-muted);
-      font-size: 0.95rem;
+    .tab-btn {
+      flex: 1;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-main);
+      padding: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .tab-btn.active {
+      background: rgba(16,185,129,0.15);
+      border-color: rgba(16,185,129,0.5);
+      color: var(--accent);
     }
 
     .field {
@@ -143,9 +143,9 @@
     }
 
     label {
+      font-size: 0.8rem;
+      font-weight: 700;
       color: var(--text-main);
-      font-size: 0.82rem;
-      font-weight: 600;
     }
 
     input {
@@ -191,26 +191,17 @@
     }
 
     .muted {
-      color: var(--text-muted);
-      font-size: 0.78rem;
+      margin-top: 18px;
       text-align: center;
-      margin-top: 16px;
+      color: var(--text-muted);
+      font-size: 0.8rem;
     }
 
-    .muted a {
-      color: var(--accent);
-      text-decoration: none;
-    }
+    .muted a { color: var(--accent); text-decoration: none; }
 
     @media (max-width: 900px) {
-      .login-shell {
-        grid-template-columns: 1fr;
-      }
-
-      .brand-panel {
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-      }
+      .login-shell { grid-template-columns: 1fr; }
+      .brand-panel { border-right: none; border-bottom: 1px solid var(--border); }
     }
   </style>
 </head>
@@ -220,39 +211,46 @@
       <div class="brand-badge">Nexus AI Pro</div>
       <h1>Digital Business IA</h1>
       <p>
-        Automatiza procesos, genera contenido, analiza negocios, gestiona clientes
-        y convierte cada tarea en una experiencia inteligente con IA.
+        Automatiza procesos, genera contenido, analiza negocios, gestiona clientes,
+        crea comunidad y convierte cada tarea en una experiencia inteligente con IA.
       </p>
 
       <div class="feature-list">
         <div class="feature">
           <strong>Asistente IA</strong>
-          <span>Responde, redacta, traduce y analiza consultas complejas en segundos.</span>
+          <span>Responde, redacta, traduce y analiza dudas en segundos.</span>
+        </div>
+        <div class="feature">
+          <strong>Red social</strong>
+          <span>Publica, sigue, chatea, crea historias y comparte contenido.</span>
         </div>
         <div class="feature">
           <strong>Automatización</strong>
-          <span>Genera contenido, planes, promociones y respuestas sin fricción.</span>
-        </div>
-        <div class="feature">
-          <strong>Negocios</strong>
-          <span>Organiza estrategias, presupuestos, oportunidades y decisiones.</span>
+          <span>Genera estrategias, promociones y textos sin fricción.</span>
         </div>
         <div class="feature">
           <strong>Productividad</strong>
-          <span>Reduce tareas repetitivas con un panel intuitivo y centralizado.</span>
+          <span>Un dashboard centralizado para operar con claridad.</span>
         </div>
       </div>
     </section>
 
     <section class="login-panel">
       <div class="login-box">
-        <h2>Iniciar sesión</h2>
-        <p>Accede a tu panel de control y empieza a operar con IA.</p>
+        <div class="tabs">
+          <button type="button" class="tab-btn active" data-tab="login">Iniciar sesión</button>
+          <button type="button" class="tab-btn" data-tab="register">Registrarme</button>
+        </div>
 
-        <form id="loginForm">
+        <form id="loginForm" data-mode="login">
           <div class="field">
             <label for="email">Correo electrónico</label>
             <input id="email" name="email" type="email" placeholder="tu@correo.com" />
+          </div>
+
+          <div class="field" id="usernameField" style="display:none;">
+            <label for="username">Usuario</label>
+            <input id="username" name="username" type="text" placeholder="tuusuario" />
           </div>
 
           <div class="field">
@@ -265,24 +263,65 @@
         </form>
 
         <div class="muted">
-          ¿No tienes cuenta? <a href="/dashboard">Solicitar acceso</a>
+          ¿Necesitas ayuda? <a href="/dashboard">Entrar sin registro</a>
         </div>
       </div>
     </section>
   </div>
 
   <script>
-    document.getElementById('loginForm').addEventListener('submit', function (event) {
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const loginForm = document.getElementById('loginForm');
+    const usernameField = document.getElementById('usernameField');
+    const usernameInput = document.getElementById('username');
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabButtons.forEach(b => b.classList.toggle('active', b === btn));
+        const mode = btn.dataset.tab;
+        loginForm.dataset.mode = mode;
+        usernameField.style.display = mode === 'register' ? 'flex' : 'none';
+        loginForm.querySelector('.primary-btn').textContent = mode === 'register' ? 'Crear cuenta' : 'Entrar al Dashboard';
+      });
+    });
+
+    loginForm.addEventListener('submit', function (event) {
       event.preventDefault();
+      const mode = loginForm.dataset.mode || 'login';
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value.trim();
+      const username = usernameInput.value.trim();
 
       if (!email || !password) {
         alert('Completa correo y contraseña.');
         return;
       }
 
-      window.location.href = '/dashboard';
+      if (mode === 'register' && !username) {
+        alert('Necesitas un nombre de usuario para registrarte.');
+        return;
+      }
+
+      const endpoint = mode === 'register' ? '/api/register' : '/api/login';
+      const payload = mode === 'register'
+        ? { email, username, password }
+        : { email, password };
+
+      fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(async (response) => {
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(data.error || 'La operación falló.');
+        }
+        window.location.href = '/dashboard';
+      })
+      .catch((error) => {
+        alert(error.message || 'No se pudo completar la acción.');
+      });
     });
   </script>
 </body>
