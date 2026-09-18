@@ -17,7 +17,7 @@ services:
       - key: OPENROUTER_API_KEY
         sync: false
       - key: OPENROUTER_MODEL
-        value: google/gemini-flash-1.5
+        value: openrouter/free
       - key: OPENROUTER_URL
         value: https://openrouter.ai/api/v1/chat/completions
       - key: APP_URL
@@ -26,5 +26,11 @@ services:
         value: "35"
       - key: OPENROUTER_MAX_TOKENS
         value: "1500"
+      - key: BOT_AUTOSTART
+        value: "1"
+      - key: BOT_INTERVAL_SECONDS
+        value: "21600"
+      - key: BOT_TRENDS_URL
+        value: https://trends.google.com/trending/rss?geo=US
       - key: LOG_LEVEL
         value: "INFO"
