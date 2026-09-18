@@ -18,7 +18,7 @@ def inicializar_base_datos():
         conexion = sqlite3.connect(DB_NAME)
         cursor = conexion.cursor()
         
-        # Tabla de interacciones del chat (ya la tenías)
+        # Tabla de interacciones del chat
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS interacciones (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -398,7 +398,7 @@ def api_generate():
 
 
 # ==========================================
-# NUEVAS RUTAS PARA BOTS, FOROS E HISTORIAS
+# RUTAS PARA BOTS, FOROS E HISTORIAS
 # ==========================================
 
 @app.route("/api/bot/generar-feed", methods=["POST"])
