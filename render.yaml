@@ -27,10 +27,12 @@ services:
       - key: OPENROUTER_MAX_TOKENS
         value: "1500"
       - key: BOT_AUTOSTART
-        value: "1"
+        value: "0"
       - key: BOT_INTERVAL_SECONDS
         value: "21600"
       - key: BOT_TRENDS_URL
         value: https://trends.google.com/trending/rss?geo=US
+      - key: BOT_CRON_SECRET
+        sync: false
       - key: LOG_LEVEL
         value: "INFO"
