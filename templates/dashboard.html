@@ -817,10 +817,19 @@
           throw new Error(data.error || 'No se pudo responder.');
         }
 
-        const ai = document.createElement('div');
-        ai.className = 'chat-message';
-        ai.textContent = 'IA: ' + (data.response || data.reply || 'Sin respuesta.');
-        box.appendChild(ai);
+        if (Array.isArray(data.images) && data.images.length) {
+          data.images.forEach(image => {
+            const ai = document.createElement('div');
+            ai.className = 'chat-message';
+            ai.innerHTML = `<strong>IA:</strong><br><img class="post-attachment" src="${image.url}" alt="Imagen generada por OpenRouter" loading="lazy">`;
+            box.appendChild(ai);
+          });
+        } else {
+          const ai = document.createElement('div');
+          ai.className = 'chat-message';
+          ai.textContent = 'IA: ' + (data.response || data.reply || 'Sin respuesta.');
+          box.appendChild(ai);
+        }
       } catch (error) {
         const ai = document.createElement('div');
         ai.className = 'chat-message';
@@ -1060,4 +1069,3 @@
   </script>
 </body>
 </html>
-
