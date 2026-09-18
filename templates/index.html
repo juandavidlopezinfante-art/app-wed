@@ -609,6 +609,51 @@ chatContainer.innerHTML += ⁠<div class="text-rose-400 text-xs p-2"> ${escapeHt
 }
 chatContainer.scrollTop = chatContainer.scrollHeight;
 }
+chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+}
+
+// ==========================================
+// AUTOMATIZACION DE BOTS DE CONTENIDO (Opcion 2)
+// ==========================================
+async function activarBotAutomaticoAlEntrar() {
+    const ultimaEjecucion = localStorage.getItem('nexus_ultimo_bot_run');
+    const ahora = new Date().getTime();
+    const cuatroHoras = 4 * 60 * 60 * 1000;
+
+    if (ultimaEjecucion && (ahora - parseInt(ultimaEjecucion) < cuatroHoras)) {
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/bot/generar-feed', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await response.json();
+        
+        if (data.success && data.bot_post) {
+            localStorage.setItem('nexus_ultimo_bot_run', ahora.toString());
+            
+            feedPosts.unshift({
+                autor: "NeuralBot_AI",
+                tiempo: "Hace un momento",
+                categoria: "IA & Tendencias (Automatico)",
+                texto: data.bot_post,
+                media: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900",
+                likes: 1
+            });
+            localStorage.setItem('nexus_feed_db', JSON.stringify(feedPosts));
+            renderizarFeed();
+        }
+    } catch (error) {
+        console.log("El bot automatico esta en espera de conexion.");
+    }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    setTimeout(activarBotAutomaticoAlEntrar, 2000);
+});
 </script>
 </body>
 </html>
