@@ -71,17 +71,17 @@ Crear Cuenta & Activar Perfil
 <!-- ========================================== -->
 <!-- 2. MENÚ LATERAL RETRÁCTIL (SIDEBAR) FIJO   -->
 <!-- ========================================== -->
-<aside id="sidebar" class="w-72 min-w-[18rem] bg-slate-900 border-r border-slate-800 flex flex-col transition-all duration-300 z-30 shadow-2xl flex-shrink-0">
+<aside id="sidebar" class="w-72 bg-slate-900 border-r border-slate-800 flex flex-col transition-all duration-300 z-30 shadow-2xl flex-shrink-0 overflow-hidden">
 <div class="p-4 border-b border-slate-800 flex items-center justify-between">
-<span class="font-extrabold text-base bg-gradient-to-r from-purple-400 via-pink-500 to-amber-400 bg-clip-text text-transparent truncate">Nexus AI Pro</span>
-<button onclick="toggleSidebar()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-bars text-lg"></i></button>
+<span class="font-extrabold text-base bg-gradient-to-r from-purple-400 via-pink-500 to-amber-400 bg-clip-text text-transparent truncate sidebar-text">Nexus AI Pro</span>
+<button onclick="toggleSidebar()" class="text-slate-400 hover:text-white transition mx-auto md:mx-0"><i class="fa-solid fa-bars text-lg"></i></button>
 </div>
 <div class="p-3">
 <button onclick="iniciarNuevoChat()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white py-3 px-3 rounded-xl font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-purple-900/50">
-<i class="fa-solid fa-plus text-lg"></i> <span class="text-xs">Nuevo Chat / Sesión</span>
+<i class="fa-solid fa-plus text-lg flex-shrink-0"></i> <span class="text-xs sidebar-text truncate">Nuevo Chat / Sesión</span>
 </button>
 </div>
-<div class="px-3 pb-2">
+<div class="px-3 pb-2 sidebar-text">
 <div class="relative">
 <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-[10px]"></i>
 <input type="text" id="searchChatsInput" onkeyup="buscarEnChats()" placeholder="Buscar en los chats..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-2 text-[11px] text-slate-200 outline-none">
@@ -89,37 +89,37 @@ Crear Cuenta & Activar Perfil
 </div>
 <nav class="flex-1 overflow-y-auto px-3 space-y-1.5 text-xs scrollbar-hide">
 <button onclick="mostrarSeccion('feed')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
-<i class="fa-solid fa-newspaper text-purple-400 text-sm"></i> Feed Viral Global
+<i class="fa-solid fa-newspaper text-purple-400 text-sm flex-shrink-0"></i> <span class="sidebar-text truncate">Feed Viral Global</span>
 </button>
 <button onclick="mostrarSeccion('reels')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
-<i class="fa-solid fa-clapperboard text-pink-400 text-sm"></i> Reels Demostración IA
+<i class="fa-solid fa-clapperboard text-pink-400 text-sm flex-shrink-0"></i> <span class="sidebar-text truncate">Reels Demostración IA</span>
 </button>
 <button onclick="mostrarSeccion('herramientas')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
-<i class="fa-solid fa-wand-magic-sparkles text-amber-400 text-sm"></i> Herramientas Pro (Word, Excel)
+<i class="fa-solid fa-wand-magic-sparkles text-amber-400 text-sm flex-shrink-0"></i> <span class="sidebar-text truncate">Herramientas Pro (Word, Excel)</span>
 </button>
 <button onclick="mostrarSeccion('suscripciones')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
-<i class="fa-solid fa-crown text-amber-400 text-sm"></i> Foros, Suscripciones & 15%
+<i class="fa-solid fa-crown text-amber-400 text-sm flex-shrink-0"></i> <span class="sidebar-text truncate">Foros, Suscripciones & 15%</span>
 </button>
 <button onclick="mostrarSeccion('adultos')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-rose-300 hover:bg-rose-950/40 transition font-medium text-left border border-rose-500/20">
-<i class="fa-solid fa-triangle-exclamation text-rose-500 text-sm"></i> Contenido 18+ (VIP)
+<i class="fa-solid fa-triangle-exclamation text-rose-500 text-sm flex-shrink-0"></i> <span class="sidebar-text truncate">Contenido 18+ (VIP)</span>
 </button>
 <button onclick="mostrarSeccion('manual')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
-<i class="fa-solid fa-book-open-reader text-cyan-400 text-sm"></i> Manual de Uso Detallado
+<i class="fa-solid fa-book-open-reader text-cyan-400 text-sm flex-shrink-0"></i> <span class="sidebar-text truncate">Manual de Uso Detallado</span>
 </button>
 <button onclick="mostrarAyudaTecnica()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
-<i class="fa-solid fa-headset text-amber-400 text-sm"></i> Ayuda Técnica con IA
+<i class="fa-solid fa-headset text-amber-400 text-sm flex-shrink-0"></i> <span class="sidebar-text truncate">Ayuda Técnica con IA</span>
 </button>
 <button onclick="abrirBuzonSugerencias()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
-<i class="fa-solid fa-envelope-open-text text-emerald-400 text-sm"></i> Buzón de Sugerencias
+<i class="fa-solid fa-envelope-open-text text-emerald-400 text-sm flex-shrink-0"></i> <span class="sidebar-text truncate">Buzón de Sugerencias</span>
 </button>
 <button onclick="compartirPlataforma()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
-<i class="fa-solid fa-share-nodes text-green-400 text-sm"></i> Compartir Plataforma
+<i class="fa-solid fa-share-nodes text-green-400 text-sm flex-shrink-0"></i> <span class="sidebar-text truncate">Compartir Plataforma</span>
 </button>
 <button onclick="informarProblemaCorreo()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
-<i class="fa-solid fa-bug text-rose-400 text-sm"></i> Informar un Problema (Correo)
+<i class="fa-solid fa-bug text-rose-400 text-sm flex-shrink-0"></i> <span class="sidebar-text truncate">Informar un Problema (Correo)</span>
 </button>
 <button onclick="borrarHistorialTotal()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-rose-400 hover:bg-rose-950/30 transition font-medium text-left">
-<i class="fa-solid fa-trash text-rose-500 text-sm"></i> Borrar Todo el Historial
+<i class="fa-solid fa-trash text-rose-500 text-sm flex-shrink-0"></i> <span class="sidebar-text truncate">Borrar Todo el Historial</span>
 </button>
 </nav>
 </aside>
@@ -530,11 +530,28 @@ ind.innerText = `📎 Archivo listo: ${input.files[0].name}`;
 ind.classList.remove('hidden');
 }
 }
+
+// ==========================================
+// CONTROL RETRÁCTIL DEL MENÚ LATERAL (SIDEBAR)
+// ==========================================
 function toggleSidebar() {
-const s = document.getElementById('sidebar');
-s.classList.toggle('w-72');
-s.classList.toggle('w-20');
+    const s = document.getElementById('sidebar');
+    const elements = s.querySelectorAll('.sidebar-text');
+    
+    // Alterna el ancho entre w-72 (expandido) y w-20 (contraído)
+    if (s.classList.contains('w-72')) {
+        s.classList.remove('w-72');
+        s.classList.add('w-20');
+        // Oculta los textos suavemente
+        elements.forEach(el => el.style.display = 'none');
+    } else {
+        s.classList.remove('w-20');
+        s.classList.add('w-72');
+        // Muestra los textos de nuevo
+        elements.forEach(el => el.style.display = '');
+    }
 }
+
 function abrirChatIA() { document.getElementById('chatModal').classList.remove('translate-x-full'); }
 function cerrarChatIA() { document.getElementById('chatModal').classList.add('translate-x-full'); }
 function mostrarSeccion(sec) {
@@ -547,11 +564,11 @@ if(target) target.classList.remove('hidden');
 }
 function escapeHtml(value) {
 return String(value ?? '').replace(/[&<>"']/g, (character) => ({
-'&': '&',
-'<': '<',
-'>': '>',
-'"': '"',
-"'": "'"
+'&': '&amp;',
+'<': '&lt;',
+'>': '&gt;',
+'"': '&quot;',
+"'": '&#039;'
 }[character]));
 }
 async function readApiResponse(response) {
@@ -611,7 +628,7 @@ chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
 // ==========================================
-// AUTOMATIZACION DE BOTS DE CONTENIDO (Opcion 2)
+// AUTOMATIZACION DE BOTS DE CONTENIDO
 // ==========================================
 async function activarBotAutomaticoAlEntrar() {
     const ultimaEjecucion = localStorage.getItem('nexus_ultimo_bot_run');
