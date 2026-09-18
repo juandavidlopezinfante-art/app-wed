@@ -236,6 +236,11 @@
       font-size: 0.8rem;
     }
 
+    .upload-chip { color: var(--green); cursor: pointer; font-weight: 700; }
+    .upload-chip:hover { color: #86efac; }
+    .post-attachment { width: 100%; max-height: 520px; border-radius: 14px; border: 1px solid var(--line); background: #050812; object-fit: contain; }
+    .post-file { display: inline-flex; align-items: center; gap: 8px; color: var(--green); border: 1px solid var(--line); border-radius: 12px; padding: 11px 13px; text-decoration: none; background: rgba(255,255,255,.03); }
+
     .primary {
       background: linear-gradient(135deg, var(--green), #34d399);
       color: #08130d;
@@ -418,6 +423,11 @@
     .channel-card { padding: 0; }
     .channel-card.adult { border-color: rgba(239,68,68,.55); }
     .channel-price { color: var(--green); font-weight: 800; }
+    .channel-cover { height: 72px; background: linear-gradient(135deg, rgba(34,197,94,.32), rgba(59,130,246,.28)); }
+    .channel-info { position: relative; padding-top: 34px; }
+    .channel-avatar { position: absolute; top: -30px; left: 14px; width: 60px; height: 60px; border-radius: 50%; border: 3px solid var(--panel); background: linear-gradient(135deg, var(--green), var(--blue)); object-fit: cover; display: grid; place-items: center; color: #06110d; font-weight: 900; font-size: 1.25rem; }
+    .channel-headline { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .channel-description { min-height: 42px; }
 
     .chat-fab {
       position: fixed;
@@ -497,6 +507,17 @@
     .toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); z-index:50; background:var(--panel-2); border:1px solid var(--line); border-radius:999px; padding:10px 16px; box-shadow:var(--shadow); }
     .toast[hidden] { display:none; }
 
+    .app-view[hidden] { display: none; }
+    .sidebar-toggle { position: fixed; top: 16px; left: 16px; z-index: 30; width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); color: var(--text); cursor: pointer; }
+    .app-shell.sidebar-collapsed { grid-template-columns: 0 1fr 320px; }
+    .app-shell.sidebar-collapsed .sidebar { width: 0; overflow: hidden; border: 0; }
+    .quick-nav { display:flex; gap:8px; flex-wrap:wrap; padding:4px 0 2px; }
+    .quick-nav .pill { font-size:.75rem; padding:6px 10px; }
+    .video-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; }
+    .video-card { background:rgba(18,26,45,.9); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+    .video-card video { width:100%; aspect-ratio:16/9; display:block; background:#050812; }
+    .video-info { padding:12px; }
+
     @media (max-width: 1100px) {
       .app-shell {
         grid-template-columns: 220px 1fr;
@@ -514,6 +535,7 @@
 </head>
 <body>
   <div class="app-shell">
+    <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Abrir o cerrar menú">☰</button>
     <aside class="sidebar">
       <div class="sidebar-inner">
         <div class="brand">
@@ -522,13 +544,14 @@
         </div>
 
         <div class="nav-group">
-          <button class="nav-item active">🏠 Inicio</button>
+          <button class="nav-item active" data-view="feedView">🏠 Inicio</button>
           <button class="nav-item">🔎 Explorar</button>
           <button class="nav-item">📷 Stories</button>
-          <button class="nav-item" data-scroll="reelsSection">🎬 Reels</button>
+          <button class="nav-item" data-view="reelsSection">🎬 Reels</button>
           <button class="nav-item">💬 Mensajes</button>
-          <button class="nav-item" data-scroll="channelsSection">📢 Canales</button>
-          <button class="nav-item" data-scroll="adultSection">🔞 Zona +18</button>
+          <button class="nav-item" data-view="publicChannelsSection">📢 Canales públicos</button>
+          <button class="nav-item" data-view="privateChannelsSection">🔒 Canales privados</button>
+          <button class="nav-item" data-view="adultChannelsSection">🔞 Zona +18</button>
           <button class="nav-item">⚙️ Configuración</button>
           <button class="nav-item" onclick="window.location.href='/logout'">🚪 Cerrar sesión</button>
         </div>
@@ -544,6 +567,16 @@
         </div>
       </div>
 
+      <nav class="quick-nav" aria-label="Secciones principales">
+        <button class="pill" data-view="feedView">Inicio</button>
+        <button class="pill" data-view="reelsSection">Reels</button>
+        <button class="pill" data-view="videosSection">Videos</button>
+        <button class="pill" data-view="publicChannelsSection">Canal público</button>
+        <button class="pill" data-view="privateChannelsSection">Canal privado</button>
+        <button class="pill" data-view="adultChannelsSection">Canal privado +18</button>
+      </nav>
+
+      <section id="feedView" class="app-view" style="display:block">
       <section class="story-row">
         <div class="story-card">
           <div class="story-avatar">A</div>
@@ -566,21 +599,22 @@
       <section class="composer">
         <div class="composer-row">
           <div class="avatar">U</div>
-          <textarea id="postText" placeholder="¿Qué estás pensando hoy?"></textarea>
+          <textarea id="postText" placeholder="¿Qué estás pensando hoy? Comparte texto, fotos, videos o archivos..."></textarea>
         </div>
         <div class="composer-actions">
           <div class="tiny-actions">
-            <span>📷 Foto</span>
-            <span>🎥 Video</span>
-            <span>🙂 Sentimiento</span>
+            <label class="upload-chip" for="feedFileInput">📎 Adjuntar archivo</label>
+            <input id="feedFileInput" type="file" hidden accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv">
+            <span id="feedFileName">Texto, fotos, videos o documentos</span>
           </div>
           <button class="primary" id="publishBtn">Publicar</button>
         </div>
       </section>
 
       <section id="feed" class="feed"></section>
+      </section>
 
-      <section id="reelsSection" class="section-panel">
+      <section id="reelsSection" class="section-panel app-view" hidden>
         <div class="section-heading">
           <div><h3>Reels</h3><p>Videos cortos y largos compartidos por la comunidad.</p></div>
           <div style="display:flex;gap:8px"><button class="pill" id="refreshReelsBtn">Actualizar</button><button class="pill" id="toggleReelFormBtn">Crear reel</button></div>
@@ -589,21 +623,32 @@
         <div id="reelsGrid" class="reel-grid"></div>
       </section>
 
-      <section id="channelsSection" class="section-panel">
-        <div class="section-heading">
-          <div><h3>Canales</h3><p>Espacios públicos y privados con precio mensual definido por sus creadores.</p></div>
-          <div style="display:flex;gap:8px"><button class="pill" id="refreshChannelsBtn">Actualizar</button><button class="pill" id="toggleChannelFormBtn">Crear canal</button></div>
-        </div>
-        <form id="channelForm" class="composer" hidden style="margin-bottom:14px"><input id="channelName" placeholder="Nombre del canal" required><input id="channelDescription" placeholder="Descripción"><label><input id="channelPrivate" type="checkbox"> Canal privado de pago</label><label><input id="channelAdult" type="checkbox"> Canal +18 privado (18% comisión)</label><input id="channelPrice" type="number" min="0" step="0.01" placeholder="Precio mensual"><button class="primary" type="submit">Crear canal</button></form>
-        <div id="channelsGrid" class="channel-grid"></div>
+      <section id="videosSection" class="section-panel app-view" hidden>
+        <div class="section-heading"><div><h3>Videos</h3><p>Videos largos y cortos compartidos en el feed.</p></div><button class="pill" id="refreshVideosBtn">Actualizar</button></div>
+        <div id="videosGrid" class="video-grid"></div>
       </section>
 
-      <section id="adultSection" class="section-panel">
+      <section id="publicChannelsSection" class="section-panel app-view" hidden>
         <div class="section-heading">
-          <div><h3>Zona +18</h3><p>Área restringida para adultos confirmados. El acceso no publica contenido automáticamente.</p></div>
+          <div><h3>Canales públicos</h3><p>Publicaciones abiertas de canales públicos.</p></div>
+          <div style="display:flex;gap:8px"><button class="pill" id="refreshChannelsBtn">Actualizar</button><button class="pill" id="toggleChannelFormBtn">Crear canal</button></div>
+        </div>
+        <form id="channelForm" class="composer" hidden style="margin-bottom:14px"><input id="channelName" placeholder="Nombre del canal" required><input id="channelAvatar" type="url" placeholder="URL de foto de perfil del canal"><input id="channelDescription" placeholder="Descripción pública del canal"><label><input id="channelPrivate" type="checkbox"> Canal privado de pago</label><label><input id="channelAdult" type="checkbox"> Canal +18 privado (18% comisión)</label><input id="channelPrice" type="number" min="0" step="0.01" placeholder="Precio mensual (0 = gratuito)"><button class="primary" type="submit">Crear canal</button></form>
+        <div id="publicChannelsGrid" class="channel-grid"></div>
+      </section>
+
+      <section id="privateChannelsSection" class="section-panel app-view" hidden>
+        <div class="section-heading"><div><h3>Canales privados</h3><p>Solo ves publicaciones después de suscribirte al canal.</p></div><button class="pill" id="refreshPrivateChannelsBtn">Actualizar</button></div>
+        <div id="privateChannelsGrid" class="channel-grid"></div><div id="privatePosts" class="feed"></div>
+      </section>
+
+      <section id="adultChannelsSection" class="section-panel app-view" hidden>
+        <div class="section-heading">
+          <div><h3>Canales privados +18</h3><p>Solo ves publicaciones después de confirmar edad y suscribirte.</p></div>
           <button class="pill" id="adultAccessBtn">Verificar edad</button>
         </div>
-        <div id="adultStatus" class="post-body">Confirma tu mayoría de edad para habilitar canales marcados como +18.</div>
+        <div id="adultStatus" class="post-body">La confirmación de edad solo se solicita al entrar aquí.</div>
+        <div id="adultChannelsGrid" class="channel-grid"></div><div id="adultPosts" class="feed"></div>
       </section>
     </main>
 
@@ -688,6 +733,7 @@
               <span class="pill">${post.is_bot ? 'Bot IA' : 'Publicación'}</span>
             </div>
             <div class="post-body">${(post.content || 'Sin contenido').replace(/\n/g, '<br>')}</div>
+            ${renderPostAttachment(post.media_url)}
             <div class="post-actions">
               <button class="action-chip" type="button">💜 Me gusta</button>
               <button class="action-chip" type="button">💬 Comentar</button>
@@ -700,18 +746,37 @@
       }
     }
 
+    function renderPostAttachment(mediaUrl) {
+      if (!mediaUrl) return '';
+      const safeUrl = String(mediaUrl).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+      const extension = safeUrl.split('?')[0].split('.').pop().toLowerCase();
+      if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension)) {
+        return `<img class="post-attachment" src="${safeUrl}" alt="Archivo adjunto de la publicación" loading="lazy">`;
+      }
+      if (['mp4', 'webm', 'mov'].includes(extension)) {
+        return `<video class="post-attachment" controls preload="metadata" src="${safeUrl}"></video>`;
+      }
+      if (['mp3', 'wav', 'm4a', 'ogg'].includes(extension)) {
+        return `<audio class="post-attachment" controls src="${safeUrl}"></audio>`;
+      }
+      return `<a class="post-file" href="${safeUrl}" target="_blank" rel="noopener">📎 Abrir archivo adjunto</a>`;
+    }
+
     async function publishPost() {
       const text = document.getElementById('postText').value.trim();
-      if (!text) {
-        alert('Escribe algo para publicar.');
+      const fileInput = document.getElementById('feedFileInput');
+      if (!text && !fileInput.files.length) {
+        alert('Escribe algo o adjunta un archivo para publicar.');
         return;
       }
 
       try {
+        const formData = new FormData();
+        formData.append('content', text);
+        if (fileInput.files.length) formData.append('file', fileInput.files[0]);
         const response = await fetch('/api/posts/create', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ content: text })
+          body: formData
         });
 
         const data = await response.json();
@@ -720,6 +785,8 @@
         }
 
         document.getElementById('postText').value = '';
+        fileInput.value = '';
+        document.getElementById('feedFileName').textContent = 'Texto, fotos, videos o documentos';
         await loadFeed();
       } catch (error) {
         alert(error.message || 'No se pudo publicar.');
@@ -856,17 +923,41 @@
     }
 
     async function loadChannels() {
-      const grid = document.getElementById('channelsGrid');
-      const response = await fetch('/api/channels');
+      const grid = document.getElementById('publicChannelsGrid');
+      const response = await fetch('/api/channels?type=public');
       const data = await response.json();
       if (!response.ok || !data.success) { grid.innerHTML = '<p class="meta">No se pudieron cargar los canales.</p>'; return; }
+      grid.innerHTML = data.channels.length ? data.channels.map(channel => channelCard(channel, 'Público', '<span class="meta">Acceso libre</span>')).join('') : '<p class="meta">No hay canales públicos todavía.</p>';
+    }
+
+    async function loadChannelView(type, gridId, postsId) {
+      const grid = document.getElementById(gridId);
+      const response = await fetch(`/api/channels?type=${type}`);
+      const data = await response.json();
+      if (!response.ok || !data.success) { grid.innerHTML = `<p class="meta">${data.error || 'No se pudieron cargar los canales.'}</p>`; return; }
       grid.innerHTML = data.channels.length ? data.channels.map(channel => {
-        const restricted = channel.is_adult ? 'adult' : '';
-        const label = channel.is_adult ? '+18' : (channel.is_private ? 'Privado' : 'Público');
-        const button = channel.monthly_price > 0 ? `<button class="primary subscribe-btn" data-channel-id="${channel.id}">Suscribirme</button>` : '<span class="meta">Acceso público</span>';
-        return `<article class="channel-card ${restricted}"><div class="channel-info"><strong>${channel.name}</strong><span class="pill">${label}</span><p>${channel.description || 'Canal de la comunidad'}<br><span class="meta">Creado por @${channel.creator_name}</span></p><div class="channel-price">${channel.monthly_price > 0 ? '$' + Number(channel.monthly_price).toFixed(2) + ' / mes' : 'Gratis'}</div><div style="margin-top:12px">${button}</div></div></article>`;
-      }).join('') : '<p class="meta">No hay canales todavía.</p>';
-      document.querySelectorAll('.subscribe-btn').forEach(button => button.addEventListener('click', subscribeChannel));
+        const button = channel.locked ? `<button class="primary subscribe-btn" data-channel-id="${channel.id}">Suscribirme</button>` : '<span class="meta">Suscripción activa</span>';
+        return channelCard(channel, type === 'adult' ? '+18' : 'Privado', button, type === 'adult');
+      }).join('') : '<p class="meta">No hay canales disponibles.</p>';
+      grid.querySelectorAll('.subscribe-btn').forEach(button => button.addEventListener('click', subscribeChannel));
+      const postsResponse = await fetch(`/api/channel-posts?type=${type}`);
+      const postsData = await postsResponse.json();
+      const posts = document.getElementById(postsId);
+      posts.innerHTML = postsData.success && postsData.posts.length ? postsData.posts.map(post => `<article class="post"><strong>${post.channel_name}</strong><div class="post-body">${(post.content || '').replace(/\n/g, '<br>')}</div>${renderPostAttachment(post.media_url)}</article>`).join('') : '<div class="post"><div class="post-body">Suscríbete a un canal para ver sus publicaciones.</div></div>';
+    }
+
+    async function loadVideos() {
+      const grid = document.getElementById('videosGrid');
+      const response = await fetch('/api/videos');
+      const data = await response.json();
+      grid.innerHTML = data.success && data.videos.length ? data.videos.map(video => `<article class="video-card"><video controls preload="metadata" src="${video.media_url}"></video><div class="video-info"><strong>${video.author}</strong><p class="meta">${video.content || 'Video compartido'}</p></div></article>`).join('') : '<p class="meta">Aún no hay videos compartidos.</p>';
+    }
+
+    function channelCard(channel, label, action, adult = false) {
+      const initial = (channel.name || 'C').charAt(0).toUpperCase();
+      const avatar = channel.avatar_url ? `<img class="channel-avatar" src="${channel.avatar_url}" alt="Foto de perfil de ${channel.name}" loading="lazy">` : `<div class="channel-avatar" aria-label="Avatar de ${channel.name}">${initial}</div>`;
+      const price = Number(channel.monthly_price || 0) > 0 ? '$' + Number(channel.monthly_price).toFixed(2) + ' / mes' : 'Gratis';
+      return `<article class="channel-card ${adult ? 'adult' : ''}"><div class="channel-cover"></div><div class="channel-info">${avatar}<div class="channel-headline"><strong>${channel.name}</strong><span class="pill">${label}</span></div><p class="channel-description">${channel.description || 'Canal de la comunidad'}</p><span class="meta">Creado por @${channel.creator_name}</span><div class="channel-price">${price}</div><div style="margin-top:12px">${action}</div></div></article>`;
     }
 
     async function subscribeChannel(event) {
@@ -904,7 +995,7 @@
     });
     document.getElementById('channelForm').addEventListener('submit', async (event) => {
       event.preventDefault();
-      const response = await fetch('/api/channels/create', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({name: document.getElementById('channelName').value.trim(), description: document.getElementById('channelDescription').value.trim(), is_private: document.getElementById('channelPrivate').checked, is_adult: document.getElementById('channelAdult').checked, monthly_price: Number(document.getElementById('channelPrice').value || 0)}) });
+      const response = await fetch('/api/channels/create', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({name: document.getElementById('channelName').value.trim(), avatar_url: document.getElementById('channelAvatar').value.trim(), description: document.getElementById('channelDescription').value.trim(), is_private: document.getElementById('channelPrivate').checked, is_adult: document.getElementById('channelAdult').checked, monthly_price: Number(document.getElementById('channelPrice').value || 0)}) });
       const data = await response.json();
       if (!response.ok || !data.success) { if (data.requiresAgeConfirmation) openAgeModal(); showToast(data.error || 'No se pudo crear el canal.'); return; }
       event.target.reset(); event.target.hidden = true; showToast('Canal creado.'); loadChannels();
@@ -918,12 +1009,32 @@
       if (!response.ok || !data.success) { showToast(data.error || 'No se pudo confirmar la edad.'); return; }
       document.getElementById('ageModal').hidden = true;
       document.getElementById('adultStatus').textContent = 'Acceso +18 confirmado para esta sesión.';
+      loadChannelView('adult', 'adultChannelsGrid', 'adultPosts');
       showToast('Acceso +18 habilitado.');
     });
     document.getElementById('adultAccessBtn').addEventListener('click', openAgeModal);
-    document.querySelectorAll('[data-scroll]').forEach(button => button.addEventListener('click', () => document.getElementById(button.dataset.scroll).scrollIntoView({behavior:'smooth'})));
+    async function showView(viewId) {
+      document.querySelectorAll('.app-view').forEach(view => { view.hidden = view.id !== viewId; });
+      document.querySelectorAll('[data-view]').forEach(button => button.classList.toggle('active', button.dataset.view === viewId));
+      if (viewId === 'videosSection') await loadVideos();
+      if (viewId === 'publicChannelsSection') await loadChannels();
+      if (viewId === 'privateChannelsSection') await loadChannelView('private', 'privateChannelsGrid', 'privatePosts');
+      if (viewId === 'adultChannelsSection') {
+        const age = await fetch('/api/age/status').then(response => response.json()).catch(() => null);
+        if (age && age.confirmed) await loadChannelView('adult', 'adultChannelsGrid', 'adultPosts');
+        else openAgeModal();
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => showView(button.dataset.view)));
+    document.getElementById('sidebarToggle').addEventListener('click', () => document.querySelector('.app-shell').classList.toggle('sidebar-collapsed'));
+    document.getElementById('feedFileInput').addEventListener('change', event => {
+      document.getElementById('feedFileName').textContent = event.target.files[0]?.name || 'Texto, fotos, videos o documentos';
+    });
     document.getElementById('refreshReelsBtn').addEventListener('click', loadReels);
     document.getElementById('refreshChannelsBtn').addEventListener('click', loadChannels);
+    document.getElementById('refreshVideosBtn').addEventListener('click', loadVideos);
+    document.getElementById('refreshPrivateChannelsBtn').addEventListener('click', () => loadChannelView('private', 'privateChannelsGrid', 'privatePosts'));
     function openChatWidget() {
       const widget = document.getElementById('chatWidget');
       widget.hidden = false;
@@ -939,9 +1050,6 @@
 
     (async function initializeDashboard() {
       await Promise.all([loadReels(), loadChannels(), loadChatHistory()]);
-      const age = await fetch('/api/age/status').then(response => response.json()).catch(() => null);
-      if (age && age.confirmed) document.getElementById('adultStatus').textContent = 'Acceso +18 confirmado para esta sesión.';
-      else openAgeModal();
     }());
 
     document.getElementById('publishBtn').addEventListener('click', publishPost);
@@ -952,3 +1060,4 @@
   </script>
 </body>
 </html>
+
