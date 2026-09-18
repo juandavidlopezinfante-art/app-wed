@@ -27,7 +27,7 @@ OPENROUTER_URL = os.environ.get(
     "OPENROUTER_URL",
     "https://openrouter.ai/api/v1/chat/completions",
 )
-DEFAULT_MODEL = os.environ.get("OPENROUTER_MODEL", "google/gemini-flash-1.5")
+DEFAULT_MODEL = os.environ.get("OPENROUTER_MODEL", "openrouter/free")
 SYSTEM_PROMPT = (
     "Eres el núcleo de inteligencia artificial central de Nexus AI Pro Enterprise. "
     "Responde de forma profesional, estructurada, experta y útil "
@@ -67,6 +67,28 @@ def ensure_user_columns():
         conn.close()
 
 
+def ensure_interacciones_columns():
+    conn = get_db_connection()
+    try:
+        existing = {
+            row[1] for row in conn.execute("PRAGMA table_info(interacciones)").fetchall()
+        }
+        required = {
+            "request_id": "TEXT NOT NULL DEFAULT ''",
+            "tool_name": "TEXT NOT NULL DEFAULT 'Asistente General'",
+            "prompt": "TEXT NOT NULL DEFAULT ''",
+            "respuesta": "TEXT NOT NULL DEFAULT ''",
+        }
+        for column_name, column_def in required.items():
+            if column_name not in existing:
+                conn.execute(
+                    f"ALTER TABLE interacciones ADD COLUMN {column_name} {column_def}"
+                )
+        conn.commit()
+    finally:
+        conn.close()
+
+
 def init_db():
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -87,6 +109,7 @@ def init_db():
     )
     conn.commit()
     conn.close()
+    ensure_interacciones_columns()
 
     ensure_user_columns()
 
@@ -197,6 +220,7 @@ def init_db():
 
     conn.commit()
     conn.close()
+    ensure_interacciones_columns()
 
 
 init_db()
@@ -225,6 +249,17 @@ def error_response(message: str, status_code: int, request_id: str):
     )
 
 
+def generate_local_fallback_response(tool_name: str, prompt: str) -> str:
+    title = (tool_name or "Asistente General").strip() or "Asistente General"
+    summary = (prompt or "una idea de contenido").strip()[:200]
+    return (
+        f"Respuesta local activa para {title}.\n\n"
+        f"Solicitud: {summary}\n\n"
+        "Idea lista para usar: convierte cada idea en una acción clara, útil y constante "
+        "para construir comunidad y generar resultados. #IA #Contenido #Crecimiento"
+    )
+
+
 def get_prompt(data: dict[str, Any]) -> tuple[str | None, str | None]:
     prompt = data.get("prompt") or data.get("message") or ""
     if not isinstance(prompt, str):
@@ -238,8 +273,12 @@ def get_prompt(data: dict[str, Any]) -> tuple[str | None, str | None]:
 
 
 def call_openrouter(messages: list[dict[str, str]], request_id: str):
-    api_key = (os.environ.get("OPENROUTER_API_KEY") or "").strip()
-    if not api_key or api_key.lower() in {"tu_api_key_de_openrouter", "change_me", "placeholder"}:
+    api_key = (os.getenv("OPENROUTER_API_KEY") or "").strip()
+    if (
+        not api_key
+        or api_key.lower() in {"tu_api_key_de_openrouter", "change_me", "placeholder"}
+        or api_key.startswith("PEGA_AQUI_")
+    ):
         logger.error("OPENROUTER_API_KEY no configurada o placeholder. request_id=%s", request_id)
         return None, error_response(
             "El servicio de inteligencia artificial no está configurado en el servidor. Configura OPENROUTER_API_KEY en el archivo .env.",
@@ -359,16 +398,19 @@ def logout():
     session.pop("user_id", None)
     session.pop("user_email", None)
     session.pop("user_name", None)
+    session.pop("is_guest", None)
     return redirect(url_for("index"))
 
 
 @app.route("/health", methods=["GET"])
 def health():
+    api_key = (os.getenv("OPENROUTER_API_KEY") or "").strip()
+    provider_configured = bool(api_key) and not api_key.startswith("PEGA_AQUI_")
     return jsonify(
         {
             "status": "ok",
             "service": "Nexus AI Pro Enterprise",
-            "providerConfigured": bool(os.environ.get("OPENROUTER_API_KEY")),
+            "providerConfigured": provider_configured,
         }
     ), 200
 
@@ -431,6 +473,7 @@ def api_login():
     session["user_id"] = user["id"]
     session["user_email"] = user["email"] or user["username"]
     session["user_name"] = user["username"]
+    session.pop("is_guest", None)
 
     return jsonify(
         {
@@ -484,8 +527,24 @@ def api_register():
         session["user_id"] = user["id"]
         session["user_email"] = user["email"] or user["username"]
         session["user_name"] = user["username"]
+        session.pop("is_guest", None)
 
     return jsonify({"success": True, "message": "Usuario registrado correctamente."}), 201
+
+
+@app.route("/api/guest-login", methods=["POST"])
+def api_guest_login():
+    session["user_id"] = None
+    session["user_email"] = "guest@nexus.local"
+    session["user_name"] = "Invitado"
+    session["is_guest"] = True
+    return jsonify(
+        {
+            "success": True,
+            "message": "Acceso de invitado iniciado.",
+            "user": {"username": "Invitado", "guest": True},
+        }
+    ), 200
 
 
 @app.route("/api/chat", methods=["POST"])
@@ -504,7 +563,7 @@ def api_chat():
         request_id,
     )
     if provider_error:
-        return provider_error
+        content = generate_local_fallback_response("Chat General", prompt)
 
     guardar_interaccion(request_id, "Chat General", prompt, content)
     return jsonify({"success": True, "reply": content, "requestId": request_id}), 200
@@ -528,7 +587,7 @@ def api_generate():
         request_id,
     )
     if provider_error:
-        return provider_error
+        content = generate_local_fallback_response(tool_name, prompt)
 
     guardar_interaccion(request_id, tool_name, prompt, content)
     return jsonify({"success": True, "response": content, "requestId": request_id}), 200
@@ -551,7 +610,7 @@ def generar_feed_bot():
         request_id,
     )
     if provider_error:
-        return provider_error
+        content = generate_local_fallback_response("Bot Generador de Feed", prompt_bot)
 
     try:
         conn = get_db_connection()
