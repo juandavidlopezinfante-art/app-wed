@@ -122,6 +122,17 @@ def ensure_ai_chat_columns():
         conn.close()
 
 
+def ensure_channel_columns():
+    conn = get_db_connection()
+    try:
+        existing = {row[1] for row in conn.execute("PRAGMA table_info(channels)").fetchall()}
+        if "avatar_url" not in existing:
+            conn.execute("ALTER TABLE channels ADD COLUMN avatar_url TEXT")
+        conn.commit()
+    finally:
+        conn.close()
+
+
 def init_db():
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -201,6 +212,7 @@ def init_db():
                 creator_id INTEGER NOT NULL,
                 name TEXT NOT NULL,
                 description TEXT,
+                avatar_url TEXT,
                 is_private INTEGER DEFAULT 0,
                 is_adult INTEGER DEFAULT 0,
                 monthly_price REAL DEFAULT 0,
@@ -290,6 +302,16 @@ def init_db():
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """),
+        ("channel_posts", """
+            CREATE TABLE IF NOT EXISTS channel_posts (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                channel_id INTEGER NOT NULL,
+                author_id INTEGER,
+                content TEXT,
+                media_url TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """),
     ]
 
     for _, ddl in tables:
@@ -299,6 +321,7 @@ def init_db():
     conn.close()
     ensure_interacciones_columns()
     ensure_ai_chat_columns()
+    ensure_channel_columns()
 
 
 init_db()
@@ -978,14 +1001,85 @@ def api_stories():
 
 @app.route("/api/channels", methods=["GET"])
 def api_channels():
+    requested_type = request.args.get("type", "all")
     conn = get_db_connection()
-    channels = conn.execute(
+    base_query = (
         "SELECT channels.*, COALESCE(usuarios.username, 'Creador') AS creator_name "
-        "FROM channels LEFT JOIN usuarios ON usuarios.id = channels.creator_id "
-        "ORDER BY channels.created_at DESC LIMIT 50"
+        "FROM channels LEFT JOIN usuarios ON usuarios.id = channels.creator_id"
+    )
+    params = []
+    if requested_type == "public":
+        base_query += " WHERE channels.is_private = 0 AND channels.is_adult = 0"
+    elif requested_type == "private":
+        base_query += " WHERE channels.is_private = 1 AND channels.is_adult = 0"
+    elif requested_type == "adult":
+        base_query += " WHERE channels.is_adult = 1"
+    base_query += " ORDER BY channels.created_at DESC LIMIT 50"
+    channels = conn.execute(base_query, params).fetchall()
+    visible = []
+    user_id = session.get("user_id")
+    guest_token = session.get("guest_token")
+    for channel in channels:
+        subscribed = conn.execute(
+            "SELECT 1 FROM channel_subscriptions WHERE channel_id = ? "
+            "AND ((subscriber_id IS NOT NULL AND subscriber_id = ?) OR "
+            "(guest_token IS NOT NULL AND guest_token = ?)) LIMIT 1",
+            (channel["id"], user_id, guest_token),
+        ).fetchone()
+        item = dict(channel)
+        item["subscribed"] = subscribed is not None
+        if requested_type in {"private", "adult"} and not item["subscribed"]:
+            item["locked"] = True
+        visible.append(item)
+    conn.close()
+    return jsonify({"success": True, "channels": visible, "type": requested_type}), 200
+
+
+@app.route("/api/videos", methods=["GET"])
+def api_videos():
+    conn = get_db_connection()
+    videos = conn.execute(
+        "SELECT id, author, content, media_url, created_at FROM posts "
+        "WHERE lower(media_url) LIKE '%.mp4' OR lower(media_url) LIKE '%.webm' "
+        "OR lower(media_url) LIKE '%.mov' ORDER BY created_at DESC LIMIT 50"
     ).fetchall()
     conn.close()
-    return jsonify({"success": True, "channels": [dict(item) for item in channels]}), 200
+    return jsonify({"success": True, "videos": [dict(item) for item in videos]}), 200
+
+
+@app.route("/api/channel-posts", methods=["GET"])
+def api_channel_posts():
+    requested_type = request.args.get("type", "public")
+    if requested_type == "adult":
+        age_error = require_adult_access()
+        if age_error:
+            return age_error
+    conn = get_db_connection()
+    conditions = ["channels.is_private = 0", "channels.is_adult = 0"]
+    if requested_type == "private":
+        conditions = ["channels.is_private = 1", "channels.is_adult = 0"]
+    elif requested_type == "adult":
+        conditions = ["channels.is_adult = 1"]
+    user_id = session.get("user_id")
+    guest_token = session.get("guest_token")
+    query = (
+        "SELECT channel_posts.*, channels.name AS channel_name FROM channel_posts "
+        "JOIN channels ON channels.id = channel_posts.channel_id "
+        f"WHERE {' AND '.join(conditions)}"
+    )
+    params = []
+    if requested_type in {"private", "adult"}:
+        query += (
+            " AND EXISTS (SELECT 1 FROM channel_subscriptions "
+            "WHERE channel_subscriptions.channel_id = channels.id AND "
+            "((subscriber_id IS NOT NULL AND subscriber_id = ?) OR "
+            "(guest_token IS NOT NULL AND guest_token = ?)))"
+        )
+        params.extend([user_id, guest_token])
+    query += " ORDER BY channel_posts.created_at DESC LIMIT 100"
+    rows = conn.execute(query, params).fetchall()
+    conn.close()
+    return jsonify({"success": True, "posts": [dict(row) for row in rows]}), 200
 
 
 def require_adult_access():
@@ -1010,9 +1104,28 @@ def api_posts_create():
     if login_error:
         return login_error
 
-    data = request.get_json(silent=True) or {}
-    content = (data.get("content") or data.get("text") or "").strip()
-    media_url = (data.get("media_url") or "").strip()
+    if request.files:
+        content = (request.form.get("content") or request.form.get("text") or "").strip()
+        uploaded = request.files.get("file")
+        media_url = ""
+        if uploaded is not None and uploaded.filename:
+            extension = Path(uploaded.filename).suffix.lower()
+            if extension not in ALLOWED_UPLOAD_EXTENSIONS:
+                return jsonify({"success": False, "error": "Tipo de archivo no permitido."}), 400
+            uploaded.seek(0, os.SEEK_END)
+            size_bytes = uploaded.tell()
+            uploaded.seek(0)
+            if size_bytes > MAX_UPLOAD_BYTES:
+                return jsonify({"success": False, "error": "El archivo supera el límite permitido."}), 413
+            stored_name = f"{uuid.uuid4().hex}{extension}"
+            uploaded.save(UPLOAD_DIR / stored_name)
+            media_url = url_for("uploaded_file", filename=stored_name)
+        elif not content:
+            return jsonify({"success": False, "error": "Selecciona un archivo o escribe algo."}), 400
+    else:
+        data = request.get_json(silent=True) or {}
+        content = (data.get("content") or data.get("text") or "").strip()
+        media_url = (data.get("media_url") or "").strip()
 
     if not content and not media_url:
         return jsonify({"success": False, "error": "Escribe algo o agrega contenido multimedia."}), 400
@@ -1026,7 +1139,7 @@ def api_posts_create():
     conn.commit()
     conn.close()
 
-    return jsonify({"success": True, "message": "Publicación creada correctamente."}), 201
+    return jsonify({"success": True, "message": "Publicación creada correctamente.", "media_url": media_url or None}), 201
 
 
 @app.route("/api/stories/create", methods=["POST"])
@@ -1151,6 +1264,7 @@ def api_channels_create():
     data = request.get_json(silent=True) or {}
     name = (data.get("name") or "").strip()
     description = (data.get("description") or "").strip()
+    avatar_url = (data.get("avatar_url") or "").strip()
     is_private = bool(data.get("is_private"))
     is_adult = bool(data.get("is_adult"))
     try:
@@ -1171,9 +1285,9 @@ def api_channels_create():
 
     conn = get_db_connection()
     conn.execute(
-        "INSERT INTO channels (creator_id, name, description, is_private, is_adult, monthly_price) "
-        "VALUES (?, ?, ?, ?, ?, ?)",
-        (creator_id, name, description or "", int(is_private), int(is_adult), monthly_price),
+        "INSERT INTO channels (creator_id, name, description, avatar_url, is_private, is_adult, monthly_price) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?)",
+        (creator_id, name, description or "", avatar_url or None, int(is_private), int(is_adult), monthly_price),
     )
     conn.commit()
     conn.close()
@@ -1183,6 +1297,7 @@ def api_channels_create():
         "message": "Canal creado correctamente.",
         "channel": {
             "name": name,
+            "avatar_url": avatar_url or None,
             "is_private": is_private,
             "is_adult": is_adult,
             "monthly_price": monthly_price,
