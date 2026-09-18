@@ -361,9 +361,9 @@ if(!container) return;
 container.innerHTML = '';
 historiasData.forEach((h) => {
 let mediaTag = h.isVideo
-? ⁠<video src="${h.url}" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0"></video>⁠
-: ⁠<div class="absolute inset-0 w-full h-full bg-cover bg-center z-0" style="background-image: url('${h.url}');"></div>⁠;
-container.innerHTML += ⁠<div class="story-ring flex-shrink-0 w-24 h-36 rounded-2xl p-2 flex flex-col justify-between cursor-pointer border-2 border-purple-400 relative overflow-hidden shadow-lg" onclick="abrirChatIA()"> ${mediaTag} <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 z-0"></div> <span class="text-[8px] font-extrabold bg-purple-500 text-white px-1.5 py-0.5 rounded-full z-10">${h.badge}</span> <span class="text-[10px] font-bold text-white text-center z-10 truncate">${h.titulo}</span> </div>⁠;
+? `<video src="${h.url}" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0"></video>`
+: `<div class="absolute inset-0 w-full h-full bg-cover bg-center z-0" style="background-image: url('${h.url}');"></div>`;
+container.innerHTML += `<div class="story-ring flex-shrink-0 w-24 h-36 rounded-2xl p-2 flex flex-col justify-between cursor-pointer border-2 border-purple-400 relative overflow-hidden shadow-lg" onclick="abrirChatIA()"> ${mediaTag} <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 z-0"></div> <span class="text-[8px] font-extrabold bg-purple-500 text-white px-1.5 py-0.5 rounded-full z-10">${h.badge}</span> <span class="text-[10px] font-bold text-white text-center z-10 truncate">${h.titulo}</span> </div>`;
 });
 }
 function subirNuevaHistoriaUsuario(input) {
@@ -390,7 +390,7 @@ const container = document.getElementById('feedPostsContainer');
 if(!container) return;
 container.innerHTML = '';
 feedPosts.forEach(post => {
-container.innerHTML += ⁠<div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4"> <div class="flex items-center gap-3"> <div class="w-10 h-10 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-white text-xs">AI</div> <div> <h4 class="font-bold text-sm text-slate-100">${post.autor}</h4> <span class="text-[10px] text-purple-400">${post.tiempo} • 🌍 ${post.categoria}</span> </div> </div> <p class="text-sm text-slate-200">${post.texto}</p> ${post.media ? ⁠<div class="rounded-2xl overflow-hidden border border-slate-800 h-64 bg-cover bg-center" style="background-image: url('${post.media}');"></div>⁠ : ''} <div class="flex items-center gap-4 text-xs text-slate-400 pt-2 border-t border-slate-800"> <span><i class="fa-solid fa-heart text-pink-500"></i> ${post.likes} Me gusta</span> <button onclick="abrirChatIA()" class="text-purple-400 font-bold"><i class="fa-solid fa-comment mr-1"></i> Discutir en Chat</button> </div> </div>⁠;
+container.innerHTML += `<div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4"> <div class="flex items-center gap-3"> <div class="w-10 h-10 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-white text-xs">AI</div> <div> <h4 class="font-bold text-sm text-slate-100">${post.autor}</h4> <span class="text-[10px] text-purple-400">${post.tiempo} • 🌍 ${post.categoria}</span> </div> </div> <p class="text-sm text-slate-200">${post.texto}</p> ${post.media ? `<div class="rounded-2xl overflow-hidden border border-slate-800 h-64 bg-cover bg-center" style="background-image: url('${post.media}');"></div>` : ''} <div class="flex items-center gap-4 text-xs text-slate-400 pt-2 border-t border-slate-800"> <span><i class="fa-solid fa-heart text-pink-500"></i> ${post.likes} Me gusta</span> <button onclick="abrirChatIA()" class="text-purple-400 font-bold"><i class="fa-solid fa-comment mr-1"></i> Discutir en Chat</button> </div> </div>`;
 });
 }
 function renderizarReels() {
@@ -398,16 +398,16 @@ const container = document.getElementById('reelsContainer');
 if(!container) return;
 container.innerHTML = '';
 reelsData.forEach(r => {
-container.innerHTML += ⁠<div class="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-xl p-3 space-y-2"> <video src="${r.url}" autoplay muted loop playsinline class="w-full h-56 object-cover rounded-xl"></video> <span class="font-bold text-purple-400 text-xs">@${r.autor}</span> <p class="text-xs text-slate-300">${r.texto}</p> </div>⁠;
+container.innerHTML += `<div class="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-xl p-3 space-y-2"> <video src="${r.url}" autoplay muted loop playsinline class="w-full h-56 object-cover rounded-xl"></video> <span class="font-bold text-purple-400 text-xs">@${r.autor}</span> <p class="text-xs text-slate-300">${r.texto}</p> </div>`;
 });
 }
 function calcularComisionForo() {
 const price = parseFloat(document.getElementById('forumPriceInput').value) || 0;
 const comision = price * 0.15;
 const neta = price - comision;
-document.getElementById('lblPrecioCreador').innerText = ⁠$${price.toFixed(2)}⁠;
-document.getElementById('lblComision15').innerText = ⁠-$${comision.toFixed(2)}⁠;
-document.getElementById('lblGananciaNeta').innerText = ⁠$${neta.toFixed(2)}⁠;
+document.getElementById('lblPrecioCreador').innerText = `$${price.toFixed(2)}`;
+document.getElementById('lblComision15').innerText = `-$${comision.toFixed(2)}`;
+document.getElementById('lblGananciaNeta').innerText = `$${neta.toFixed(2)}`;
 }
 function guardarForoPrivado() {
 const titulo = document.getElementById('forumTitleInput').value.trim();
@@ -436,15 +436,15 @@ const container = document.getElementById('forosCreadosContainer');
 if(!container) return;
 container.innerHTML = '<h3 class="font-bold text-sm text-slate-200">Foros Privados Activos en la Comunidad</h3>';
 if(forosPrivadosList.length === 0) {
-container.innerHTML += ⁠<p class="text-xs text-slate-500">Aún no hay foros creados. ¡Sé el primero en lanzar uno!</p>⁠;
+container.innerHTML += `<p class="text-xs text-slate-500">Aún no hay foros creados. ¡Sé el primero en lanzar uno!</p>`;
 return;
 }
 forosPrivadosList.forEach(f => {
-container.innerHTML += ⁠ <div class="bg-slate-950 border border-amber-500/30 p-4 rounded-2xl space-y-2"> <div class="flex justify-between items-center"> <h4 class="font-bold text-xs text-amber-300">🔒 ${f.title}</h4> <span class="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full">$${f.price.toFixed(2)} / mes</span> </div> <p class="text-[11px] text-slate-400">Creador: <span class="text-purple-400">${f.creator}</span> • Ganancia neta para el creador: <span class="text-emerald-400 font-bold">$${f.net.toFixed(2)}</span></p> <button onclick="abrirChatIA()" class="w-full mt-2 bg-amber-600 text-slate-950 py-2 rounded-xl font-bold text-xs">Suscribirse al Foro</button> </div>⁠;
+container.innerHTML += ` <div class="bg-slate-950 border border-amber-500/30 p-4 rounded-2xl space-y-2"> <div class="flex justify-between items-center"> <h4 class="font-bold text-xs text-amber-300">🔒 ${f.title}</h4> <span class="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full">$${f.price.toFixed(2)} / mes</span> </div> <p class="text-[11px] text-slate-400">Creador: <span class="text-purple-400">${f.creator}</span> • Ganancia neta para el creador: <span class="text-emerald-400 font-bold">$${f.net.toFixed(2)}</span></p> <button onclick="abrirChatIA()" class="w-full mt-2 bg-amber-600 text-slate-950 py-2 rounded-xl font-bold text-xs">Suscribirse al Foro</button> </div>`;
 });
 }
 function iniciarNuevoChat() {
-document.getElementById('chatContainer').innerHTML = ⁠<div class="flex items-start gap-3"><div class="w-9 h-9 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-xs text-white">AI</div><div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200">Nueva sesión iniciada. ¿En qué te ayudo?</div></div>⁠;
+document.getElementById('chatContainer').innerHTML = `<div class="flex items-start gap-3"><div class="w-9 h-9 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-xs text-white">AI</div><div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200">Nueva sesión iniciada. ¿En qué te ayudo?</div></div>`;
 abrirChatIA();
 }
 function buscarEnChats() {
@@ -462,7 +462,7 @@ if(sug) alert("¡Gracias! Tu sugerencia ha sido registrada para la próxima actu
 function informarProblemaCorreo() {
 const prob = prompt("🚨 Informar un Problema: Describe el fallo técnico. Se enviará directamente al correo del administrador:");
 if(prob) {
-window.location.href = ⁠mailto:juandavidlopezinfante@gmail.com?subject=Reporte de Error en Nexus AI&body=${encodeURIComponent(prob)}⁠;
+window.location.href = `mailto:juandavidlopezinfante@gmail.com?subject=Reporte de Error en Nexus AI&body=${encodeURIComponent(prob)}`;
 }
 }
 function borrarHistorialTotal() {
@@ -526,7 +526,7 @@ alert("🚀 ¡Tendencia publicada con éxito al Feed Mundial!");
 function mostrarArchivoSeleccionado(input) {
 const ind = document.getElementById('fileIndicator');
 if(input.files && input.files[0]) {
-ind.innerText = ⁠📎 Archivo listo: ${input.files[0].name}⁠;
+ind.innerText = `📎 Archivo listo: ${input.files[0].name}`;
 ind.classList.remove('hidden');
 }
 }
@@ -551,7 +551,7 @@ return String(value ?? '').replace(/[&<>"']/g, (character) => ({
 '<': '<',
 '>': '>',
 '"': '"',
-"'": '''
+"'": "'"
 }[character]));
 }
 async function readApiResponse(response) {
@@ -576,7 +576,7 @@ const txt = input.value.trim();
 if (!txt) {
 return;
 }
-chatContainer.innerHTML += ⁠<div class="flex justify-end"> <div class="bg-purple-600 text-white p-3 rounded-3xl max-w-sm text-xs"> ${escapeHtml(txt)} </div> </div>⁠;
+chatContainer.innerHTML += `<div class="flex justify-end"> <div class="bg-purple-600 text-white p-3 rounded-3xl max-w-sm text-xs"> ${escapeHtml(txt)} </div> </div>`;
 input.value = '';
 chatContainer.scrollTop = chatContainer.scrollHeight;
 try {
@@ -594,7 +594,7 @@ const data = result.data;
 if (!response.ok || data.success === false) {
 const errorMessage =
 data.error ||
-⁠El servidor respondió con código ${response.status}.⁠;
+`El servidor respondió con código ${response.status}.`;
 throw new Error(errorMessage);
 }
 const reply = data.reply || data.response;
@@ -603,14 +603,11 @@ throw new Error(
 'El servidor no devolvió una respuesta.'
 );
 }
-chatContainer.innerHTML += ⁠<div class="flex items-start gap-3"> <div class="w-9 h-9 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-xs text-white"> AI </div> <div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200 whitespace-pre-wrap"> ${escapeHtml(reply)} </div> </div>⁠;
+chatContainer.innerHTML += `<div class="flex items-start gap-3"> <div class="w-9 h-9 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-xs text-white"> AI </div> <div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200 whitespace-pre-wrap"> ${escapeHtml(reply)} </div> </div>`;
 } catch (error) {
-chatContainer.innerHTML += ⁠<div class="text-rose-400 text-xs p-2"> ${escapeHtml( error.message || 'Error de enlace con el servidor.' )} </div>⁠;
+chatContainer.innerHTML += `<div class="text-rose-400 text-xs p-2"> ${escapeHtml( error.message || 'Error de enlace con el servidor.' )} </div>`;
 }
 chatContainer.scrollTop = chatContainer.scrollHeight;
-}
-chatContainer.scrollTop = chatContainer.scrollHeight;
-}
 }
 
 // ==========================================
