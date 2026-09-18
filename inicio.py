@@ -1,7 +1,11 @@
+import json
 import logging
 import os
 import sqlite3
+import threading
+import time
 import uuid
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
 
@@ -36,6 +40,11 @@ SYSTEM_PROMPT = (
 )
 MAX_PROMPT_LENGTH = int(os.environ.get("MAX_PROMPT_LENGTH", "12000"))
 OPENROUTER_TIMEOUT = float(os.environ.get("OPENROUTER_TIMEOUT", "35"))
+BOT_INTERVAL_SECONDS = int(os.environ.get("BOT_INTERVAL_SECONDS", str(6 * 60 * 60)))
+BOT_TRENDS_URL = os.environ.get(
+    "BOT_TRENDS_URL",
+    "https://trends.google.com/trending/rss?geo=US",
+)
 UPLOAD_DIR = BASE_DIR / "uploads"
 UPLOAD_DIR.mkdir(exist_ok=True)
 MAX_UPLOAD_BYTES = int(os.environ.get("MAX_UPLOAD_BYTES", str(25 * 1024 * 1024)))
@@ -326,6 +335,24 @@ def generate_local_fallback_response(tool_name: str, prompt: str) -> str:
         "Idea lista para usar: convierte cada idea en una acción clara, útil y constante "
         "para construir comunidad y generar resultados. #IA #Contenido #Crecimiento"
     )
+
+
+def fetch_social_trends() -> list[str]:
+    try:
+        response = requests.get(BOT_TRENDS_URL, timeout=10, headers={"User-Agent": "NexusAIPro/1.0"})
+        response.raise_for_status()
+        root = ET.fromstring(response.content)
+        trends = []
+        for item in root.findall(".//item/title"):
+            title = (item.text or "").strip()
+            if title and title not in trends:
+                trends.append(title)
+            if len(trends) >= 8:
+                break
+        return trends
+    except (requests.RequestException, ET.ParseError, ValueError) as exc:
+        logger.warning("No se pudieron consultar tendencias: %s", exc)
+        return []
 
 
 def get_prompt(data: dict[str, Any]) -> tuple[str | None, str | None]:
@@ -786,10 +813,13 @@ def uploaded_file(filename):
 @app.route("/api/bot/generar-feed", methods=["POST"])
 def generar_feed_bot():
     request_id = uuid.uuid4().hex
+    trends = fetch_social_trends()
+    trend_context = ", ".join(trends) if trends else "tecnología, inteligencia artificial y productividad"
     prompt_bot = (
-        "Genera una publicación corta, moderna y atractiva sobre tecnología, "
-        "inteligencia artificial o productividad para una red social, "
-        "incluyendo hashtags relevantes."
+        "Crea un lote de contenido para una red social usando estas tendencias actuales como inspiración: "
+        f"{trend_context}. "
+        "Devuelve únicamente JSON válido con tres claves: post, story y reel. "
+        "Cada valor debe ser texto breve listo para publicar; no incluyas markdown ni explicaciones."
     )
 
     content, provider_error = call_openrouter(
@@ -799,22 +829,53 @@ def generar_feed_bot():
         ],
         request_id,
     )
-    if provider_error:
-        content = generate_local_fallback_response("Bot Generador de Feed", prompt_bot)
+    fallback = {
+        "post": f"Lo que está marcando tendencia hoy: {trend_context}. Convierte la conversación en valor. #IA #Contenido #Crecimiento",
+        "story": f"Tendencia del día: {trend_context}. Crea algo útil y compártelo.",
+        "reel": f"Cómo convertir {trends[0] if trends else 'una tendencia'} en contenido: claridad, constancia y acción. #Reels #IA",
+    }
+    batch = fallback
+    if not provider_error and content:
+        try:
+            normalized = content.strip().replace("```json", "").replace("```", "").strip()
+            parsed = json.loads(normalized)
+            if isinstance(parsed, dict):
+                batch = {
+                    "post": str(parsed.get("post") or fallback["post"]).strip(),
+                    "story": str(parsed.get("story") or fallback["story"]).strip(),
+                    "reel": str(parsed.get("reel") or fallback["reel"]).strip(),
+                }
+        except (TypeError, ValueError, json.JSONDecodeError):
+            batch = {"post": content.strip(), "story": fallback["story"], "reel": fallback["reel"]}
 
     try:
         conn = get_db_connection()
         conn.execute(
             "INSERT INTO posts (author, content, is_bot) VALUES (?, ?, ?)",
-            ("NexusBot_AI", content, 1),
+            ("NexusBot_AI", batch["post"], 1),
+        )
+        conn.execute(
+            "INSERT INTO stories (user_id, content) VALUES (?, ?)",
+            (1, batch["story"]),
+        )
+        conn.execute(
+            "INSERT INTO reels (user_id, caption) VALUES (?, ?)",
+            (1, batch["reel"]),
         )
         conn.commit()
         conn.close()
     except Exception as exc:
-        logger.exception("Error guardando post del bot: %s", exc)
-        return error_response("No se pudo guardar el post del bot.", 500, request_id)
+        logger.exception("Error guardando lote del bot: %s", exc)
+        return error_response("No se pudo guardar el lote del bot.", 500, request_id)
 
-    return jsonify({"success": True, "bot_post": content, "requestId": request_id}), 200
+    return jsonify({
+        "success": True,
+        "bot_post": batch["post"],
+        "story": batch["story"],
+        "reel": batch["reel"],
+        "used_fallback": provider_error is not None,
+        "requestId": request_id,
+    }), 200
 
 
 @app.route("/api/foros/crear", methods=["POST"])
@@ -1185,6 +1246,29 @@ def api_reaction():
     conn.close()
 
     return jsonify({"success": True, "message": "Reacción registrada."}), 201
+
+
+def start_bot_scheduler():
+    if os.getenv("BOT_AUTOSTART", "1").lower() not in {"1", "true", "yes"}:
+        return
+    if getattr(app, "_bot_scheduler_started", False):
+        return
+    app._bot_scheduler_started = True
+
+    def scheduler():
+        while True:
+            time.sleep(BOT_INTERVAL_SECONDS)
+            try:
+                with app.app_context():
+                    generar_feed_bot()
+                logger.info("Lote automático de contenido generado correctamente.")
+            except Exception:
+                logger.exception("Error en el programador automático de contenido.")
+
+    threading.Thread(target=scheduler, name="nexus-content-bot", daemon=True).start()
+
+
+start_bot_scheduler()
 
 
 if __name__ == "__main__":
