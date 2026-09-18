@@ -18,6 +18,8 @@ services:
         sync: false
       - key: OPENROUTER_MODEL
         value: openrouter/free
+      - key: OPENROUTER_IMAGE_MODEL
+        value: google/gemini-2.5-flash-image
       - key: OPENROUTER_URL
         value: https://openrouter.ai/api/v1/chat/completions
       - key: APP_URL
