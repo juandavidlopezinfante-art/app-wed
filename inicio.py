@@ -41,6 +41,7 @@ SYSTEM_PROMPT = (
 MAX_PROMPT_LENGTH = int(os.environ.get("MAX_PROMPT_LENGTH", "12000"))
 OPENROUTER_TIMEOUT = float(os.environ.get("OPENROUTER_TIMEOUT", "35"))
 BOT_INTERVAL_SECONDS = int(os.environ.get("BOT_INTERVAL_SECONDS", str(6 * 60 * 60)))
+BOT_CRON_SECRET = os.getenv("BOT_CRON_SECRET", "")
 BOT_TRENDS_URL = os.environ.get(
     "BOT_TRENDS_URL",
     "https://trends.google.com/trending/rss?geo=US",
@@ -876,6 +877,13 @@ def generar_feed_bot():
         "used_fallback": provider_error is not None,
         "requestId": request_id,
     }), 200
+
+
+@app.route("/api/bot/run-scheduled", methods=["POST"])
+def run_scheduled_bot():
+    if not BOT_CRON_SECRET or request.headers.get("X-Bot-Secret") != BOT_CRON_SECRET:
+        return jsonify({"success": False, "error": "No autorizado."}), 401
+    return generar_feed_bot()
 
 
 @app.route("/api/foros/crear", methods=["POST"])
