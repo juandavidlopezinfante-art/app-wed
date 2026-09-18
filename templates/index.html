@@ -69,9 +69,9 @@ Crear Cuenta & Activar Perfil
 </div>
 </div>
 <!-- ========================================== -->
-<!-- 2. MENÚ LATERAL RETRÁCTIL (SIDEBAR)        -->
+<!-- 2. MENÚ LATERAL RETRÁCTIL (SIDEBAR) FIJO   -->
 <!-- ========================================== -->
-<aside id="sidebar" class="w-72 bg-slate-900 border-r border-slate-800 flex flex-col transition-all duration-300 z-30 shadow-2xl">
+<aside id="sidebar" class="w-72 min-w-[18rem] bg-slate-900 border-r border-slate-800 flex flex-col transition-all duration-300 z-30 shadow-2xl flex-shrink-0">
 <div class="p-4 border-b border-slate-800 flex items-center justify-between">
 <span class="font-extrabold text-base bg-gradient-to-r from-purple-400 via-pink-500 to-amber-400 bg-clip-text text-transparent truncate">Nexus AI Pro</span>
 <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-bars text-lg"></i></button>
@@ -98,13 +98,13 @@ Crear Cuenta & Activar Perfil
 <i class="fa-solid fa-wand-magic-sparkles text-amber-400 text-sm"></i> Herramientas Pro (Word, Excel)
 </button>
 <button onclick="mostrarSeccion('suscripciones')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
-<i class="fa-solid fa-crown text-amber-400 text-sm"></i> Suscripciones & 15% Desc.
+<i class="fa-solid fa-crown text-amber-400 text-sm"></i> Foros, Suscripciones & 15%
 </button>
 <button onclick="mostrarSeccion('adultos')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-rose-300 hover:bg-rose-950/40 transition font-medium text-left border border-rose-500/20">
 <i class="fa-solid fa-triangle-exclamation text-rose-500 text-sm"></i> Contenido 18+ (VIP)
 </button>
 <button onclick="mostrarSeccion('manual')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
-<i class="fa-solid fa-book-open-reader text-cyan-400 text-sm"></i> Manual de Uso Completo
+<i class="fa-solid fa-book-open-reader text-cyan-400 text-sm"></i> Manual de Uso Detallado
 </button>
 <button onclick="mostrarAyudaTecnica()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition font-medium text-left">
 <i class="fa-solid fa-headset text-amber-400 text-sm"></i> Ayuda Técnica con IA
@@ -145,14 +145,15 @@ Crear Cuenta & Activar Perfil
 </div>
 </div>
 <!-- ========================================== -->
-<!-- 4. HISTORIAS SUPERIORES ESTILO TIKTOK      -->
+<!-- 4. HISTORIAS SUPERIORES CON SUBIDA LIBRE   -->
 <!-- ========================================== -->
 <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 p-4 z-20 shadow-md flex items-center gap-4">
 <div class="flex flex-col items-center justify-center flex-shrink-0">
-<button onclick="abrirChatIA()" class="story-ring w-14 h-14 rounded-full bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center text-white text-lg shadow-lg cursor-pointer">
-<i class="fa-solid fa-wand-magic-sparkles"></i>
-</button>
-<span class="text-[10px] font-bold text-slate-300 mt-1">Demostradores</span>
+<label class="story-ring w-14 h-14 rounded-full bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center text-white text-lg shadow-lg cursor-pointer hover:scale-105 transition">
+<i class="fa-solid fa-plus"></i>
+<input type="file" id="subirHistoriaInput" accept="image/*,video/*,.pdf,.doc,.docx" class="hidden" onchange="subirNuevaHistoriaUsuario(this)">
+</label>
+<span class="text-[10px] font-bold text-slate-300 mt-1">Subir Historia</span>
 </div>
 <div id="storiesContainer" class="flex-1 flex gap-4 overflow-x-auto scrollbar-hide pb-1"></div>
 </header>
@@ -194,29 +195,35 @@ Crear Cuenta & Activar Perfil
 </div>
 </div>
 </div>
-<!-- VISTA: SUSCRIPCIONES Y 15% DE DESCUENTO -->
+<!-- VISTA: FOROS PRIVADOS, SUSCRIPCIONES Y COMISIÓN 15% -->
 <div id="view-suscripciones" class="hidden space-y-6">
 <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-xl space-y-6">
 <div class="text-center space-y-2">
-<span class="bg-amber-500/10 border border-amber-500/30 text-amber-400 px-3 py-1 rounded-full text-xs font-bold">Monetización Global</span>
-<h2 class="font-black text-2xl text-amber-300">Suscripciones de Usuarios & 15% de Descuento</h2>
-<p class="text-xs text-slate-400">Desbloquea todo el potencial de la IA con el descuento especial aplicado.</p>
+<span class="bg-amber-500/10 border border-amber-500/30 text-amber-400 px-3 py-1 rounded-full text-xs font-bold">Monetización de Creadores</span>
+<h2 class="font-black text-2xl text-amber-300">Foros Privados, Suscripciones & Comisión 15%</h2>
+<p class="text-xs text-slate-400">Crea tu propio foro privado, define el precio de suscripción y la plataforma calculará automáticamente tu ganancia neta restando solo el 15%.</p>
 </div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Formulario para que el usuario cree su foro -->
 <div class="bg-slate-950 border border-slate-800 p-6 rounded-2xl space-y-4">
-<h3 class="font-bold text-sm text-purple-300">🚀 Creator Pro</h3>
-<p class="text-2xl font-black text-white">$9.99 <span class="text-xs text-slate-400">/ mes</span></p>
-<p class="text-xs text-slate-400">Acceso prioritario a Claude 3.5 Sonnet y herramientas de documentos.</p>
-<button onclick="suscribirsePlan('Creator Pro')" class="w-full bg-purple-600 text-white py-2 rounded-xl font-bold text-xs">Suscribirse</button>
+<h3 class="font-bold text-sm text-purple-300"><i class="fa-solid fa-comments"></i> Crear Foro Privado de Suscripción</h3>
+<div class="space-y-3">
+<div>
+<label class="block text-[11px] font-bold text-slate-300 mb-1">Título del Foro Privado</label>
+<input type="text" id="forumTitleInput" placeholder="Ej. Comunidad Exclusiva de Prompt Engineering" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none focus:border-purple-500">
 </div>
-<div class="bg-slate-950 border border-amber-500/40 p-6 rounded-2xl space-y-4 relative overflow-hidden shadow-lg">
-<div class="absolute top-2 right-2 bg-amber-500 text-slate-950 text-[9px] font-black px-2 py-0.5 rounded-full">¡15% OFF ACTIVO!</div>
-<h3 class="font-bold text-sm text-amber-400">👑 Enterprise VIP (18+)</h3>
-<p class="text-2xl font-black text-white"><span class="line-through text-slate-500 text-sm">$29.99</span> $25.49 <span class="text-xs text-amber-400">/ mes (15% desc.)</span></p>
-<p class="text-xs text-slate-400">Acceso total sin restricciones, zona 18+ y prioridad máxima en el clúster.</p>
-<button onclick="suscribirsePlan('Enterprise VIP')" class="w-full bg-gradient-to-r from-amber-500 to-pink-600 text-slate-950 py-2 rounded-xl font-bold text-xs">Obtener con Descuento</button>
+<div>
+<label class="block text-[11px] font-bold text-slate-300 mb-1">Precio de Suscripción Mensual ($ USD)</label>
+<input type="number" id="forumPriceInput" step="0.01" placeholder="19.99" oninput="calcularComisionForo()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none focus:border-purple-500">
+</div>
+<div class="bg-purple-950/30 border border-purple-500/30 p-4 rounded-xl text-xs space-y-1">
+<p class="text-slate-300">💰 Precio fijado por ti: <span id="lblPrecioCreador" class="font-bold text-white">$0.00</span></p>
+<p class="text-slate-300">🔻 Comisión de plataforma (15%): <span id="lblComision15" class="font-bold text-rose-400">-$0.00</span></p>
+<p class="text-purple-300 font-bold">✨ Tu ganancia neta por suscriptor: <span id="lblGananciaNeta" class="text-emerald-400 font-black">$0.00</span></p>
+</div>
+<button onclick="guardarForoPrivado()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-xl font-bold text-xs shadow-lg">Publicar Foro Privado en la Red</button>
 </div>
 </div>
+<div id="forosCreadosContainer" class="space-y-4 pt-2"></div>
 </div>
 </div>
 <!-- VISTA: CONTENIDO ADULTO 18+ -->
@@ -235,22 +242,27 @@ Crear Cuenta & Activar Perfil
 </div>
 </div>
 </div>
-<!-- VISTA: MANUAL DE USO COMPLETO -->
+<!-- VISTA: MANUAL DE USO AMPLIADO Y DETALLADO -->
 <div id="view-manual" class="hidden space-y-6 text-slate-300">
 <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-6 text-xs leading-relaxed">
-<h2 class="font-black text-xl text-cyan-300"><i class="fa-solid fa-book-open-reader mr-2"></i> Manual de Uso de Toda la Aplicación</h2>
+<h2 class="font-black text-xl text-cyan-300"><i class="fa-solid fa-book-open-reader mr-2"></i> Manual de Uso Detallado de Nexus AI Pro Enterprise</h2>
+<p class="text-slate-400">Esta plataforma es un ecosistema global inteligente diseñado para integrar redes sociales, generación multimedia avanzada, documentos y monetización de creadores bajo una arquitectura blindada.</p>
 <div class="space-y-4">
-<div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-1">
-<h3 class="font-bold text-purple-300 text-sm">1. Chat Libre & Multimodal</h3>
-<p class="text-slate-400">Puedes enviar textos, audios, fotos y documentos de Word y Excel. El motor procesará todo de inmediato.</p>
+<div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+<h3 class="font-bold text-purple-300 text-sm">1. Chat Multimodal Inteligente</h3>
+<p class="text-slate-400">Conéctate en tiempo real con modelos avanzados a través de OpenRouter. Envía mensajes ilimitados, adjunta archivos de audio, fotos y documentos corporativos. El sistema procesa y responde al instante sin perder el contexto.</p>
 </div>
-<div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-1">
-<h3 class="font-bold text-pink-300 text-sm">2. Generadores de Fotos, Videos y Documentos</h3>
-<p class="text-slate-400">Crea contenido visual o redacta documentos profesionales desde cero indicándole las referencias que necesites.</p>
+<div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+<h3 class="font-bold text-pink-300 text-sm">2. Feed Global, Historias y Reels</h3>
+<p class="text-slate-400">Comparte descubrimientos, fotos, videos o archivos multimedia en el Feed mundial. Las historias superiores permiten subir contenido dinámico que se guarda localmente sin riesgo de pérdida.</p>
 </div>
-<div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-1">
-<h3 class="font-bold text-amber-300 text-sm">3. Menú Lateral y Funciones de Soporte</h3>
-<p class="text-slate-400">Utiliza el buscador de chats, la ayuda técnica con IA, el buzón de sugerencias o informa cualquier problema técnico que llegará directo a tu correo de administrador.</p>
+<div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+<h3 class="font-bold text-amber-300 text-sm">3. Foros Privados y Monetización del 15%</h3>
+<p class="text-slate-400">Cualquier creador puede abrir un foro de suscripción privada. Tú decides el costo mensual de acceso y la plataforma gestionará automáticamente la retención del 15% de comisión, acreditando limpio tu ganancia neta.</p>
+</div>
+<div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+<h3 class="font-bold text-cyan-300 text-sm">4. Herramientas de Soporte y Reportes</h3>
+<p class="text-slate-400">Utiliza el buzón de sugerencias, el asistente de ayuda técnica o reporta fallos directamente al correo de administración (juandavidlopezinfante@gmail.com).</p>
 </div>
 </div>
 </div>
@@ -267,6 +279,10 @@ Crear Cuenta & Activar Perfil
 <div>
 <label class="block text-xs font-bold text-slate-300 mb-1">Contenido / Prompt</label>
 <textarea id="postText" required placeholder="Describe tu descubrimiento de IA..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 outline-none resize-none h-28"></textarea>
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-300 mb-1">Adjuntar Multimedia (Foto, Video o Archivo)</label>
+<input type="file" id="postMediaInput" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-300">
 </div>
 <button type="submit" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold text-xs">Publicar al Feed Mundial</button>
 </form>
@@ -307,14 +323,15 @@ Crear Cuenta & Activar Perfil
 <!-- ========================================== -->
 <script>
 let usuarioActual = { nombre: "Visitante Global", contacto: "visita@nexus.ai" };
-const historiasData = [
-{ titulo: "Chat Libre Pro", badge: "Demostración", url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-with-code-31910-large.mp4" },
-{ titulo: "Generador Fotos 4K", badge: "FLUX IA", url: "https://assets.mixkit.co/videos/preview/mixkit-plexus-background-of-plexus-animation-31911-large.mp4" },
-{ titulo: "Word & Excel AI", badge: "Documentos", url: "https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-man-working-on-a-financial-graph-42861-large.mp4" }
+let historiasData = JSON.parse(localStorage.getItem('nexus_stories_db')) || [
+{ titulo: "Chat Libre Pro", badge: "Demostración", url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-with-code-31910-large.mp4", isVideo: true },
+{ titulo: "Generador Fotos", badge: "FLUX IA", url: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900", isVideo: false },
+{ titulo: "Word & Excel AI", badge: "Documentos", url: "https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-man-working-on-a-financial-graph-42861-large.mp4", isVideo: true }
 ];
 let feedPosts = JSON.parse(localStorage.getItem('nexus_feed_db')) || [
 { autor: "NeuralAI Trends", tiempo: "Hace 2 min", categoria: "Chat & Código", texto: "🔥 Nuevo benchmark en procesamiento de documentos Word y hojas de cálculo con IA generativa.", media: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900", likes: 1420 }
 ];
+let forosPrivadosList = JSON.parse(localStorage.getItem('nexus_foros_db')) || [];
 const reelsData = [
 { autor: "DeepAI Generator", texto: "Demostración de traducción de voz y texto con avatares de IA.", url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-with-code-31910-large.mp4", likes: 3100 }
 ];
@@ -322,6 +339,7 @@ window.addEventListener('DOMContentLoaded', () => {
 renderizarHistorias();
 renderizarFeed();
 renderizarReels();
+renderizarForos();
 });
 function registrarUsuario(event) {
 event.preventDefault();
@@ -342,15 +360,37 @@ const container = document.getElementById('storiesContainer');
 if(!container) return;
 container.innerHTML = '';
 historiasData.forEach((h) => {
-container.innerHTML += `<div class="story-ring flex-shrink-0 w-24 h-36 rounded-2xl p-2 flex flex-col justify-between cursor-pointer border-2 border-purple-400 relative overflow-hidden shadow-lg" onclick="abrirChatIA()"> <video src="${h.url}" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0"></video> <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 z-0"></div> <span class="text-[8px] font-extrabold bg-purple-500 text-white px-1.5 py-0.5 rounded-full z-10">${h.badge}</span> <span class="text-[10px] font-bold text-white text-center z-10">${h.titulo}</span> </div>`;
+let mediaTag = h.isVideo
+? ⁠<video src="${h.url}" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0"></video>⁠
+: ⁠<div class="absolute inset-0 w-full h-full bg-cover bg-center z-0" style="background-image: url('${h.url}');"></div>⁠;
+container.innerHTML += ⁠<div class="story-ring flex-shrink-0 w-24 h-36 rounded-2xl p-2 flex flex-col justify-between cursor-pointer border-2 border-purple-400 relative overflow-hidden shadow-lg" onclick="abrirChatIA()"> ${mediaTag} <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 z-0"></div> <span class="text-[8px] font-extrabold bg-purple-500 text-white px-1.5 py-0.5 rounded-full z-10">${h.badge}</span> <span class="text-[10px] font-bold text-white text-center z-10 truncate">${h.titulo}</span> </div>⁠;
 });
+}
+function subirNuevaHistoriaUsuario(input) {
+if(input.files && input.files[0]) {
+const file = input.files[0];
+const reader = new FileReader();
+reader.onload = function(e) {
+const isVid = file.type.startsWith('video');
+historiasData.unshift({
+titulo: usuarioActual.nombre,
+badge: "Historia",
+url: e.target.result,
+isVideo: isVid
+});
+localStorage.setItem('nexus_stories_db', JSON.stringify(historiasData));
+renderizarHistorias();
+alert("🚀 ¡Historia subida y guardada con éxito!");
+};
+reader.readAsDataURL(file);
+}
 }
 function renderizarFeed() {
 const container = document.getElementById('feedPostsContainer');
 if(!container) return;
 container.innerHTML = '';
 feedPosts.forEach(post => {
-container.innerHTML += `<div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4"> <div class="flex items-center gap-3"> <div class="w-10 h-10 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-white text-xs">AI</div> <div> <h4 class="font-bold text-sm text-slate-100">${post.autor}</h4> <span class="text-[10px] text-purple-400">${post.tiempo} • 🌍 ${post.categoria}</span> </div> </div> <p class="text-sm text-slate-200">${post.texto}</p> ${post.media ? `<div class="rounded-2xl overflow-hidden border border-slate-800 h-64 bg-cover bg-center" style="background-image: url('${post.media}');"></div>` : ''} <div class="flex items-center gap-4 text-xs text-slate-400 pt-2 border-t border-slate-800"> <span><i class="fa-solid fa-heart text-pink-500"></i> ${post.likes} Me gusta</span> <button onclick="abrirChatIA()" class="text-purple-400 font-bold"><i class="fa-solid fa-comment mr-1"></i> Discutir en Chat</button> </div> </div>`;
+container.innerHTML += ⁠<div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4"> <div class="flex items-center gap-3"> <div class="w-10 h-10 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-white text-xs">AI</div> <div> <h4 class="font-bold text-sm text-slate-100">${post.autor}</h4> <span class="text-[10px] text-purple-400">${post.tiempo} • 🌍 ${post.categoria}</span> </div> </div> <p class="text-sm text-slate-200">${post.texto}</p> ${post.media ? ⁠<div class="rounded-2xl overflow-hidden border border-slate-800 h-64 bg-cover bg-center" style="background-image: url('${post.media}');"></div>⁠ : ''} <div class="flex items-center gap-4 text-xs text-slate-400 pt-2 border-t border-slate-800"> <span><i class="fa-solid fa-heart text-pink-500"></i> ${post.likes} Me gusta</span> <button onclick="abrirChatIA()" class="text-purple-400 font-bold"><i class="fa-solid fa-comment mr-1"></i> Discutir en Chat</button> </div> </div>⁠;
 });
 }
 function renderizarReels() {
@@ -358,11 +398,53 @@ const container = document.getElementById('reelsContainer');
 if(!container) return;
 container.innerHTML = '';
 reelsData.forEach(r => {
-container.innerHTML += `<div class="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-xl p-3 space-y-2"> <video src="${r.url}" autoplay muted loop playsinline class="w-full h-56 object-cover rounded-xl"></video> <span class="font-bold text-purple-400 text-xs">@${r.autor}</span> <p class="text-xs text-slate-300">${r.texto}</p> </div>`;
+container.innerHTML += ⁠<div class="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-xl p-3 space-y-2"> <video src="${r.url}" autoplay muted loop playsinline class="w-full h-56 object-cover rounded-xl"></video> <span class="font-bold text-purple-400 text-xs">@${r.autor}</span> <p class="text-xs text-slate-300">${r.texto}</p> </div>⁠;
+});
+}
+function calcularComisionForo() {
+const price = parseFloat(document.getElementById('forumPriceInput').value) || 0;
+const comision = price * 0.15;
+const neta = price - comision;
+document.getElementById('lblPrecioCreador').innerText = ⁠$${price.toFixed(2)}⁠;
+document.getElementById('lblComision15').innerText = ⁠-$${comision.toFixed(2)}⁠;
+document.getElementById('lblGananciaNeta').innerText = ⁠$${neta.toFixed(2)}⁠;
+}
+function guardarForoPrivado() {
+const titulo = document.getElementById('forumTitleInput').value.trim();
+const precio = parseFloat(document.getElementById('forumPriceInput').value) || 0;
+if(!titulo || precio <= 0) {
+alert("Por favor ingresa un título válido y un precio mayor a 0.");
+return;
+}
+const comision = precio * 0.15;
+const neta = precio - comision;
+forosPrivadosList.unshift({
+creator: usuarioActual.nombre,
+title: titulo,
+price: precio,
+net: neta,
+fee: comision
+});
+localStorage.setItem('nexus_foros_db', JSON.stringify(forosPrivadosList));
+document.getElementById('forumTitleInput').value = '';
+document.getElementById('forumPriceInput').value = '';
+renderizarForos();
+alert("👑 ¡Foro privado creado con éxito! Se aplicó automáticamente el 15% de comisión de plataforma.");
+}
+function renderizarForos() {
+const container = document.getElementById('forosCreadosContainer');
+if(!container) return;
+container.innerHTML = '<h3 class="font-bold text-sm text-slate-200">Foros Privados Activos en la Comunidad</h3>';
+if(forosPrivadosList.length === 0) {
+container.innerHTML += ⁠<p class="text-xs text-slate-500">Aún no hay foros creados. ¡Sé el primero en lanzar uno!</p>⁠;
+return;
+}
+forosPrivadosList.forEach(f => {
+container.innerHTML += ⁠ <div class="bg-slate-950 border border-amber-500/30 p-4 rounded-2xl space-y-2"> <div class="flex justify-between items-center"> <h4 class="font-bold text-xs text-amber-300">🔒 ${f.title}</h4> <span class="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full">$${f.price.toFixed(2)} / mes</span> </div> <p class="text-[11px] text-slate-400">Creador: <span class="text-purple-400">${f.creator}</span> • Ganancia neta para el creador: <span class="text-emerald-400 font-bold">$${f.net.toFixed(2)}</span></p> <button onclick="abrirChatIA()" class="w-full mt-2 bg-amber-600 text-slate-950 py-2 rounded-xl font-bold text-xs">Suscribirse al Foro</button> </div>⁠;
 });
 }
 function iniciarNuevoChat() {
-document.getElementById('chatContainer').innerHTML = `<div class="flex items-start gap-3"><div class="w-9 h-9 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-xs text-white">AI</div><div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200">Nueva sesión iniciada. ¿En qué te ayudo?</div></div>`;
+document.getElementById('chatContainer').innerHTML = ⁠<div class="flex items-start gap-3"><div class="w-9 h-9 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-xs text-white">AI</div><div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200">Nueva sesión iniciada. ¿En qué te ayudo?</div></div>⁠;
 abrirChatIA();
 }
 function buscarEnChats() {
@@ -380,7 +462,7 @@ if(sug) alert("¡Gracias! Tu sugerencia ha sido registrada para la próxima actu
 function informarProblemaCorreo() {
 const prob = prompt("🚨 Informar un Problema: Describe el fallo técnico. Se enviará directamente al correo del administrador:");
 if(prob) {
-window.location.href = `mailto:juandavidlopezinfante@gmail.com?subject=Reporte de Error en Nexus AI&body=${encodeURIComponent(prob)}`;
+window.location.href = ⁠mailto:juandavidlopezinfante@gmail.com?subject=Reporte de Error en Nexus AI&body=${encodeURIComponent(prob)}⁠;
 }
 }
 function borrarHistorialTotal() {
@@ -393,9 +475,6 @@ function verificarEdad18() {
 document.getElementById('adultWarningBox').classList.add('hidden');
 document.getElementById('adultContentContainer').classList.remove('hidden');
 }
-function suscribirsePlan(plan) {
-alert(`🎉 Suscripción al plan "${plan}" procesada aplicando el 15% de descuento.`);
-}
 function compartirPlataforma() {
 if(navigator.share) {
 navigator.share({ title: 'Nexus AI Pro', url: window.location.href });
@@ -407,13 +486,35 @@ function publicarTendenciaUsuario(event) {
 event.preventDefault();
 const texto = document.getElementById('postText').value.trim();
 const cat = document.getElementById('postCategory').value.trim();
+const fileInput = document.getElementById('postMediaInput');
 if(!texto) return;
+let mediaUrl = "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=900";
+if(fileInput.files && fileInput.files[0]) {
+const reader = new FileReader();
+reader.onload = function(e) {
 feedPosts.unshift({
 autor: usuarioActual.nombre,
 tiempo: "Justo ahora",
 categoria: cat,
 texto: texto,
-media: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=900",
+media: e.target.result,
+likes: 1
+});
+localStorage.setItem('nexus_feed_db', JSON.stringify(feedPosts));
+document.getElementById('postText').value = '';
+mostrarSeccion('feed');
+renderizarFeed();
+alert("🚀 ¡Tendencia publicada con archivo multimedia al Feed Mundial!");
+};
+reader.readAsDataURL(fileInput.files[0]);
+return;
+}
+feedPosts.unshift({
+autor: usuarioActual.nombre,
+tiempo: "Justo ahora",
+categoria: cat,
+texto: texto,
+media: mediaUrl,
 likes: 1
 });
 localStorage.setItem('nexus_feed_db', JSON.stringify(feedPosts));
@@ -425,7 +526,7 @@ alert("🚀 ¡Tendencia publicada con éxito al Feed Mundial!");
 function mostrarArchivoSeleccionado(input) {
 const ind = document.getElementById('fileIndicator');
 if(input.files && input.files[0]) {
-ind.innerText = `📎 Archivo listo: ${input.files[0].name}`;
+ind.innerText = ⁠📎 Archivo listo: ${input.files[0].name}⁠;
 ind.classList.remove('hidden');
 }
 }
@@ -446,11 +547,11 @@ if(target) target.classList.remove('hidden');
 }
 function escapeHtml(value) {
 return String(value ?? '').replace(/[&<>"']/g, (character) => ({
-'&': '&amp;',
-'<': '&lt;',
-'>': '&gt;',
-'"': '&quot;',
-"'": '&#039;'
+'&': '&',
+'<': '<',
+'>': '>',
+'"': '"',
+"'": '''
 }[character]));
 }
 async function readApiResponse(response) {
@@ -475,7 +576,7 @@ const txt = input.value.trim();
 if (!txt) {
 return;
 }
-chatContainer.innerHTML += `<div class="flex justify-end"> <div class="bg-purple-600 text-white p-3 rounded-3xl max-w-sm text-xs"> ${escapeHtml(txt)} </div> </div>`;
+chatContainer.innerHTML += ⁠<div class="flex justify-end"> <div class="bg-purple-600 text-white p-3 rounded-3xl max-w-sm text-xs"> ${escapeHtml(txt)} </div> </div>⁠;
 input.value = '';
 chatContainer.scrollTop = chatContainer.scrollHeight;
 try {
@@ -493,7 +594,7 @@ const data = result.data;
 if (!response.ok || data.success === false) {
 const errorMessage =
 data.error ||
-`El servidor respondió con código ${response.status}.`;
+⁠El servidor respondió con código ${response.status}.⁠;
 throw new Error(errorMessage);
 }
 const reply = data.reply || data.response;
@@ -502,18 +603,9 @@ throw new Error(
 'El servidor no devolvió una respuesta.'
 );
 }
-chatContainer.innerHTML += `
-<div class="flex items-start gap-3">
-<div class="w-9 h-9 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-xs text-white">
-AI
-</div>
-<div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200 whitespace-pre-wrap">
-${escapeHtml(reply)}
-</div>
-</div>
-`;
+chatContainer.innerHTML += ⁠<div class="flex items-start gap-3"> <div class="w-9 h-9 rounded-2xl bg-purple-600 flex items-center justify-center font-bold text-xs text-white"> AI </div> <div class="bg-slate-950 border border-slate-800 p-4 rounded-3xl text-xs text-slate-200 whitespace-pre-wrap"> ${escapeHtml(reply)} </div> </div>⁠;
 } catch (error) {
-chatContainer.innerHTML += `<div class="text-rose-400 text-xs p-2"> ${escapeHtml( error.message || 'Error de enlace con el servidor.' )} </div>`;
+chatContainer.innerHTML += ⁠<div class="text-rose-400 text-xs p-2"> ${escapeHtml( error.message || 'Error de enlace con el servidor.' )} </div>⁠;
 }
 chatContainer.scrollTop = chatContainer.scrollHeight;
 }
