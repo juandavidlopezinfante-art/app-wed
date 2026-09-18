@@ -68,8 +68,5 @@ def generar_url_imagen(prompt, is_adult=False):
         encoded_prompt = urllib.parse.quote(prompt + ", highly detailed digital art, uncensored concept art, expressive character design")
     else:
         encoded_prompt = urllib.parse.quote(prompt)
-<<<<<<< HEAD
+
     return f"https://image.pollinations.ai/prompt/{encoded_prompt}?width=1024&height=1024&nologo=true"
-=======
-    return f"https://image.pollinations.ai/prompt/{encoded_prompt}?width=1024&height=1024&nologo=true"
->>>>>>> 2ee94137af6c45c3fbc13df60309912e507c384f
