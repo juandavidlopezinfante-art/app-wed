@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -190,6 +190,21 @@
       font-size: 0.95rem;
     }
 
+    .guest-btn {
+      width: 100%;
+      border: 1px dashed rgba(148, 163, 184, 0.65);
+      background: rgba(148, 163, 184, 0.08);
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 11px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+
+    .guest-btn:hover { border-color: var(--accent); color: var(--accent); }
+
     .muted {
       margin-top: 18px;
       text-align: center;
@@ -259,11 +274,12 @@
           </div>
 
           <button type="submit" class="primary-btn">Entrar al Dashboard</button>
-          <button type="button" class="secondary-btn" onclick="window.location.href='/dashboard'">Ver demo</button>
+          <button type="button" class="secondary-btn" id="demoButton">Crear una cuenta nueva</button>
+          <button type="button" class="guest-btn" id="guestButton">Entrar como invitado</button>
         </form>
 
         <div class="muted">
-          ¿Necesitas ayuda? <a href="/dashboard">Entrar sin registro</a>
+          ¿Ya tienes una cuenta? <a href="#loginForm" id="loginLink">Inicia sesión aquí</a>
         </div>
       </div>
     </section>
@@ -275,14 +291,51 @@
     const usernameField = document.getElementById('usernameField');
     const usernameInput = document.getElementById('username');
 
+    function selectTab(mode) {
+      tabButtons.forEach(button => {
+        button.classList.toggle('active', button.dataset.tab === mode);
+      });
+      loginForm.dataset.mode = mode;
+      usernameField.style.display = mode === 'register' ? 'flex' : 'none';
+      loginForm.querySelector('.primary-btn').textContent = mode === 'register'
+        ? 'Crear cuenta'
+        : 'Entrar al Dashboard';
+      if (mode === 'register') {
+        usernameInput.focus();
+      }
+    }
+
     tabButtons.forEach(btn => {
       btn.addEventListener('click', () => {
-        tabButtons.forEach(b => b.classList.toggle('active', b === btn));
-        const mode = btn.dataset.tab;
-        loginForm.dataset.mode = mode;
-        usernameField.style.display = mode === 'register' ? 'flex' : 'none';
-        loginForm.querySelector('.primary-btn').textContent = mode === 'register' ? 'Crear cuenta' : 'Entrar al Dashboard';
+        selectTab(btn.dataset.tab);
       });
+    });
+
+    document.getElementById('demoButton').addEventListener('click', () => selectTab('register'));
+    document.getElementById('loginLink').addEventListener('click', (event) => {
+      event.preventDefault();
+      selectTab('login');
+    });
+
+    document.getElementById('guestButton').addEventListener('click', async () => {
+      const button = document.getElementById('guestButton');
+      button.disabled = true;
+      button.textContent = 'Abriendo acceso...';
+      try {
+        const response = await fetch('/api/guest-login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(data.error || 'No se pudo abrir el acceso de invitado.');
+        }
+        window.location.href = '/dashboard';
+      } catch (error) {
+        button.disabled = false;
+        button.textContent = 'Entrar como invitado';
+        alert(error.message || 'No se pudo abrir el acceso de invitado.');
+      }
     });
 
     loginForm.addEventListener('submit', function (event) {
