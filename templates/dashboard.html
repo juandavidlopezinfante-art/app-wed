@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -437,26 +437,56 @@
 
     .chat-widget {
       position: fixed;
-      right: 24px;
-      bottom: 94px;
+      inset: 7vh 6vw;
       z-index: 19;
-      width: min(390px, calc(100vw - 32px));
-      background: rgba(12,18,34,.98);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      box-shadow: 0 24px 70px rgba(0,0,0,.45);
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      background: rgba(12,18,34,.99);
+      border: 1px solid rgba(142,160,198,.28);
+      border-radius: 24px;
+      box-shadow: 0 30px 100px rgba(0,0,0,.6);
       overflow: hidden;
     }
 
+    .chat-widget::before { content: ""; position: fixed; inset: 0; z-index: -1; background: rgba(2,8,23,.64); backdrop-filter: blur(7px); }
     .chat-widget[hidden] { display: none; }
-    .chat-widget-head { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border-bottom:1px solid var(--line); }
-    .chat-widget-actions { display:flex; gap:6px; }
-    .icon-btn { border:1px solid var(--line); background:transparent; color:var(--text); border-radius:8px; cursor:pointer; padding:5px 8px; }
-    .chat-widget .chat-box { max-height:280px; padding:14px; margin:0; }
-    .chat-widget-controls { padding:12px; border-top:1px solid var(--line); }
-    .chat-widget-controls textarea { min-height:58px; }
-    .file-row { display:flex; align-items:center; gap:8px; margin-top:8px; color:var(--muted); font-size:.78rem; }
-    .file-row input { max-width: 220px; }
+    .chat-widget.minimized { inset: auto 24px 24px auto; width: min(430px, calc(100vw - 32px)); height: auto; display: block; }
+    .chat-widget.minimized .assistant-layout, .chat-widget.minimized .chat-widget-controls { display: none; }
+    .chat-widget-head { display:flex; justify-content:space-between; align-items:center; padding:18px 22px; border-bottom:1px solid var(--line); background:linear-gradient(120deg, rgba(34,197,94,.12), rgba(59,130,246,.1)); }
+    .assistant-title { display:flex; align-items:center; gap:12px; }
+    .assistant-orb { width:38px; height:38px; display:grid; place-items:center; border-radius:12px; background:linear-gradient(135deg,var(--green),var(--blue)); color:#06110d; font-weight:900; }
+    .assistant-title strong { display:block; font-size:1.05rem; }
+    .assistant-title span { display:block; color:var(--muted); font-size:.78rem; margin-top:3px; }
+    .chat-widget-actions { display:flex; gap:8px; }
+    .icon-btn { width:36px; height:36px; border:1px solid var(--line); background:rgba(255,255,255,.04); color:var(--text); border-radius:10px; cursor:pointer; font-size:1.1rem; }
+    .icon-btn:hover { border-color:var(--green); color:var(--green); }
+    .assistant-layout { min-height:0; display:grid; grid-template-columns:minmax(0,1fr) 280px; }
+    .chat-widget .chat-box { max-height:none; height:100%; padding:26px clamp(18px, 4vw, 54px); margin:0; gap:16px; background:radial-gradient(circle at 50% 0%, rgba(59,130,246,.08), transparent 44%); }
+    .chat-widget .chat-message { max-width:min(780px, 88%); padding:14px 17px; border-radius:16px; font-size:.98rem; line-height:1.6; }
+    .chat-widget .chat-message strong { color:var(--green); }
+    .assistant-files { min-height:0; padding:20px; border-left:1px solid var(--line); background:rgba(255,255,255,.025); overflow:auto; }
+    .assistant-files h4 { margin:0 0 6px; color:var(--text); letter-spacing:0; text-transform:none; font-size:1rem; }
+    .assistant-files p { color:var(--muted); font-size:.78rem; line-height:1.5; margin:0 0 14px; }
+    .file-list { display:flex; flex-direction:column; gap:9px; }
+    .file-card { padding:10px; border:1px solid var(--line); border-radius:12px; background:rgba(11,16,32,.7); font-size:.78rem; overflow-wrap:anywhere; }
+    .file-card span { display:block; color:var(--muted); margin-top:4px; font-size:.7rem; }
+    .chat-widget-controls { padding:18px clamp(18px, 4vw, 54px) 22px; border-top:1px solid var(--line); background:rgba(18,26,45,.96); }
+    .chat-widget-controls textarea { min-height:118px; max-height:260px; margin-top:0; padding:15px 17px; font-size:1rem; line-height:1.5; }
+    .file-row { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:12px; color:var(--muted); font-size:.78rem; }
+    .file-row input { max-width:100%; flex:1; }
+    .file-row .primary { min-width:110px; }
+    .mic-btn { min-width:42px; padding:10px 12px; border:1px solid var(--line); border-radius:10px; background:rgba(255,255,255,.04); color:var(--text); cursor:pointer; font-size:1.05rem; }
+    .mic-btn.recording { background:rgba(239,68,68,.16); border-color:var(--red); color:#fca5a5; animation:pulse-recording 1.2s infinite; }
+    @keyframes pulse-recording { 50% { box-shadow:0 0 0 5px rgba(239,68,68,.12); } }
+    .recording-status { color:#fca5a5; font-size:.78rem; min-width:96px; }
+
+    @media (max-width: 760px) {
+      .chat-widget { inset: 12px; border-radius: 18px; }
+      .assistant-layout { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; }
+      .assistant-files { max-height:150px; border-left:0; border-top:1px solid var(--line); }
+      .chat-widget-controls { padding:14px; }
+      .chat-widget .chat-box { padding:18px 14px; }
+    }
 
     .age-modal { position:fixed; inset:0; z-index:40; display:grid; place-items:center; background:rgba(2,8,23,.78); padding:18px; }
     .age-modal[hidden] { display:none; }
@@ -613,13 +643,16 @@
   <button class="chat-fab" id="chatFab" aria-label="Abrir chat IA">✦</button>
   <section class="chat-widget" id="chatWidget" hidden aria-label="Chat de IA">
     <div class="chat-widget-head">
-      <strong>Asistente IA</strong>
-      <div class="chat-widget-actions"><button class="icon-btn" id="minimizeChatBtn" type="button">−</button><button class="icon-btn" id="closeChatBtn" type="button">×</button></div>
+      <div class="assistant-title"><div class="assistant-orb">✦</div><div><strong>Asistente IA</strong><span>Historial, archivos y respuestas en un solo espacio</span></div></div>
+      <div class="chat-widget-actions"><button class="icon-btn" id="minimizeChatBtn" type="button" title="Minimizar">−</button><button class="icon-btn" id="closeChatBtn" type="button" title="Cerrar">×</button></div>
     </div>
-    <div id="chatBox" class="chat-box"><div class="chat-message">Tu historial se guarda en este dispositivo.</div></div>
+    <div class="assistant-layout">
+      <div id="chatBox" class="chat-box"><div class="chat-message">Tu historial se guarda en este dispositivo.</div></div>
+      <aside class="assistant-files"><h4>Archivos adjuntos</h4><p>Consulta los archivos que has enviado en esta conversación.</p><div id="aiFiles" class="file-list"><div class="file-card">Todavía no hay archivos<span>Imágenes, videos, audio, PDF, Word y Excel</span></div></div></aside>
+    </div>
     <div class="chat-widget-controls">
-      <textarea id="chatInput" class="chat-input" placeholder="Escribe una solicitud..."></textarea>
-      <div class="file-row"><input id="aiFileInput" type="file" accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv"><button class="primary" id="sendChatBtn" type="button">Enviar</button></div>
+      <textarea id="chatInput" class="chat-input" placeholder="Escribe una solicitud larga para el asistente..."></textarea>
+      <div class="file-row"><input id="aiFileInput" type="file" accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv"><span class="recording-status" id="recordingStatus">Adjunta o graba audio</span><button class="mic-btn" id="micBtn" type="button" title="Grabar audio" aria-label="Grabar audio">🎙</button><button class="primary" id="sendChatBtn" type="button">Enviar</button></div>
     </div>
   </section>
   <div class="age-modal" id="ageModal" hidden><div class="age-card"><h3>Zona para mayores de 18</h3><p>Esta sección está restringida a personas adultas. Al continuar confirmas que tienes 18 años o más y aceptas usar la plataforma de forma legal y responsable.</p><div style="display:flex; gap:10px; justify-content:flex-end;"><button class="pill" id="cancelAgeBtn">Cancelar</button><button class="primary" id="confirmAgeBtn">Tengo 18 o más</button></div></div></div>
@@ -744,23 +777,72 @@
       const data = await response.json();
       if (!response.ok || !data.success) return;
       const box = document.getElementById('chatBox');
+      const files = document.getElementById('aiFiles');
       box.innerHTML = data.messages.length
         ? data.messages.map(item => `<div class="chat-message"><strong>${item.role === 'user' ? 'Tú' : 'IA'}:</strong> ${item.content.replace(/\n/g, '<br>')}</div>`).join('')
         : '<div class="chat-message">Tu historial aparecerá aquí.</div>';
+      files.innerHTML = data.files.length
+        ? data.files.map(file => `<a class="file-card" href="/uploads/${file.stored_name}" target="_blank" rel="noopener">${file.original_name}<span>${file.mime_type || 'Archivo'} · ${Math.ceil(file.size_bytes / 1024)} KB</span></a>`).join('')
+        : '<div class="file-card">Todavía no hay archivos<span>Imágenes, videos, audio, PDF, Word y Excel</span></div>';
       box.scrollTop = box.scrollHeight;
     }
 
-    async function uploadAiFile() {
+    async function uploadAiFile(fileOverride = null) {
       const input = document.getElementById('aiFileInput');
-      if (!input.files.length) return null;
+      const file = fileOverride || input.files[0];
+      if (!file) return null;
       const form = new FormData();
-      form.append('file', input.files[0]);
+      form.append('file', file);
       const response = await fetch('/api/ai/files', { method: 'POST', body: form });
       const data = await response.json();
       if (!response.ok || !data.success) throw new Error(data.error || 'No se pudo subir el archivo.');
       input.value = '';
       return data.file;
     }
+
+    let audioRecorder = null;
+    let audioChunks = [];
+    document.getElementById('micBtn').addEventListener('click', async () => {
+      const button = document.getElementById('micBtn');
+      const status = document.getElementById('recordingStatus');
+      if (audioRecorder && audioRecorder.state === 'recording') {
+        audioRecorder.stop();
+        return;
+      }
+      if (!navigator.mediaDevices || !window.MediaRecorder) {
+        showToast('Tu navegador no permite grabar audio.');
+        return;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioChunks = [];
+        audioRecorder = new MediaRecorder(stream);
+        audioRecorder.addEventListener('dataavailable', event => {
+          if (event.data.size) audioChunks.push(event.data);
+        });
+        audioRecorder.addEventListener('stop', async () => {
+          stream.getTracks().forEach(track => track.stop());
+          button.classList.remove('recording');
+          button.textContent = '🎙';
+          status.textContent = 'Subiendo audio...';
+          try {
+            const audioFile = new File([new Blob(audioChunks, { type: 'audio/webm' })], `audio-${Date.now()}.webm`, { type: 'audio/webm' });
+            const file = await uploadAiFile(audioFile);
+            status.textContent = file ? 'Audio guardado' : 'Adjunta o graba audio';
+            await loadChatHistory();
+          } catch (error) {
+            status.textContent = 'Error de audio';
+            showToast(error.message || 'No se pudo guardar el audio.');
+          }
+        });
+        audioRecorder.start();
+        button.classList.add('recording');
+        button.textContent = '■';
+        status.textContent = 'Grabando... pulsa para detener';
+      } catch (error) {
+        showToast('Debes permitir el micrófono para grabar audio.');
+      }
+    });
 
     async function loadReels() {
       const grid = document.getElementById('reelsGrid');
@@ -842,11 +924,17 @@
     document.querySelectorAll('[data-scroll]').forEach(button => button.addEventListener('click', () => document.getElementById(button.dataset.scroll).scrollIntoView({behavior:'smooth'})));
     document.getElementById('refreshReelsBtn').addEventListener('click', loadReels);
     document.getElementById('refreshChannelsBtn').addEventListener('click', loadChannels);
-    document.getElementById('chatFab').addEventListener('click', () => { document.getElementById('chatWidget').hidden = false; loadChatHistory(); });
-    document.getElementById('openAiBtn').addEventListener('click', () => { document.getElementById('chatWidget').hidden = false; loadChatHistory(); });
-    document.getElementById('openAiSideBtn').addEventListener('click', () => { document.getElementById('chatWidget').hidden = false; loadChatHistory(); });
+    function openChatWidget() {
+      const widget = document.getElementById('chatWidget');
+      widget.hidden = false;
+      widget.classList.remove('minimized');
+      loadChatHistory();
+    }
+    document.getElementById('chatFab').addEventListener('click', openChatWidget);
+    document.getElementById('openAiBtn').addEventListener('click', openChatWidget);
+    document.getElementById('openAiSideBtn').addEventListener('click', openChatWidget);
     document.getElementById('closeChatBtn').addEventListener('click', () => { document.getElementById('chatWidget').hidden = true; });
-    document.getElementById('minimizeChatBtn').addEventListener('click', () => { document.getElementById('chatWidget').hidden = true; });
+    document.getElementById('minimizeChatBtn').addEventListener('click', () => { document.getElementById('chatWidget').classList.toggle('minimized'); });
     document.getElementById('aiFileInput').addEventListener('change', async () => { try { const file = await uploadAiFile(); if (file) showToast(`Archivo guardado: ${file.name}`); } catch (error) { showToast(error.message); } });
 
     (async function initializeDashboard() {
@@ -864,4 +952,3 @@
   </script>
 </body>
 </html>
-
