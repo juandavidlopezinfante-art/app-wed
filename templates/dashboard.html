@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -380,6 +380,93 @@
       resize: vertical;
     }
 
+    .section-panel {
+      background: rgba(18,26,45,0.9);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .section-heading h3 { margin: 0; }
+    .section-heading p { margin: 4px 0 0; color: var(--muted); font-size: .82rem; }
+
+    .reel-grid, .channel-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 14px;
+    }
+
+    .reel-card, .channel-card {
+      background: linear-gradient(145deg, rgba(23,35,61,.96), rgba(18,26,45,.96));
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .reel-card video { width: 100%; aspect-ratio: 9 / 13; display: block; background: #050812; object-fit: cover; }
+    .reel-info, .channel-info { padding: 12px; }
+    .reel-info p, .channel-info p { color: var(--muted); font-size: .84rem; line-height: 1.45; margin: 6px 0 12px; }
+    .channel-card { padding: 0; }
+    .channel-card.adult { border-color: rgba(239,68,68,.55); }
+    .channel-price { color: var(--green); font-weight: 800; }
+
+    .chat-fab {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 20;
+      border: 0;
+      border-radius: 50%;
+      width: 58px;
+      height: 58px;
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      color: #06110d;
+      font-size: 1.35rem;
+      cursor: pointer;
+      box-shadow: 0 16px 34px rgba(34,197,94,.3);
+    }
+
+    .chat-widget {
+      position: fixed;
+      right: 24px;
+      bottom: 94px;
+      z-index: 19;
+      width: min(390px, calc(100vw - 32px));
+      background: rgba(12,18,34,.98);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: 0 24px 70px rgba(0,0,0,.45);
+      overflow: hidden;
+    }
+
+    .chat-widget[hidden] { display: none; }
+    .chat-widget-head { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border-bottom:1px solid var(--line); }
+    .chat-widget-actions { display:flex; gap:6px; }
+    .icon-btn { border:1px solid var(--line); background:transparent; color:var(--text); border-radius:8px; cursor:pointer; padding:5px 8px; }
+    .chat-widget .chat-box { max-height:280px; padding:14px; margin:0; }
+    .chat-widget-controls { padding:12px; border-top:1px solid var(--line); }
+    .chat-widget-controls textarea { min-height:58px; }
+    .file-row { display:flex; align-items:center; gap:8px; margin-top:8px; color:var(--muted); font-size:.78rem; }
+    .file-row input { max-width: 220px; }
+
+    .age-modal { position:fixed; inset:0; z-index:40; display:grid; place-items:center; background:rgba(2,8,23,.78); padding:18px; }
+    .age-modal[hidden] { display:none; }
+    .age-card { max-width:430px; background:var(--panel); border:1px solid var(--line); border-radius:20px; padding:24px; box-shadow:var(--shadow); }
+    .age-card h3 { margin-top:0; }
+    .age-card p { color:var(--muted); line-height:1.55; }
+
+    .toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); z-index:50; background:var(--panel-2); border:1px solid var(--line); border-radius:999px; padding:10px 16px; box-shadow:var(--shadow); }
+    .toast[hidden] { display:none; }
+
     @media (max-width: 1100px) {
       .app-shell {
         grid-template-columns: 220px 1fr;
@@ -408,9 +495,10 @@
           <button class="nav-item active">🏠 Inicio</button>
           <button class="nav-item">🔎 Explorar</button>
           <button class="nav-item">📷 Stories</button>
-          <button class="nav-item">🎬 Reels</button>
+          <button class="nav-item" data-scroll="reelsSection">🎬 Reels</button>
           <button class="nav-item">💬 Mensajes</button>
-          <button class="nav-item">📢 Canales</button>
+          <button class="nav-item" data-scroll="channelsSection">📢 Canales</button>
+          <button class="nav-item" data-scroll="adultSection">🔞 Zona +18</button>
           <button class="nav-item">⚙️ Configuración</button>
           <button class="nav-item" onclick="window.location.href='/logout'">🚪 Cerrar sesión</button>
         </div>
@@ -461,6 +549,32 @@
       </section>
 
       <section id="feed" class="feed"></section>
+
+      <section id="reelsSection" class="section-panel">
+        <div class="section-heading">
+          <div><h3>Reels</h3><p>Videos cortos y largos compartidos por la comunidad.</p></div>
+          <div style="display:flex;gap:8px"><button class="pill" id="refreshReelsBtn">Actualizar</button><button class="pill" id="toggleReelFormBtn">Crear reel</button></div>
+        </div>
+        <form id="reelForm" class="composer" hidden style="margin-bottom:14px"><input id="reelUrl" placeholder="URL del video (MP4, WebM...)" required><input id="reelCaption" placeholder="Descripción del reel"><button class="primary" type="submit">Publicar reel</button></form>
+        <div id="reelsGrid" class="reel-grid"></div>
+      </section>
+
+      <section id="channelsSection" class="section-panel">
+        <div class="section-heading">
+          <div><h3>Canales</h3><p>Espacios públicos y privados con precio mensual definido por sus creadores.</p></div>
+          <div style="display:flex;gap:8px"><button class="pill" id="refreshChannelsBtn">Actualizar</button><button class="pill" id="toggleChannelFormBtn">Crear canal</button></div>
+        </div>
+        <form id="channelForm" class="composer" hidden style="margin-bottom:14px"><input id="channelName" placeholder="Nombre del canal" required><input id="channelDescription" placeholder="Descripción"><label><input id="channelPrivate" type="checkbox"> Canal privado de pago</label><label><input id="channelAdult" type="checkbox"> Canal +18 privado (18% comisión)</label><input id="channelPrice" type="number" min="0" step="0.01" placeholder="Precio mensual"><button class="primary" type="submit">Crear canal</button></form>
+        <div id="channelsGrid" class="channel-grid"></div>
+      </section>
+
+      <section id="adultSection" class="section-panel">
+        <div class="section-heading">
+          <div><h3>Zona +18</h3><p>Área restringida para adultos confirmados. El acceso no publica contenido automáticamente.</p></div>
+          <button class="pill" id="adultAccessBtn">Verificar edad</button>
+        </div>
+        <div id="adultStatus" class="post-body">Confirma tu mayoría de edad para habilitar canales marcados como +18.</div>
+      </section>
     </main>
 
     <aside class="right-panel">
@@ -491,20 +605,25 @@
           </div>
         </div>
 
-        <div class="panel-card">
-          <h4>Chat</h4>
-          <div id="chatBox" class="chat-box">
-            <div class="chat-message">Hola, ¿cómo va tu estrategia de contenido?</div>
-            <div class="chat-message">Puedes probar un tema de crecimiento con IA.</div>
-          </div>
-          <textarea id="chatInput" class="chat-input" placeholder="Escribe un mensaje..."></textarea>
-          <div style="margin-top:12px; display:flex; justify-content:flex-end;">
-            <button class="primary" id="sendChatBtn">Enviar</button>
-          </div>
-        </div>
+        <div class="panel-card"><h4>IA persistente</h4><p class="meta">Abre el asistente flotante para continuar tu historial y adjuntar archivos.</p><button class="primary" id="openAiSideBtn">Abrir asistente</button></div>
       </div>
     </aside>
   </div>
+
+  <button class="chat-fab" id="chatFab" aria-label="Abrir chat IA">✦</button>
+  <section class="chat-widget" id="chatWidget" hidden aria-label="Chat de IA">
+    <div class="chat-widget-head">
+      <strong>Asistente IA</strong>
+      <div class="chat-widget-actions"><button class="icon-btn" id="minimizeChatBtn" type="button">−</button><button class="icon-btn" id="closeChatBtn" type="button">×</button></div>
+    </div>
+    <div id="chatBox" class="chat-box"><div class="chat-message">Tu historial se guarda en este dispositivo.</div></div>
+    <div class="chat-widget-controls">
+      <textarea id="chatInput" class="chat-input" placeholder="Escribe una solicitud..."></textarea>
+      <div class="file-row"><input id="aiFileInput" type="file" accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv"><button class="primary" id="sendChatBtn" type="button">Enviar</button></div>
+    </div>
+  </section>
+  <div class="age-modal" id="ageModal" hidden><div class="age-card"><h3>Zona para mayores de 18</h3><p>Esta sección está restringida a personas adultas. Al continuar confirmas que tienes 18 años o más y aceptas usar la plataforma de forma legal y responsable.</p><div style="display:flex; gap:10px; justify-content:flex-end;"><button class="pill" id="cancelAgeBtn">Cancelar</button><button class="primary" id="confirmAgeBtn">Tengo 18 o más</button></div></div></div>
+  <div class="toast" id="toast" hidden></div>
 
   <script>
     async function loadFeed() {
@@ -612,14 +731,137 @@
       box.scrollTop = box.scrollHeight;
     }
 
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.hidden = false;
+      window.clearTimeout(window.toastTimer);
+      window.toastTimer = window.setTimeout(() => { toast.hidden = true; }, 3200);
+    }
+
+    async function loadChatHistory() {
+      const response = await fetch('/api/ai/history');
+      const data = await response.json();
+      if (!response.ok || !data.success) return;
+      const box = document.getElementById('chatBox');
+      box.innerHTML = data.messages.length
+        ? data.messages.map(item => `<div class="chat-message"><strong>${item.role === 'user' ? 'Tú' : 'IA'}:</strong> ${item.content.replace(/\n/g, '<br>')}</div>`).join('')
+        : '<div class="chat-message">Tu historial aparecerá aquí.</div>';
+      box.scrollTop = box.scrollHeight;
+    }
+
+    async function uploadAiFile() {
+      const input = document.getElementById('aiFileInput');
+      if (!input.files.length) return null;
+      const form = new FormData();
+      form.append('file', input.files[0]);
+      const response = await fetch('/api/ai/files', { method: 'POST', body: form });
+      const data = await response.json();
+      if (!response.ok || !data.success) throw new Error(data.error || 'No se pudo subir el archivo.');
+      input.value = '';
+      return data.file;
+    }
+
+    async function loadReels() {
+      const grid = document.getElementById('reelsGrid');
+      const response = await fetch('/api/reels');
+      const data = await response.json();
+      if (!response.ok || !data.success) { grid.innerHTML = '<p class="meta">No se pudieron cargar los reels.</p>'; return; }
+      grid.innerHTML = data.reels.length ? data.reels.map(reel => `
+        <article class="reel-card"><video controls preload="metadata" src="${reel.video_url || ''}"></video>
+          <div class="reel-info"><strong>@${reel.author}</strong><p>${reel.caption || 'Reel de la comunidad'}</p><span class="meta">${reel.created_at || ''}</span></div>
+        </article>`).join('') : '<p class="meta">Aún no hay reels publicados.</p>';
+    }
+
+    async function loadChannels() {
+      const grid = document.getElementById('channelsGrid');
+      const response = await fetch('/api/channels');
+      const data = await response.json();
+      if (!response.ok || !data.success) { grid.innerHTML = '<p class="meta">No se pudieron cargar los canales.</p>'; return; }
+      grid.innerHTML = data.channels.length ? data.channels.map(channel => {
+        const restricted = channel.is_adult ? 'adult' : '';
+        const label = channel.is_adult ? '+18' : (channel.is_private ? 'Privado' : 'Público');
+        const button = channel.monthly_price > 0 ? `<button class="primary subscribe-btn" data-channel-id="${channel.id}">Suscribirme</button>` : '<span class="meta">Acceso público</span>';
+        return `<article class="channel-card ${restricted}"><div class="channel-info"><strong>${channel.name}</strong><span class="pill">${label}</span><p>${channel.description || 'Canal de la comunidad'}<br><span class="meta">Creado por @${channel.creator_name}</span></p><div class="channel-price">${channel.monthly_price > 0 ? '$' + Number(channel.monthly_price).toFixed(2) + ' / mes' : 'Gratis'}</div><div style="margin-top:12px">${button}</div></div></article>`;
+      }).join('') : '<p class="meta">No hay canales todavía.</p>';
+      document.querySelectorAll('.subscribe-btn').forEach(button => button.addEventListener('click', subscribeChannel));
+    }
+
+    async function subscribeChannel(event) {
+      const response = await fetch(`/api/channels/${event.currentTarget.dataset.channelId}/subscribe`, { method: 'POST' });
+      const data = await response.json();
+      if (!response.ok || !data.success) {
+        if (data.requiresAgeConfirmation) openAgeModal();
+        showToast(data.error || 'No se pudo suscribir.');
+        return;
+      }
+      showToast(`Suscripción activa. Comisión de plataforma: $${data.subscription.platform_fee.toFixed(2)}`);
+    }
+
+    document.getElementById('toggleReelFormBtn').addEventListener('click', () => {
+      const form = document.getElementById('reelForm');
+      form.hidden = !form.hidden;
+    });
+    document.getElementById('reelForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const response = await fetch('/api/reels/create', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({video_url: document.getElementById('reelUrl').value.trim(), caption: document.getElementById('reelCaption').value.trim()}) });
+      const data = await response.json();
+      if (!response.ok || !data.success) { showToast(data.error || 'No se pudo crear el reel.'); return; }
+      event.target.reset(); event.target.hidden = true; showToast('Reel publicado.'); loadReels();
+    });
+
+    document.getElementById('toggleChannelFormBtn').addEventListener('click', () => {
+      const form = document.getElementById('channelForm');
+      form.hidden = !form.hidden;
+    });
+    document.getElementById('channelAdult').addEventListener('change', (event) => {
+      if (event.target.checked) {
+        document.getElementById('channelPrivate').checked = true;
+        openAgeModal();
+      }
+    });
+    document.getElementById('channelForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const response = await fetch('/api/channels/create', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({name: document.getElementById('channelName').value.trim(), description: document.getElementById('channelDescription').value.trim(), is_private: document.getElementById('channelPrivate').checked, is_adult: document.getElementById('channelAdult').checked, monthly_price: Number(document.getElementById('channelPrice').value || 0)}) });
+      const data = await response.json();
+      if (!response.ok || !data.success) { if (data.requiresAgeConfirmation) openAgeModal(); showToast(data.error || 'No se pudo crear el canal.'); return; }
+      event.target.reset(); event.target.hidden = true; showToast('Canal creado.'); loadChannels();
+    });
+
+    function openAgeModal() { document.getElementById('ageModal').hidden = false; }
+    document.getElementById('cancelAgeBtn').addEventListener('click', () => { document.getElementById('ageModal').hidden = true; });
+    document.getElementById('confirmAgeBtn').addEventListener('click', async () => {
+      const response = await fetch('/api/age/verify', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({confirmed: true}) });
+      const data = await response.json();
+      if (!response.ok || !data.success) { showToast(data.error || 'No se pudo confirmar la edad.'); return; }
+      document.getElementById('ageModal').hidden = true;
+      document.getElementById('adultStatus').textContent = 'Acceso +18 confirmado para esta sesión.';
+      showToast('Acceso +18 habilitado.');
+    });
+    document.getElementById('adultAccessBtn').addEventListener('click', openAgeModal);
+    document.querySelectorAll('[data-scroll]').forEach(button => button.addEventListener('click', () => document.getElementById(button.dataset.scroll).scrollIntoView({behavior:'smooth'})));
+    document.getElementById('refreshReelsBtn').addEventListener('click', loadReels);
+    document.getElementById('refreshChannelsBtn').addEventListener('click', loadChannels);
+    document.getElementById('chatFab').addEventListener('click', () => { document.getElementById('chatWidget').hidden = false; loadChatHistory(); });
+    document.getElementById('openAiBtn').addEventListener('click', () => { document.getElementById('chatWidget').hidden = false; loadChatHistory(); });
+    document.getElementById('openAiSideBtn').addEventListener('click', () => { document.getElementById('chatWidget').hidden = false; loadChatHistory(); });
+    document.getElementById('closeChatBtn').addEventListener('click', () => { document.getElementById('chatWidget').hidden = true; });
+    document.getElementById('minimizeChatBtn').addEventListener('click', () => { document.getElementById('chatWidget').hidden = true; });
+    document.getElementById('aiFileInput').addEventListener('change', async () => { try { const file = await uploadAiFile(); if (file) showToast(`Archivo guardado: ${file.name}`); } catch (error) { showToast(error.message); } });
+
+    (async function initializeDashboard() {
+      await Promise.all([loadReels(), loadChannels(), loadChatHistory()]);
+      const age = await fetch('/api/age/status').then(response => response.json()).catch(() => null);
+      if (age && age.confirmed) document.getElementById('adultStatus').textContent = 'Acceso +18 confirmado para esta sesión.';
+      else openAgeModal();
+    }());
+
     document.getElementById('publishBtn').addEventListener('click', publishPost);
     document.getElementById('refreshFeedBtn').addEventListener('click', loadFeed);
     document.getElementById('sendChatBtn').addEventListener('click', sendChatMessage);
-    document.getElementById('openAiBtn').addEventListener('click', () => {
-      alert('La IA está activa para generar contenido e ideas desde el chat y el dashboard.');
-    });
 
     loadFeed();
   </script>
 </body>
 </html>
+
